@@ -29,7 +29,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Vous pouvez donner la catégorie associé à la dépense"
+        android:text="Vous pouvez donner la catégorie associée à la dépense"
         android:id="@+id/TextParam2"/>
 
 
@@ -41,19 +41,30 @@
         android:id="@+id/Categorie"
         android:textAlignment="center" />
 
-    <EditText
-        android:layout_width="match_parent"
+
+    <DatePicker
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Ex : 01/01/2000"
-        android:id="@+id/date"
-        android:textAlignment="center"/>
+        android:datePickerMode="spinner"
+        android:spinnersShown="true"
+        android:calendarViewShown="false"
+        android:layout_gravity="center"
+        android:id="@+id/date"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:visibility="visible"
         android:text="Sauvegarder"
         android:id="@+id/Save"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="La date doit être inférieur ou égale à la date d(aujourd'hui"
+        android:id="@+id/inf"
+        android:visibility="invisible"/>
 
 
 </LinearLayout>
