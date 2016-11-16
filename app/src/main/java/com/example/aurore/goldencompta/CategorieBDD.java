@@ -6,7 +6,9 @@ package com.example.aurore.goldencompta;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+
 
 public class CategorieBDD {
 
@@ -47,6 +49,7 @@ public class CategorieBDD {
         //Création d'un ContentValues (fonctionne comme une HashMap)
         ContentValues values = new ContentValues();
         //on lui ajoute une valeur associée à une clé (qui est le nom de la colonne dans laquelle on veut mettre la valeur)
+        values.put(COL_ID, categ.getId());
         values.put(COL_NOM, categ.getNom());
         //on insère l'objet dans la BDD via le ContentValues
         return bdd.insert(TABLE_CATEGORIE, null, values);
