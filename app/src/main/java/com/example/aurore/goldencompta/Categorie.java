@@ -8,6 +8,8 @@ public class Categorie {
     private int id;
     private String nom;
 
+    public Categorie(){};
+
     public Categorie(String nom){
         this.nom=nom;
     }

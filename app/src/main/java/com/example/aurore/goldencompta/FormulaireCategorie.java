@@ -21,8 +21,8 @@ public class FormulaireCategorie extends Activity {
         loginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v){
-                System.out.println("Val Max : "+ Newcategorie.getText());
-                intent.putExtra("MAX", Newcategorie.getText().toString());
+                System.out.println("Intitulé de la nouvelle catégorie : "+ Newcategorie.getText());
+                intent.putExtra("newCateg", Newcategorie.getText().toString());
                 main.setResult(RESULT_OK,intent);
                 finish();
             }

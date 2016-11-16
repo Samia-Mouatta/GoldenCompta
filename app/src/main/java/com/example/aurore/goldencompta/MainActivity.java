@@ -3,25 +3,13 @@ package com.example.aurore.goldencompta;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TableLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-
-import static android.R.id.list;
 
 public class MainActivity extends Activity {
     public final static int CHOOSE_BUTTON_REQUEST = 0;
-    private ListView list ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +49,21 @@ public class MainActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            //Si ok on ajoute dans la base de données correspondante
+            Categorie newCateg = new Categorie(data.getStringExtra("NewCateg"));
+            CategorieBDD categBdd = new CategorieBDD(this);
+            categBdd.open();
+            categBdd.insertCategorie(newCateg);
+            categBdd.close();
+            /*Categ = data.getStringExtra("NewCateg");
+            SaisieintervalleMax.setText(IntervalleMax);
+            intervalleMax = Integer.parseInt(IntervalleMax.toString());*/
+        }
     }
 
     @Override

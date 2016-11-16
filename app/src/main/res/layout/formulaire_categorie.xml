@@ -15,17 +15,17 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Vous pouvez modifier la valeur maximale"
+            android:text="Intitulé de la nouvelle catégorie : "
             android:id="@+id/TextParam2"/>
     </LinearLayout>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="EX :1000"
+        android:hint="EX :Animaux"
         android:id="@+id/newCategorie"
         android:textAlignment="center"
-        android:inputType="number"/>
+        android:inputType="text"/>
 
 
     <Button
