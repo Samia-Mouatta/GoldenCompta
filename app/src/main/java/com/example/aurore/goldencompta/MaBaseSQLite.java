@@ -13,8 +13,9 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 
     public static final String TABLE_DEPENSE = "table_depense";
     private static final String COL_ID_DEPENSE = "id";
-    private static final String COL_DATE = "date";
-    private static final String COL_CATEG = "categorie";
+    public static final String COL_DATE = "date";
+    public static final String COL_CATEG = "categorie";
+    public static final String COL_MONTANT ="montant";
 
 
     public  static final String CREATE_BDD = "CREATE TABLE " + TABLE_CATEGORIE + " ("

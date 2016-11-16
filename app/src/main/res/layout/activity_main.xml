@@ -13,4 +13,12 @@
             android:gravity="center"
             android:text="Test"/>
 
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/main_table"
+            android:background="#8cff9d2c">
+
+        </TableLayout>
+
 </RelativeLayout>

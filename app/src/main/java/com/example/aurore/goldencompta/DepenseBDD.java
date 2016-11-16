@@ -2,6 +2,7 @@ package com.example.aurore.goldencompta;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.text.Format;
@@ -39,6 +40,14 @@ public class DepenseBDD {
     public void close(){
         //on ferme l'accès à la BDD
         bdd.close();
+    }
+
+    public Cursor populateTable(){
+        SQLiteDatabase bdd= maBaseSQLite.getReadableDatabase();
+        String[] columns = {maBaseSQLite.COL_CATEG,maBaseSQLite.COL_DATE,maBaseSQLite.COL_MONTANT};
+        Cursor cursor = bdd.query(maBaseSQLite.TABLE_DEPENSE, columns, null, null, null, null, null);
+
+        return cursor;
     }
 
     public SQLiteDatabase getBDD(){
