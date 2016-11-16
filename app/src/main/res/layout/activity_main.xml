@@ -4,16 +4,10 @@
     android:layout_height="fill_parent"
     android:stretchColumns="*">
     <TextView
-        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/history_display_no"
-        android:layout_weight="0.5"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:text="Test"/>
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:id="@+id/history_display_nom"
-        android:layout_weight="0.5"
-        android:gravity="center"/>
+
 </TableLayout>

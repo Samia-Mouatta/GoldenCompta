@@ -15,20 +15,25 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
+import static android.R.id.list;
+
 public class MainActivity extends Activity {
     public final static int CHOOSE_BUTTON_REQUEST = 0;
-    private TableLayout tableLayout;
+    private ListView list ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        tableLayout=(TableLayout)findViewById(R.id.tableLayout);
 
 
         //Création de l'instance de la classe CategorieBDD
         CategorieBDD categBdd = new CategorieBDD(this);
         Categorie categ = new Categorie("Animaux");
+
+        ArrayList<Categorie> Listcategories = new ArrayList<Categorie>();
 
 
         //On ouvre la base de données pour écrire dedans
@@ -38,7 +43,7 @@ public class MainActivity extends Activity {
 
 
         //Pour vérifier que l'on a bien créé notre catégorie dans la BDD
-        //on extrait le livre de la BDD grâce au titre de la catégorie que l'on a créé précédemment
+        //on extrait la catégorie de la BDD grâce au titre de la catégorie que l'on a créée précédemment
         Categorie categFromBdd = categBdd.getCategorieWithNom(categ.getNom());
         //Si une categorie est retournée (donc si la catégorie à bien été ajoutée à la BDD)
         if(categFromBdd != null){
@@ -50,16 +55,6 @@ public class MainActivity extends Activity {
             categBdd.updateCategorie(categFromBdd.getId(), categFromBdd);
         }
 
-
-        for (int i=0;i<5;i++){
-            View tableRow = LayoutInflater.from(this).inflate(R.layout.activity_main,null,false);
-            TextView history_display_no  = (TextView) tableRow.findViewById(R.id.history_display_no);
-            TextView history_display_date  = (TextView) tableRow.findViewById(R.id.history_display_nom);
-
-            history_display_no.setText(""+(i+1));
-            history_display_date.setText("2014-02-05");
-            tableLayout.addView(tableRow);
-        }
 
         categBdd.close();
     }
@@ -74,6 +69,10 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
+            //Retour à la page d'accueil
+            case R.id.menu_main:
+
+                return true;
             //case R.id.menu_about:
             case R.id.menu_category:
                 // Comportement du bouton "Catégorie"
