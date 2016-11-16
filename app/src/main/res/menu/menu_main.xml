@@ -19,4 +19,9 @@
         app:showAsAction="ifRoom"
         android:icon="@android:drawable/ic_menu_add"
         android:title="Dépense"/>
+    <item
+        android:id="@+id/menu_budget"
+        app:showAsAction="ifRoom"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="Budget"/>
 </menu>

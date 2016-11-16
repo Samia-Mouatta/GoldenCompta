@@ -6,9 +6,10 @@ package com.example.aurore.goldencompta;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class CategorieBDD {
 
@@ -20,6 +21,9 @@ public class CategorieBDD {
     private static final int NUM_COL_ID = 0;
     private static final String COL_NOM = "nom";
     private static final int NUM_COL_NOM = 1;
+
+    private String[] allColumns = { COL_ID,
+            COL_NOM};
 
     private SQLiteDatabase bdd;
 
@@ -36,7 +40,6 @@ public class CategorieBDD {
     }
 
     public void close(){
-        //on ferme l'accès à la BDD
         bdd.close();
     }
 
@@ -44,15 +47,19 @@ public class CategorieBDD {
         return bdd;
     }
 
-
-    public long insertCategorie(Categorie categ){
-        //Création d'un ContentValues (fonctionne comme une HashMap)
+    public Categorie insertCategorie(Categorie categ){
         ContentValues values = new ContentValues();
-        //on lui ajoute une valeur associée à une clé (qui est le nom de la colonne dans laquelle on veut mettre la valeur)
-        values.put(COL_ID, categ.getId());
+        //values.put(COL_ID, categ.getId());
         values.put(COL_NOM, categ.getNom());
-        //on insère l'objet dans la BDD via le ContentValues
-        return bdd.insert(TABLE_CATEGORIE, null, values);
+
+        long insertId = bdd.insert(TABLE_CATEGORIE, null, values);
+        Cursor cursor = bdd.query(TABLE_CATEGORIE,
+                allColumns, COL_ID + " = " + insertId, null,
+                null, null, null);
+        cursor.moveToFirst();
+        Categorie newCat = cursorToCategorie(cursor);
+        cursor.close();
+        return newCat;
     }
 
     public int updateCategorie(int id, Categorie categ){
@@ -74,23 +81,32 @@ public class CategorieBDD {
         return cursorToCategorie(c);
     }
 
-    //Cette méthode permet de convertir un cursor en une catégirie
+
+    public List<Categorie> getAllCategories() {
+        List<Categorie> categories = new ArrayList<Categorie>();
+        Cursor cursor = bdd.query(TABLE_CATEGORIE,
+                allColumns, null, null, null, null, COL_ID + " DESC");
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Categorie categorie = cursorToCategorie(cursor);
+            categories.add(categorie);
+            cursor.moveToNext();
+        }
+        // Make sure to close the cursor
+        cursor.close();
+        return categories;
+    }
+
+    //Cette méthode permet de convertir un cursor en une catégorie
     private Categorie cursorToCategorie(Cursor c){
-        //si aucun élément n'a été retourné dans la requête, on renvoie null
         if (c.getCount() == 0)
             return null;
 
-        //Sinon on se place sur le premier élément
         c.moveToFirst();
-        //On créé une catégorie
-        Categorie categ = new Categorie(c.getString(NUM_COL_NOM));
-        //on lui affecte toutes les infos grâce aux infos contenues dans le Cursor
+        Categorie categ = new Categorie();
         categ.setId(c.getInt(NUM_COL_ID));
         categ.setNom(c.getString(NUM_COL_NOM));
-        //On ferme le cursor
         c.close();
-
-        //On retourne la catégorie
         return categ;
     }
 }
