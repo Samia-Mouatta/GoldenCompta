@@ -18,6 +18,7 @@ public class DepenseBDD {
 
     private static final String TABLE_DEPENSE = "table_depense";
     private static final String COL_ID = "id";
+    private static final String COL_MONTANT ="montant";
     private static final String COL_DATE = "date";
     private static final String COL_CATEG = "categorie";
 
@@ -55,6 +56,7 @@ public class DepenseBDD {
         Format formatter = new SimpleDateFormat("dd/MM/yyyy");
         String s = formatter.format(dep.getDate());
         values.put(COL_DATE, s);
+        values.put(COL_MONTANT, dep.getMontant());
 
         values.put(COL_CATEG, dep.getCategorie().getNom());
         //on insère l'objet dans la BDD via le ContentValues
@@ -70,6 +72,7 @@ public class DepenseBDD {
         String s = formatter.format(dep.getDate());
         values.put(COL_DATE, s);
 
+        values.put(COL_MONTANT, dep.getMontant());
         values.put(COL_CATEG, dep.getCategorie().getNom());
         return bdd.update(TABLE_DEPENSE, values, COL_ID + " = " +id, null);
     }
