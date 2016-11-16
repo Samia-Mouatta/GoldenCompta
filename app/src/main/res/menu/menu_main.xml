@@ -1,11 +1,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-<item
+    <item
         android:id="@+id/menu_main"
         android:showAsAction="ifRoom"
+        android:icon="@android:drawable/btn_default"
         android:title="Page d'accueil"/>
     <item
         android:id="@+id/menu_category"
-        android:icon="@drawable/ic_action_settings"
         android:showAsAction="ifRoom"
+        android:icon="@android:drawable/ic_media_next"
         android:title="Catégorie"/>
+
+    <item
+        android:id="@+id/menu_depense"
+        android:showAsAction="ifRoom"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="Dépense"/>
 </menu>

@@ -79,7 +79,13 @@ public class MainActivity extends Activity {
                 Intent intentCategory = new Intent(this, FormulaireCategorie.class);
                 startActivityForResult(intentCategory, CHOOSE_BUTTON_REQUEST);
                 return true;
+            case R.id.menu_depense:
+                //Comportement du bouton "Dépense"
+                Intent intentDepense = new Intent(this, FormulaireDepense.class);
+                startActivityForResult(intentDepense, CHOOSE_BUTTON_REQUEST);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 }
