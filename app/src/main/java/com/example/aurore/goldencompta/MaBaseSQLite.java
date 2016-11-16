@@ -1,9 +1,5 @@
 package com.example.aurore.goldencompta;
 
-/**
- * Created by roros on 11/11/2016.
- */
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -34,6 +30,27 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         //on crée la table à partir de la requête écrite dans la variable CREATE_BDD
         db.execSQL(CREATE_BDD);
+
+
+        String ROW1 = "INSERT INTO " + TABLE_CATEGORIE + " ( id, nom ) Values ('1','Animaux');";
+        db.execSQL(ROW1);
+
+        String ROW2 = "INSERT INTO " + TABLE_CATEGORIE + " ( id, nom ) Values ('2','Pizza');";
+        db.execSQL(ROW2);
+
+        String ROW3 = "INSERT INTO " + TABLE_CATEGORIE + " ( id, nom ) Values ('3','Courses');";
+        db.execSQL(ROW3);
+
+
+
+        String ROW11 = "INSERT INTO " + TABLE_DEPENSE + " Values ('1','12/06/2009', '120', 'Animaux');";
+        db.execSQL(ROW11);
+
+        String ROW22 = "INSERT INTO " + TABLE_DEPENSE + " Values ('2','13/06/2009', '1650', 'Courses');";
+        db.execSQL(ROW22);
+
+        String ROW33 = "INSERT INTO " + TABLE_DEPENSE + " Values ('3','14/06/2009', '10', 'Pizza');";
+        db.execSQL(ROW33);
     }
 
     @Override

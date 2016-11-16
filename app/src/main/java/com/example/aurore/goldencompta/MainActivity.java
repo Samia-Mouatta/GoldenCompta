@@ -28,7 +28,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-/*
+
         //Création de l'instance de la classe CategorieBDD
         CategorieBDD categBdd = new CategorieBDD(this);
         Categorie categ = new Categorie("Animaux");
@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
         }
 
 
-        categBdd.close();*/
+        categBdd.close();
     }
 
     @Override

@@ -9,7 +9,7 @@ public class Categorie {
     private String nom;
 
     public Categorie(String nom){
-        this.id=1; this.nom=nom;
+        this.nom=nom;
     }
 
     public int getId(){

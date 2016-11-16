@@ -36,7 +36,6 @@ public class CategorieBDD {
     }
 
     public void close(){
-        //on ferme l'accès à la BDD
         bdd.close();
     }
 
@@ -44,14 +43,10 @@ public class CategorieBDD {
         return bdd;
     }
 
-
     public long insertCategorie(Categorie categ){
-        //Création d'un ContentValues (fonctionne comme une HashMap)
         ContentValues values = new ContentValues();
-        //on lui ajoute une valeur associée à une clé (qui est le nom de la colonne dans laquelle on veut mettre la valeur)
-        values.put(COL_ID, categ.getId());
+        //values.put(COL_ID, categ.getId());
         values.put(COL_NOM, categ.getNom());
-        //on insère l'objet dans la BDD via le ContentValues
         return bdd.insert(TABLE_CATEGORIE, null, values);
     }
 
