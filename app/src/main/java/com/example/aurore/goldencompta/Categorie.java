@@ -34,3 +34,4 @@ public class Categorie {
         return "Id : "+id+"\nNom : "+nom+"\n";
     }
 }
+

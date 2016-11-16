@@ -42,6 +42,7 @@ public class CategorieBDD {
         return bdd;
     }
 
+
     public long insertCategorie(Categorie categ){
         //Création d'un ContentValues (fonctionne comme une HashMap)
         ContentValues values = new ContentValues();

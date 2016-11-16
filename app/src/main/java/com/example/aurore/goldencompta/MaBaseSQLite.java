@@ -35,5 +35,4 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE " + TABLE_CATEGORIE + ";");
         onCreate(db);
     }
-
 }

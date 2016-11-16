@@ -27,6 +27,5 @@ public class FormulaireCategorie extends Activity {
                 finish();
             }
         });
-
     }
 }
