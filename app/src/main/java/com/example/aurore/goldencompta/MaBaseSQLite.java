@@ -32,13 +32,13 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
         db.execSQL(CREATE_BDD);
 
 
-        String ROW1 = "INSERT INTO " + TABLE_CATEGORIE + " ( id, nom ) Values ('1','Animaux');";
+        String ROW1 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('1','Animaux');";
         db.execSQL(ROW1);
 
-        String ROW2 = "INSERT INTO " + TABLE_CATEGORIE + " ( id, nom ) Values ('2','Pizza');";
+        String ROW2 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('2','Pizza');";
         db.execSQL(ROW2);
 
-        String ROW3 = "INSERT INTO " + TABLE_CATEGORIE + " ( id, nom ) Values ('3','Courses');";
+        String ROW3 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('3','Courses');";
         db.execSQL(ROW3);
 
 

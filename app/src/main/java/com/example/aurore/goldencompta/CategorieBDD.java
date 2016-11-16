@@ -77,7 +77,6 @@ public class CategorieBDD {
 
         //Sinon on se place sur le premier élément
         c.moveToFirst();
-        //On créé une catégorie
         Categorie categ = new Categorie(c.getString(NUM_COL_NOM));
         //on lui affecte toutes les infos grâce aux infos contenues dans le Cursor
         categ.setId(c.getInt(NUM_COL_ID));

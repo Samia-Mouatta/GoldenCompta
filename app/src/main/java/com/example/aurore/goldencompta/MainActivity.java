@@ -31,7 +31,7 @@ public class MainActivity extends Activity {
 
         //Création de l'instance de la classe CategorieBDD
         CategorieBDD categBdd = new CategorieBDD(this);
-        Categorie categ = new Categorie("Animaux");
+        Categorie categ = new Categorie("TestBDD");
 
 
         //On ouvre la base de données pour écrire dedans
