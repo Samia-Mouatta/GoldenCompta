@@ -20,7 +20,7 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 
     public  static final String CREATE_BDD = "CREATE TABLE " + TABLE_CATEGORIE + " ("
             + COL_ID_CATEG + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_NOM + " TEXT NOT NULL); " +
-            "CREATE TABLE "+ TABLE_DEPENSE + " (" + COL_ID_DEPENSE + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ COL_MONTANT + " TEXT NOT NULL "
+            "CREATE TABLE "+ TABLE_DEPENSE + " (" + COL_ID_DEPENSE + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ COL_MONTANT + " REAL NOT NULL "
             + COL_DATE + " DATE NOT NULL, " + COL_CATEG + "); ";
 
     public MaBaseSQLite(Context context, String name, CursorFactory factory, int version) {
