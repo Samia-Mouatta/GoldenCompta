@@ -20,7 +20,7 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 
     public  static final String CREATE_BDD = "CREATE TABLE " + TABLE_CATEGORIE + " ("
             + COL_ID_CATEG + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_NOM + " TEXT NOT NULL); " +
-            "CREATE TABLE "+ TABLE_DEPENSE + " (" + COL_ID_DEPENSE + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            "CREATE TABLE "+ TABLE_DEPENSE + " (" + COL_ID_DEPENSE + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ COL_MONTANT + " REAL NOT NULL "
             + COL_DATE + " DATE NOT NULL, " + COL_CATEG + "); ";
 
     public MaBaseSQLite(Context context, String name, CursorFactory factory, int version) {
@@ -44,13 +44,13 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 
 
 
-        String ROW11 = "INSERT INTO " + TABLE_DEPENSE + " Values ('1','12/06/2009', '120', 'Animaux');";
+        String ROW11 = "INSERT INTO " + TABLE_DEPENSE + " Values ('1', '12,20,'12/06/2009', '120', 'Animaux');";
         db.execSQL(ROW11);
 
-        String ROW22 = "INSERT INTO " + TABLE_DEPENSE + " Values ('2','13/06/2009', '1650', 'Courses');";
+        String ROW22 = "INSERT INTO " + TABLE_DEPENSE + " Values ('2','56,32,'13/06/2009', '1650', 'Courses');";
         db.execSQL(ROW22);
 
-        String ROW33 = "INSERT INTO " + TABLE_DEPENSE + " Values ('3','14/06/2009', '10', 'Pizza');";
+        String ROW33 = "INSERT INTO " + TABLE_DEPENSE + " Values ('3','14,50','14/06/2009', '10', 'Pizza');";
         db.execSQL(ROW33);
     }
 

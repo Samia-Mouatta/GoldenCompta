@@ -20,6 +20,8 @@ public class FormulaireDepense extends Activity {
     String d, dBis;
     Date systeme = new Date();
     Date saisi;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
