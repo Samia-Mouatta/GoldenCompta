@@ -10,8 +10,8 @@ import android.widget.*;
 
 public class MainActivity extends Activity {
     public final static int CHOOSE_BUTTON_REQUEST = 0;
-    /*public DepenseBDD depense;
-    private TableLayout t1;*/
+    /*DepenseBDD depense;
+    TableLayout t1;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,45 +96,44 @@ public class MainActivity extends Activity {
                 return super.onOptionsItemSelected(item);
         }
     }
- /* affichage tableau
+/*
     private void BuildTable() {
-        Cursor mCur = depense.populateTable();
-       System.out.println("Successfully inserted a row at "+mCur.getCount());
-        if (mCur.getCount() != 0) {
-            if (mCur.moveToFirst()) {
-                do {
-                    int rows = mCur.getCount();
-                    int cols = mCur.getColumnCount();
 
-                    // outer for loop
-                    for (int i = 0; i < rows; i++) {
+        depense.open();
+        Cursor c = depense.populateTable();
 
-                        TableRow row = new TableRow(this);
-                        TableLayout.LayoutParams tableRowParams=
-                                new TableLayout.LayoutParams
-                                        (TableLayout.LayoutParams.MATCH_PARENT,TableLayout.LayoutParams.WRAP_CONTENT);
-                        row.setLayoutParams(tableRowParams);
+        int rows = c.getCount();
+        int cols = c.getColumnCount();
 
-                        // inner for loop
-                        for (int j = 0; j < cols; j++) {
+        c.moveToFirst();
 
-                            TextView tv = new TextView(this);
-                            tv.setLayoutParams(new ViewGroup.LayoutParams(
-                                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                                    ViewGroup.LayoutParams.WRAP_CONTENT));
-                            tv.setGravity(Gravity.CENTER);
-                            tv.setTextSize(18);
-                            tv.setPadding(0, 5, 0, 5);
+        // outer for loop
+        for (int i = 0; i < rows; i++) {
 
-                            tv.setText(mCur.getString(j));
-                            row.addView(tv);
+            TableRow row = new TableRow(this);
+            row.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 
-                        }
-                        t1.addView(row);
-                    }
-                } while (mCur.moveToNext());
+            // inner for loop
+            for (int j = 0; j < cols; j++) {
+
+                TextView tv = new TextView(this);
+                tv.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+                //tv.setBackgroundResource(R.drawable.cell_shape);
+                tv.setGravity(Gravity.CENTER);
+                tv.setTextSize(18);
+                tv.setPadding(0, 5, 0, 5);
+
+                tv.setText(c.getString(j));
+
+                row.addView(tv);
+
             }
+
+            c.moveToNext();
+
+            t1.addView(row);
+
         }
-    }
-*/
+        depense.close();
+    }*/
 }
