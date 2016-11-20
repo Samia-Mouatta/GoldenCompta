@@ -13,12 +13,20 @@
             android:gravity="center"
             android:text="Test"/>
 
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/main_table"
-            android:background="#8cff9d2c">
 
-        </TableLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+                <TableLayout
+                    android:id="@+id/main_table"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp"
+                    android:shrinkColumns="*"
+                    android:stretchColumns="*">
+                </TableLayout>
+        </ScrollView>
+
 
 </RelativeLayout>

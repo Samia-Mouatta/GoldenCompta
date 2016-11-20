@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.*;
-import android.widget.ListView;
+import android.widget.TableRow;
+import android.widget.TableLayout;
+import android.widget.TableRow.LayoutParams;
 import android.widget.*;
 
 public class MainActivity extends Activity {
     public final static int CHOOSE_BUTTON_REQUEST = 0;
-    /*DepenseBDD depense;
+   /* DepenseBDD depense;
     TableLayout t1;*/
 
     @Override
@@ -47,9 +49,6 @@ public class MainActivity extends Activity {
 
 
         categBdd.close();
-/*
-        depense = new DepenseBDD(this);
-        BuildTable();*/
     }
 
     @Override

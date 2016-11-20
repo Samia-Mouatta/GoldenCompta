@@ -80,14 +80,15 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 
 
 
-        String ROW11 = "INSERT INTO " + TABLE_DEPENSE + " Values ('1', '12,20,'12/06/2009', '120', 'Animaux');";
+        String ROW11 = "INSERT INTO " + TABLE_DEPENSE + " Values ('1', '12,20','12/06/2009', '120', 'Animaux');";
         db.execSQL(ROW11);
 
-        String ROW22 = "INSERT INTO " + TABLE_DEPENSE + " Values ('2','56,32,'13/06/2009', '1650', 'Courses');";
+        String ROW22 = "INSERT INTO " + TABLE_DEPENSE + " Values ('2','56,32','13/06/2009', '1650', 'Courses');";
         db.execSQL(ROW22);
 
         String ROW33 = "INSERT INTO " + TABLE_DEPENSE + " Values ('3','14,50','14/06/2009', '10', 'Pizza');";
         db.execSQL(ROW33);
+
     }
 
     @Override
