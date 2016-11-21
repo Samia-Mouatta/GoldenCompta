@@ -43,7 +43,7 @@ public class DepenseBDD {
     }
 
     public Cursor populateTable(){
-        SQLiteDatabase bdd= maBaseSQLite.getReadableDatabase();
+
         String[] columns = {maBaseSQLite.COL_CATEG,maBaseSQLite.COL_DATE,maBaseSQLite.COL_MONTANT};
         Cursor cursor = bdd.query(maBaseSQLite.TABLE_DEPENSE, columns, null, null, null, null, null);
 

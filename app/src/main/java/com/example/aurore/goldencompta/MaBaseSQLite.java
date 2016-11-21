@@ -42,16 +42,53 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
         String ROW3 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('3','Courses');";
         db.execSQL(ROW3);
 
+        String ROW4 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('4','Pharmacie');";
+        db.execSQL(ROW4);
+
+        String ROW5 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('5','Médecin');";
+        db.execSQL(ROW5);
+
+        String ROW6 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('6','Electricité');";
+        db.execSQL(ROW6);
+
+        String ROW7 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('7','Assurances');";
+        db.execSQL(ROW7);
+
+        String ROW8 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('8','Logement');";
+        db.execSQL(ROW8);
+
+        String ROW9 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('9','Transports');";
+        db.execSQL(ROW9);
+
+        String ROW10 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('10','Sports');";
+        db.execSQL(ROW10);
+
+        String ROW12 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('12','Voyages');";
+        db.execSQL(ROW12);
+
+        String ROW13 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('13','Vêtements');";
+        db.execSQL(ROW13);
+
+        String ROW14 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('14','Restaurants');";
+        db.execSQL(ROW14);
+
+        String ROW15 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('15','Loisirs');"; //cinéma - théatre - spéctacle ...
+        db.execSQL(ROW15);
+
+        String ROW16 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('16','Cadeaux');";
+        db.execSQL(ROW16);
 
 
-        String ROW11 = "INSERT INTO " + TABLE_DEPENSE + " Values ('1', '12,20,'12/06/2009', '120', 'Animaux');";
+
+        String ROW11 = "INSERT INTO " + TABLE_DEPENSE + " Values ('1', '12,20','12/06/2009', '120', 'Animaux');";
         db.execSQL(ROW11);
 
-        String ROW22 = "INSERT INTO " + TABLE_DEPENSE + " Values ('2','56,32,'13/06/2009', '1650', 'Courses');";
+        String ROW22 = "INSERT INTO " + TABLE_DEPENSE + " Values ('2','56,32','13/06/2009', '1650', 'Courses');";
         db.execSQL(ROW22);
 
         String ROW33 = "INSERT INTO " + TABLE_DEPENSE + " Values ('3','14,50','14/06/2009', '10', 'Pizza');";
         db.execSQL(ROW33);
+
     }
 
     @Override
