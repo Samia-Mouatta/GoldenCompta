@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class FormulaireCategorie extends Activity {
     Activity main = this;
@@ -22,9 +23,16 @@ public class FormulaireCategorie extends Activity {
             @Override
             public void onClick(View v){
                 System.out.println("Intitulé de la nouvelle catégorie : "+ Newcategorie.getText());
-                intent.putExtra("newCateg", Newcategorie.getText().toString());
-                main.setResult(RESULT_OK,intent);
-                finish();
+                String categ= Newcategorie.getText().toString();
+                // si le champ catégorie est vide
+                if (categ.equals("")) {
+                    Toast.makeText(FormulaireCategorie.this,R.string.categorie_existe, Toast.LENGTH_SHORT).show();
+                }else {
+                    intent.putExtra("newCateg", Newcategorie.getText().toString());
+                    main.setResult(RESULT_OK, intent);
+                    finish();
+                }
+
             }
         });
     }

@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.view.View.OnClickListener;
+import android.widget.Toast;
 
 import java.util.Date;
 
@@ -40,20 +41,25 @@ public class FormulaireDepense extends Activity {
 
         save.setOnClickListener(new OnClickListener(){
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
 
+                String categ = categorie.getText().toString();
+                // si le champ catégorie est vide
+                if (categ.equals("")) {
+                    Toast.makeText(FormulaireDepense.this,R.string.champ_vide, Toast.LENGTH_SHORT).show();
+                }else {
+                    dBis = date.getYear() + "/" + (date.getMonth() + 1) + "/" + date.getDayOfMonth();
+                    saisi = new Date(dBis);
 
-                dBis =  date.getYear()+"/" + (date.getMonth()+1) +"/"+date.getDayOfMonth();
-                saisi = new Date(dBis);
-
-                if(saisi.before(systeme) || saisi.equals(systeme)) {
-                    //System.out.println(saisi.toString());
-                    d =  date.getDayOfMonth() +"/" + (date.getMonth()+1) +"/"+date.getYear();
-                    main.setResult(RESULT_OK, intent);
-                    finish();
-                }else{
-                    inferieur.setVisibility(View.VISIBLE);
+                    if (saisi.before(systeme) || saisi.equals(systeme)) {
+                        //System.out.println(saisi.toString());
+                        d = date.getDayOfMonth() + "/" + (date.getMonth() + 1) + "/" + date.getYear();
+                        main.setResult(RESULT_OK, intent);
+                        finish();
+                    } else {
+                        inferieur.setVisibility(View.VISIBLE);
                 }
+
 
                 /*
                 System.out.println("Date du calendrier2 : " + d);
@@ -66,7 +72,7 @@ public class FormulaireDepense extends Activity {
                 intent.putExtra("CATEGORIE", categorie.getText().toString());
                 intent.putExtra("DATE", d);
 
-
+               }
             }
         });
 
