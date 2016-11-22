@@ -3,12 +3,18 @@ package com.example.aurore.goldencompta;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.view.*;
-import android.widget.TableRow;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TableRow.LayoutParams;
-import android.widget.*;
+import android.widget.TextView;
+import android.widget.Toast;
+
 
 public class MainActivity extends Activity {
     public final static int CHOOSE_BUTTON_REQUEST = 0;
@@ -20,12 +26,19 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       // t1 = (TableLayout) findViewById(R.id.main_table);
-
+//        Intent intentBDD = new Intent(this, MaBaseSQLite.class);
+//        startActivityForResult(intentBDD, CHOOSE_BUTTON_REQUEST);
+//        startActivityForResult(intentBDD, CHOOSE_BUTTON_REQUEST);
+        // t1 = (TableLayout) findViewById(R.id.main_table);
+//        MaBaseSQLite DataBase = new MaBaseSQLite();
 
         //Création de l'instance de la classe CategorieBDD
         CategorieBDD categBdd = new CategorieBDD(this);
         Categorie categ = new Categorie("TestBDD");
+
+        //Création de l'instance de la classe DepenseBDD
+        DepenseBDD depenseBdd = new DepenseBDD(this);
+        Depense depens = new Depense();
 
 
         //On ouvre la base de données pour écrire dedans
@@ -38,7 +51,7 @@ public class MainActivity extends Activity {
         //on extrait la catégorie de la BDD grâce au titre de la catégorie que l'on a créée précédemment
         Categorie categFromBdd = categBdd.getCategorieWithNom(categ.getNom());
         //Si une categorie est retournée (donc si la catégorie à bien été ajoutée à la BDD)
-        if(categFromBdd != null){
+        if (categFromBdd != null) {
             //On affiche les infos de la catégorie dans un Toast
             Toast.makeText(this, categFromBdd.toString(), Toast.LENGTH_LONG).show();
             //On modifie le titre du livre
@@ -49,6 +62,53 @@ public class MainActivity extends Activity {
 
 
         categBdd.close();
+
+        //Affichage du tableau----------------------------------------------------------------------
+        TableLayout tl = (TableLayout) findViewById(R.id.tdyn);
+        TableRow tr;
+//        depenseBdd.open();
+        Cursor lesDepenses = depenseBdd.selectDepense();
+        String contenu = "ok";
+
+
+        LayoutParams layoutParams = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+        layoutParams.setMargins(2, 2, 2, 2);
+
+        if (lesDepenses.moveToFirst()) {
+
+
+        for (int i = 0; i < depenseBdd.selectDepense().getCount(); i++) {
+
+//            contenu = Integer.toString(depenseBdd.selectDepense(1));
+            tr = new TableRow(this);
+            tr.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+            tr.addView(generateTextView(lesDepenses.getString(0), layoutParams));
+            tr.addView(generateTextView(lesDepenses.getString(1), layoutParams));
+            tl.addView(tr, layoutParams);
+            lesDepenses.moveToNext();
+        }
+    }
+//        depenseBdd.close();
+
+    }
+
+    public TextView generateTextView(String texte, LayoutParams ly) {
+        TextView result = new TextView(this);
+        result.setBackgroundColor(Color.LTGRAY);
+        result.setTextColor(Color.DKGRAY);
+        result.setGravity(Gravity.CENTER);
+        result.setPadding(2, 2, 2, 2);
+        result.setText(texte);
+        result.setTextSize(20);
+        result.setVisibility(View.VISIBLE);
+        result.setLayoutParams(ly);
+        return result;
+
+        //Fin affichage du tableau------------------------------------------------------------------
+/*
+        depense = new DepenseBDD(this);
+        BuildTable();*/
+
     }
 
     @Override
@@ -91,10 +151,16 @@ public class MainActivity extends Activity {
                 Intent intentDepense = new Intent(this, FormulaireDepense.class);
                 startActivityForResult(intentDepense, CHOOSE_BUTTON_REQUEST);
                 return true;
+            case R.id.menu_budget:
+                //Comportement du bouton "budget"
+                Intent intentBudget = new Intent(this, FormulaireBudget.class);
+                startActivityForResult(intentBudget, CHOOSE_BUTTON_REQUEST);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
 /*
     private void BuildTable() {
 
@@ -135,4 +201,49 @@ public class MainActivity extends Activity {
         }
         depense.close();
     }*/
+
+
+//// affichage tableau
+//    private void BuildTable() {
+//        DepenseBDD depense = new DepenseBDD(this);
+//        Cursor mCur = depense.populateTable();
+//       System.out.println("Successfully inserted a row at "+mCur.getCount());
+//        if (mCur.getCount() != 0) {
+//            if (mCur.moveToFirst()) {
+//                do {
+//                    int rows = mCur.getCount();
+//                    int cols = mCur.getColumnCount();
+//
+//                    // outer for loop
+//                    for (int i = 0; i < rows; i++) {
+//
+//                        TableRow row = new TableRow(this);
+//                        TableLayout.LayoutParams tableRowParams=
+//                                new TableLayout.LayoutParams
+//                                        (TableLayout.LayoutParams.MATCH_PARENT,TableLayout.LayoutParams.WRAP_CONTENT);
+//                        row.setLayoutParams(tableRowParams);
+//
+//                        // inner for loop
+//                        for (int j = 0; j < cols; j++) {
+//
+//                            TextView tv = new TextView(this);
+//                            tv.setLayoutParams(new ViewGroup.LayoutParams(
+//                                    ViewGroup.LayoutParams.WRAP_CONTENT,
+//                                    ViewGroup.LayoutParams.WRAP_CONTENT));
+//                            tv.setGravity(Gravity.CENTER);
+//                            tv.setTextSize(18);
+//                            tv.setPadding(0, 5, 0, 5);
+//
+//                            tv.setText(mCur.getString(j));
+//                            row.addView(tv);
+//
+//                        }
+//                        t1.addView(row);
+//                    }
+//                } while (mCur.moveToNext());
+//            }
+//        }
+//    }
+
+
 }
