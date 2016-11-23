@@ -13,7 +13,7 @@ import java.util.List;
 
 public class CategorieBDD {
 
-    private static final int VERSION_BDD = 1;
+    private static final int VERSION_BDD = 3;
     private static final String NOM_BDD = "goldenCompta.db";
 
     private static final String TABLE_CATEGORIE = "table_categorie";
@@ -24,6 +24,8 @@ public class CategorieBDD {
 
     private String[] allColumns = { COL_ID,
             COL_NOM};
+
+    private String[] colNom = { COL_NOM};
 
     private SQLiteDatabase bdd;
 
@@ -97,6 +99,24 @@ public class CategorieBDD {
         return categories;
     }
 
+    public List<String> getAllCategoriesName(){
+        List<String> listeCategories = new ArrayList<String>();
+        String nomCategorie = " " ;
+        Cursor cursor = bdd.query(TABLE_CATEGORIE,
+                colNom, null, null, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            nomCategorie = cursor.getString(0);
+            listeCategories.add(nomCategorie);
+            cursor.moveToNext();
+        }
+        // Make sure to close the cursor
+        cursor.close();
+        return listeCategories;
+
+    }
+
     //Cette méthode permet de convertir un cursor en une catégorie
     private Categorie cursorToCategorie(Cursor c){
         if (c.getCount() == 0)
@@ -109,4 +129,5 @@ public class CategorieBDD {
         c.close();
         return categ;
     }
+
 }
