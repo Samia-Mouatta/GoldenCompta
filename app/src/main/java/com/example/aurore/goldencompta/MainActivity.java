@@ -10,9 +10,10 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TableRow.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,19 +41,21 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final Button Cat = (Button) findViewById(R.id.Categorie);
+
 //        Intent intentBDD = new Intent(this, MaBaseSQLite.class);
 //        startActivityForResult(intentBDD, CHOOSE_BUTTON_REQUEST);
 //        startActivityForResult(intentBDD, CHOOSE_BUTTON_REQUEST);
         // t1 = (TableLayout) findViewById(R.id.main_table);
 //        MaBaseSQLite DataBase = new MaBaseSQLite();
 
+        //Création de l'instance de la classe DepenseBDD
+        DepenseBDD depenseBdd = new DepenseBDD(this);
+        Cursor lesDepenses = depenseBdd.selectDepense();
+
         //Création de l'instance de la classe CategorieBDD
         CategorieBDD categBdd = new CategorieBDD(this);
         Categorie categ = new Categorie("TestBDD");
-
-        //Création de l'instance de la classe DepenseBDD
-        DepenseBDD depenseBdd = new DepenseBDD(this);
-        Depense depens = new Depense();
 
 
         //On ouvre la base de données pour écrire dedans
@@ -77,71 +80,26 @@ public class MainActivity extends Activity {
 
         categBdd.close();
 
-        //Affichage du tableau----------------------------------------------------------------------
-        TableLayout tl = (TableLayout) findViewById(R.id.tdyn);
-        TableRow tr;
-        TableRow trEntete;
-        String monthTmp = "";
-        String monthDepense = "";
-        Cursor lesDepenses = depenseBdd.selectDepense();
-        String contenu = "ok";
-        String[] tabMois={"Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre"};
-        int nbMonth;
-        LayoutParams linLayout = new LayoutParams();
+        tableauDepenses(lesDepenses);
 
-//
-        LayoutParams layoutParams = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-        layoutParams.setMargins(2, 2, 2, 2);
-
-        if (lesDepenses.moveToFirst())
-            for (int i = 0; i < depenseBdd.selectDepense().getCount(); i++) {
-                monthDepense = lesDepenses.getString(2);
-                monthDepense = monthDepense.substring(3,5);
-
-
-                if (monthDepense == monthTmp || monthTmp == "")  {
-                    nbMonth = parseInt(monthDepense)-1;
-                    trEntete = new TableRow(this);
-                    trEntete.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-                    trEntete.addView(generateTextView(tabMois[nbMonth], layoutParams));
-                    tl.addView(trEntete, layoutParams);
-
-                    monthTmp = monthDepense;
-                }
-
-                tr = new TableRow(this);
-                tr.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-
-                for (int j = 0; j<4 ; j++) {
-                    tr.addView(generateTextView(lesDepenses.getString(j), layoutParams));
-                }
-
-                tl.addView(tr, layoutParams);
-                lesDepenses.moveToNext();
-            }
-//        depenseBdd.close();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-    }
-
-    public TextView generateTextView(String texte, LayoutParams ly) {
-        TextView result = new TextView(this);
-        result.setBackgroundColor(Color.LTGRAY);
-        result.setTextColor(Color.DKGRAY);
-        result.setGravity(Gravity.CENTER);
-        result.setPadding(2, 2, 2, 2);
-        result.setText(texte);
-        result.setTextSize(20);
-        result.setVisibility(View.VISIBLE);
-        result.setLayoutParams(ly);
-        return result;
-
-        //Fin affichage du tableau------------------------------------------------------------------
+        Cursor lesDepenses2 = depenseBdd.selectDepenseByCat();
+        tableauDepenses(lesDepenses2);
 /*
         depense = new DepenseBDD(this);
         BuildTable();*/
+
+        Cat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//
+                LinearLayout ll = (LinearLayout) findViewById(R.id.lay);
+                ll.removeAllViews();
+//                DepenseBDD depenseBdd = new DepenseBDD(MainActivity.this);
+//                Cursor lesDepenses = depenseBdd.selectDepenseByCat();
+//                tableauDepenses(lesDepenses);
+
+            }
+        });
 
     }
 
@@ -231,7 +189,69 @@ public class MainActivity extends Activity {
         client.disconnect();
     }
 
-/*
+    public void tableauDepenses(Cursor lesDepenses){
+
+        TableLayout tl = (TableLayout) findViewById(R.id.tdyn);
+        TableRow tr;
+        TableRow trEntete;
+        String monthTmp = "";
+        String monthDepense = "";
+        String contenu = "ok";
+        String[] tabMois={"Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre"};
+        int nbMonth;
+        TableRow.LayoutParams linLayout = new TableRow.LayoutParams();
+
+//
+        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.FILL_PARENT);
+        layoutParams.setMargins(2, 2, 2, 2);
+
+        if (lesDepenses.moveToFirst())
+            for (int i = 0; i < lesDepenses.getCount(); i++) {
+                monthDepense = lesDepenses.getString(2);
+                monthDepense = monthDepense.substring(3,5);
+
+
+                if (monthDepense == monthTmp || monthTmp == "")  {
+                    nbMonth = parseInt(monthDepense)-1;
+                    trEntete = new TableRow(this);
+                    trEntete.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                    trEntete.addView(generateTextView(tabMois[nbMonth], layoutParams));
+                    tl.addView(trEntete, layoutParams);
+
+                    monthTmp = monthDepense;
+                }
+
+                tr = new TableRow(this);
+                tr.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+
+                for (int j = 0; j<4 ; j++) {
+                    tr.addView(generateTextView(lesDepenses.getString(j), layoutParams));
+                }
+
+                tl.addView(tr, layoutParams);
+                lesDepenses.moveToNext();
+            }
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    public TextView generateTextView(String texte, TableRow.LayoutParams ly) {
+        TextView result = new TextView(this);
+        result.setBackgroundColor(Color.LTGRAY);
+        result.setTextColor(Color.DKGRAY);
+        result.setGravity(Gravity.CENTER);
+        result.setPadding(2, 2, 2, 2);
+        result.setText(texte);
+        result.setTextSize(20);
+        result.setVisibility(View.VISIBLE);
+        result.setLayoutParams(ly);
+        return result;
+    }
+
+
+    /*
     private void BuildTable() {
 
         depense.open();

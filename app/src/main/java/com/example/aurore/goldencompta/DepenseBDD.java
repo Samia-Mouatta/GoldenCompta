@@ -107,7 +107,17 @@ public class DepenseBDD {
         String TABLE_NAME = "table_depense";
         this.open();
 
-            return bdd.rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY categorie", null);
+        return bdd.rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY date", null);
+
+
+    }
+
+    public Cursor selectDepenseByCat(){
+
+        String TABLE_NAME = "table_depense";
+        this.open();
+
+        return bdd.rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY categorie", null);
 
 
     }
