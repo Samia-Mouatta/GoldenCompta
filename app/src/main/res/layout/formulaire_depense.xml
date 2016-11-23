@@ -24,7 +24,7 @@
         android:hint="EX :1000"
         android:id="@+id/newDepense"
         android:textAlignment="center"
-        android:inputType="number"/>
+        android:inputType="numberDecimal"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -32,14 +32,11 @@
         android:text="Vous pouvez donner la catégorie associée à la dépense"
         android:id="@+id/TextParam2"/>
 
-
-
-    <EditText
+    <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Ex : Vetement"
-        android:id="@+id/Categorie"
-        android:textAlignment="center" />
+        android:id="@+id/spinnerC"/>
+
 
 
     <DatePicker
@@ -62,7 +59,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="La date doit être inférieur ou égale à la date d(aujourd'hui"
+        android:text="La date doit être inférieur ou égale à la date d'aujourd'hui"
         android:id="@+id/inf"
         android:visibility="invisible"/>
 
