@@ -18,8 +18,9 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
     public final static int CHOOSE_BUTTON_REQUEST = 0;
-   /* DepenseBDD depense;
-    TableLayout t1;*/
+    DepenseBDD depense;
+    TableLayout t1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +68,7 @@ public class MainActivity extends Activity {
         TableLayout tl = (TableLayout) findViewById(R.id.tdyn);
         TableRow tr;
 //        depenseBdd.open();
-        Cursor lesDepenses = depenseBdd.selectDepense();
+        Cursor lesDepenses = depenseBdd.populateTable();
         String contenu = "ok";
 
 
@@ -77,7 +78,7 @@ public class MainActivity extends Activity {
         if (lesDepenses.moveToFirst()) {
 
 
-        for (int i = 0; i < depenseBdd.selectDepense().getCount(); i++) {
+        for (int i = 0; i < depenseBdd.populateTable().getCount(); i++) {
 
 //            contenu = Integer.toString(depenseBdd.selectDepense(1));
             tr = new TableRow(this);
