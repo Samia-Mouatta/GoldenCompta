@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 
 public class DepenseBDD {
 
-    private static final int VERSION_BDD = 1;
+    private static final int VERSION_BDD = 4;
     private static final String NOM_BDD = "goldenCompta.db";
 
     private static final String TABLE_DEPENSE = "table_depense";
@@ -89,5 +89,26 @@ public class DepenseBDD {
     public int removeDepenseWithID(int id){
         //Suppression d'une dépense de la BDD grâce à l'ID
         return bdd.delete(TABLE_DEPENSE, COL_ID + " = " +id, null);
+    }
+
+    public Cursor selectDepense(){
+
+//        String[] columns = {maBaseSQLite.COL_CATEG,maBaseSQLite.COL_DATE,maBaseSQLite.COL_MONTANT};
+////        Cursor cursor = bdd.query(maBaseSQLite.TABLE_DEPENSE, columns, null, null, null, null, null);
+////        return cursor;
+//
+//        SQLiteDatabase bdd= maBaseSQLite.getReadableDatabase();
+////        Cursor c = bdd.rawQuery("select " + "*" + " from " + "table_depense", new String[]{"1"});
+////        return c;
+//        Cursor cursor = bdd.query(TABLE_DEPENSE,
+//                columns, null, null, null, null, COL_ID + " DESC");
+//        return cursor;
+
+        String TABLE_NAME = "table_depense";
+        this.open();
+
+            return bdd.rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY categorie", null);
+
+
     }
 }
