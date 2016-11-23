@@ -16,7 +16,6 @@ import android.widget.TableRow.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
@@ -88,8 +87,9 @@ public class MainActivity extends Activity {
         String contenu = "ok";
         String[] tabMois={"Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre"};
         int nbMonth;
+        LayoutParams linLayout = new LayoutParams();
 
-
+//
         LayoutParams layoutParams = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
         layoutParams.setMargins(2, 2, 2, 2);
 
@@ -97,8 +97,6 @@ public class MainActivity extends Activity {
             for (int i = 0; i < depenseBdd.selectDepense().getCount(); i++) {
                 monthDepense = lesDepenses.getString(2);
                 monthDepense = monthDepense.substring(3,5);
-
-
 
 
                 if (monthDepense == monthTmp || monthTmp == "")  {
@@ -113,11 +111,11 @@ public class MainActivity extends Activity {
 
                 tr = new TableRow(this);
                 tr.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-                tr.addView(generateTextView(lesDepenses.getString(0), layoutParams));
-                tr.addView(generateTextView(lesDepenses.getString(1), layoutParams));
-                tr.addView(generateTextView(lesDepenses.getString(2), layoutParams));
-                tr.addView(generateTextView(lesDepenses.getString(3), layoutParams));
-                tr.addView(generateTextView(monthDepense, layoutParams));
+
+                for (int j = 0; j<4 ; j++) {
+                    tr.addView(generateTextView(lesDepenses.getString(j), layoutParams));
+                }
+
                 tl.addView(tr, layoutParams);
                 lesDepenses.moveToNext();
             }
