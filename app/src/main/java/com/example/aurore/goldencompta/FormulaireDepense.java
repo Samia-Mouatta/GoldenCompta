@@ -60,6 +60,7 @@ public class FormulaireDepense extends Activity {
                 (android.R.layout.simple_spinner_dropdown_item);
 
         spinner.setAdapter(dataAdapter);
+        //loadSpinnerData();
 
         save.setOnClickListener(new OnClickListener(){
             @Override
@@ -69,11 +70,8 @@ public class FormulaireDepense extends Activity {
                 String cat = spinner.getSelectedItem().toString();
                 // si le champ catégorie est vide
                 if (dep.equals("")) {
-                    Toast.makeText(FormulaireDepense.this,"Les champs doivent etre ", Toast.LENGTH_SHORT).show();
-                }else if() {
-
-
-                } else {
+                    Toast.makeText(FormulaireDepense.this,R.string.champ_vide, Toast.LENGTH_SHORT).show();
+                }else {
                     dBis = date.getYear() + "/" + (date.getMonth() + 1) + "/" + date.getDayOfMonth();
                     saisi = new Date(dBis);
 

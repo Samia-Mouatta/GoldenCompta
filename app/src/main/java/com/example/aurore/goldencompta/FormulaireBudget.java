@@ -26,6 +26,7 @@ public class FormulaireBudget extends Activity {
 
         final String budget;
         final String BUD = "budget";
+        final String Test = "budget";
         final Intent intent = new Intent();
         final Button save = (Button) findViewById(R.id.Save);
         final TextView montantActuel = (TextView) findViewById(R.id.MontantActuel);
