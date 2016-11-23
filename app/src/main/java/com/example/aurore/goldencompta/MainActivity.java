@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
@@ -16,13 +17,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
+
+import static java.lang.Integer.parseInt;
+
+
 public class MainActivity extends Activity {
     public final static int CHOOSE_BUTTON_REQUEST = 0;
     DepenseBDD depense;
     TableLayout t1;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
-
-    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,30 +81,51 @@ public class MainActivity extends Activity {
         //Affichage du tableau----------------------------------------------------------------------
         TableLayout tl = (TableLayout) findViewById(R.id.tdyn);
         TableRow tr;
-//        depenseBdd.open();
-        Cursor lesDepenses = depenseBdd.populateTable();
+        TableRow trEntete;
+        String monthTmp = "";
+        String monthDepense = "";
+        Cursor lesDepenses = depenseBdd.selectDepense();
         String contenu = "ok";
+        String[] tabMois={"Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre"};
+        int nbMonth;
 
 
         LayoutParams layoutParams = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
         layoutParams.setMargins(2, 2, 2, 2);
 
-        if (lesDepenses.moveToFirst()) {
+        if (lesDepenses.moveToFirst())
+            for (int i = 0; i < depenseBdd.selectDepense().getCount(); i++) {
+                monthDepense = lesDepenses.getString(2);
+                monthDepense = monthDepense.substring(3,5);
 
 
-        for (int i = 0; i < depenseBdd.populateTable().getCount(); i++) {
 
-//            contenu = Integer.toString(depenseBdd.selectDepense(1));
-            tr = new TableRow(this);
-            tr.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-            tr.addView(generateTextView(lesDepenses.getString(0), layoutParams));
-            tr.addView(generateTextView(lesDepenses.getString(1), layoutParams));
-            tl.addView(tr, layoutParams);
-            lesDepenses.moveToNext();
-        }
-    }
+
+                if (monthDepense == monthTmp || monthTmp == "")  {
+                    nbMonth = parseInt(monthDepense)-1;
+                    trEntete = new TableRow(this);
+                    trEntete.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+                    trEntete.addView(generateTextView(tabMois[nbMonth], layoutParams));
+                    tl.addView(trEntete, layoutParams);
+
+                    monthTmp = monthDepense;
+                }
+
+                tr = new TableRow(this);
+                tr.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+                tr.addView(generateTextView(lesDepenses.getString(0), layoutParams));
+                tr.addView(generateTextView(lesDepenses.getString(1), layoutParams));
+                tr.addView(generateTextView(lesDepenses.getString(2), layoutParams));
+                tr.addView(generateTextView(lesDepenses.getString(3), layoutParams));
+                tr.addView(generateTextView(monthDepense, layoutParams));
+                tl.addView(tr, layoutParams);
+                lesDepenses.moveToNext();
+            }
 //        depenseBdd.close();
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     public TextView generateTextView(String texte, LayoutParams ly) {
@@ -162,6 +195,42 @@ public class MainActivity extends Activity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Main Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
     }
 
 /*
