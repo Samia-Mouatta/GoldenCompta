@@ -80,7 +80,7 @@ public class FormulaireDepense extends Activity {
                         main.setResult(RESULT_OK, intent);
                         finish();
                     } else {
-                        Toast.makeText(FormulaireDepense.this,"La date doit être inférieur ou égale à la date d'aujourd'hui", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FormulaireDepense.this,"La date doit être inférieure ou égale à la date d'aujourd'hui", Toast.LENGTH_SHORT).show();
                 }
 
 
