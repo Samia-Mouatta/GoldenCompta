@@ -87,7 +87,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (resultCode == CATEGORIE) {
+        if (requestCode == CATEGORIE) {
             if (resultCode == RESULT_OK) {
                 //Si ok on ajoute dans la base de données correspondante
                 Categorie newCateg = new Categorie(data.getStringExtra("newCateg"));
@@ -98,7 +98,7 @@ public class MainActivity extends Activity {
                 categBdd.insertCategorie(newCateg);
                 categBdd.close();
             }
-        } else if (resultCode == DEPENSE) {
+        } else if (requestCode == DEPENSE) {
             if (resultCode == RESULT_OK) {
                 //Si ok on ajoute dans la base de données correspondante
                 float montant = Float.parseFloat(data.getStringExtra("NEWDEPENSE"));

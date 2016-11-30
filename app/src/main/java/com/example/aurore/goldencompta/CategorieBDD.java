@@ -13,7 +13,7 @@ import java.util.List;
 
 public class CategorieBDD {
 
-    private static final int VERSION_BDD = 1;
+    private static final int VERSION_BDD = 3;
     private static final String NOM_BDD = "goldenCompta.db";
 
     private static final String TABLE_CATEGORIE = "table_categorie";
