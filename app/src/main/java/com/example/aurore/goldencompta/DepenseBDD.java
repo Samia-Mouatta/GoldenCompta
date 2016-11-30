@@ -22,6 +22,14 @@ public class DepenseBDD {
     private static final String COL_MONTANT ="montant";
     private static final String COL_DATE = "date";
     private static final String COL_CATEG = "categorie";
+    private static final int NUM_COL_ID = 0;
+    private static final int NUM_COL_MONTANT = 1;
+    private static final int NUM_COL_DATE = 2;
+    private static final int NUM_COL_CATEG = 3;
+
+
+    private String[] allColumns = { COL_ID,
+            COL_MONTANT, COL_DATE, COL_CATEG};
 
     private SQLiteDatabase bdd;
 
@@ -55,21 +63,22 @@ public class DepenseBDD {
     }
 
 
-    public long insertDepense(Depense dep){
-        //Création d'un ContentValues (fonctionne comme une HashMap)
+
+    public Depense insertDepense(Depense dep){
         ContentValues values = new ContentValues();
-        //on lui ajoute une valeur associée à une clé (qui est le nom de la colonne dans laquelle on veut mettre la valeur)
-        values.put(COL_ID, dep.getId());
-
-        //Passage de la date en chaine de caractères
-        Format formatter = new SimpleDateFormat("dd/MM/yyyy");
-        String s = formatter.format(dep.getDate());
-        values.put(COL_DATE, s);
+        //values.put(COL_ID, categ.getId());
         values.put(COL_MONTANT, dep.getMontant());
+        values.put(COL_DATE, dep.getDate());
+        values.put(COL_CATEG, dep.getCategorie());
 
-        values.put(COL_CATEG, dep.getCategorie().getNom());
-        //on insère l'objet dans la BDD via le ContentValues
-        return bdd.insert(TABLE_DEPENSE, null, values);
+        long insertId = bdd.insert(TABLE_DEPENSE, null, values);
+        Cursor cursor = bdd.query(TABLE_DEPENSE,
+                allColumns, COL_ID + " = " + insertId, null,
+                null, null, null);
+        cursor.moveToFirst();
+        Depense newDep = cursorToDepense(cursor);
+        cursor.close();
+        return newDep;
     }
 
     public int updateDepense(int id, Depense dep){
@@ -82,7 +91,7 @@ public class DepenseBDD {
         values.put(COL_DATE, s);
 
         values.put(COL_MONTANT, dep.getMontant());
-        values.put(COL_CATEG, dep.getCategorie().getNom());
+        values.put(COL_CATEG, dep.getCategorie());
         return bdd.update(TABLE_DEPENSE, values, COL_ID + " = " +id, null);
     }
 
@@ -120,5 +129,21 @@ public class DepenseBDD {
         return bdd.rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY categorie", null);
 
 
+    }
+
+
+    //Cette méthode permet de convertir un cursor en une dépense
+    private Depense cursorToDepense(Cursor c){
+        if (c.getCount() == 0)
+            return null;
+
+        c.moveToFirst();
+        Depense dep = new Depense();
+        dep.setId(c.getInt(NUM_COL_ID));
+        dep.setMontant(c.getFloat(NUM_COL_MONTANT));
+        dep.setDate(c.getString(NUM_COL_DATE));
+        dep.setCategorie(c.getString(NUM_COL_CATEG));
+        c.close();
+        return dep;
     }
 }

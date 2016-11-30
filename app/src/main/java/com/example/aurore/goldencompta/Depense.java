@@ -10,11 +10,11 @@ public class Depense {
     int id;
     String dateDepense;
     float montant;
-    Categorie categ;
+    String categ;
 
     public Depense(){};
 
-    public Depense(String dateDepense, float montant, Categorie categ){
+    public Depense(String dateDepense, float montant, String categ){
         this.dateDepense=dateDepense;
         this.montant=montant;
         this.categ=categ;
@@ -40,9 +40,9 @@ public class Depense {
 
     public void setMontant(float montant){this.montant=montant;}
 
-    public Categorie getCategorie(){return categ;}
+    public String getCategorie(){return categ;}
 
-    public void setCategorie(Categorie categ){this.categ=categ;}
+    public void setCategorie(String categ){this.categ=categ;}
 
     public String toString(){
         return "Id : "+id+"\nDate dépense : "+dateDepense+"\nMontant : "+montant+"\n";

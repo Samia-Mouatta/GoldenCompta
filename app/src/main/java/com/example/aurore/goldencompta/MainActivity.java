@@ -114,14 +114,15 @@ public class MainActivity extends Activity {
             if (resultCode == RESULT_OK) {
                 //Si ok on ajoute dans la base de données correspondante
                 float montant = Float.parseFloat(data.getStringExtra("NEWDEPENSE"));
-                Categorie cat = new Categorie(data.getStringExtra("CATEGORIE"));
-                Depense newDep = new Depense(data.getStringExtra("DATE"), montant, cat);
+                Depense newDep = new Depense(data.getStringExtra("DATE"), montant, data.getStringExtra("CATEGORIE"));
 
                 //Ajout dans la base de données
                 DepenseBDD cdepBdd = new DepenseBDD(this);
                 cdepBdd.open();
                 cdepBdd.insertDepense(newDep);
                 cdepBdd.close();
+            } else {
+                Toast.makeText(this, "Erreur lors de l'insertion", Toast.LENGTH_LONG).show();
             }
         }
     }

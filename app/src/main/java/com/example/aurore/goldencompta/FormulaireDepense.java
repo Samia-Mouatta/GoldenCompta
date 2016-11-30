@@ -83,6 +83,10 @@ public class FormulaireDepense extends Activity {
 
                     if (saisi.before(systeme) || saisi.equals(systeme)) {
                         d = date.getDayOfMonth() + "/" + (date.getMonth() + 1) + "/" + date.getYear();
+
+                        intent.putExtra("NEWDEPENSE", dep);
+                        intent.putExtra("CATEGORIE",cat );
+                        intent.putExtra("DATE", d);
                         main.setResult(RESULT_OK, intent);
                         finish();
                     } else {
@@ -98,10 +102,6 @@ public class FormulaireDepense extends Activity {
                 System.out.println("Catégorie : " + cat);
                 System.out.print("Date : " + d.toString());
 
-
-                intent.putExtra("NEWDEPENSE", dep);
-                intent.putExtra("CATEGORIE",cat );
-                intent.putExtra("DATE", d);
 
                }
             }
