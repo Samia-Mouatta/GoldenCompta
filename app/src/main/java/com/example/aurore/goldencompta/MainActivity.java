@@ -95,7 +95,18 @@ public class MainActivity extends Activity {
                 //Ajout dans la base de données
                 CategorieBDD categBdd = new CategorieBDD(this);
                 categBdd.open();
-                categBdd.insertCategorie(newCateg);
+               // categBdd.insertCategorie(newCateg);
+               Categorie existCateg = categBdd.getCategorieWithNom(newCateg.getNom());
+
+                if(existCateg == null){
+                    //Si la catégorie n'existe pas dans la BDD, on l'ajoute
+                    categBdd.insertCategorie(new Categorie(data.getStringExtra("newCateg")));
+
+                }//Si le catégorie existe (mais normalement il ne devrait pas)
+                else{
+                    //on affiche un message indiquant que la catégorie existe dans la BDD
+                    Toast.makeText(this, "Cette catégorie existe dans la BDD", Toast.LENGTH_LONG).show();
+                }
                 categBdd.close();
             }
         } else if (requestCode == DEPENSE) {
