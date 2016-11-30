@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TableRow.LayoutParams;
@@ -113,13 +114,14 @@ public class MainActivity extends Activity {
             if (resultCode == RESULT_OK) {
                 //Si ok on ajoute dans la base de données correspondante
                 float montant = Float.parseFloat(data.getStringExtra("NEWDEPENSE"));
-                /*Depense newDep = new Depense(data.getStringExtra("DATE"), montant, data.getStringExtra("CATEGORIE"));
+                Categorie cat = new Categorie(data.getStringExtra("CATEGORIE"));
+                Depense newDep = new Depense(data.getStringExtra("DATE"), montant, cat);
 
                 //Ajout dans la base de données
                 DepenseBDD cdepBdd = new DepenseBDD(this);
                 cdepBdd.open();
                 cdepBdd.insertDepense(newDep);
-                cdepBdd.close();*/
+                cdepBdd.close();
             }
         }
     }

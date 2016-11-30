@@ -8,13 +8,13 @@ import java.util.Date;
 
 public class Depense {
     int id;
-    Date dateDepense;
+    String dateDepense;
     float montant;
     Categorie categ;
 
     public Depense(){};
 
-    public Depense(Date dateDepense, float montant, Categorie categ){
+    public Depense(String dateDepense, float montant, Categorie categ){
         this.dateDepense=dateDepense;
         this.montant=montant;
         this.categ=categ;
@@ -28,11 +28,11 @@ public class Depense {
         this.id=id;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return dateDepense;
     }
 
-    public void setDate(Date dateDepense) {
+    public void setDate(String dateDepense) {
         this.dateDepense = dateDepense;
     }
 
