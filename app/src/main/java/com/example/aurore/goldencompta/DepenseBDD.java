@@ -9,6 +9,7 @@ import android.util.Log;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import static android.content.ContentValues.TAG;
 
@@ -161,17 +162,38 @@ public class DepenseBDD {
 
 
     //Cette méthode permet de convertir un cursor en une dépense
-    private Depense cursorToDepense(Cursor c){
+    private static final Depense cursorToDepense(Cursor c){
+
         if (c.getCount() == 0)
             return null;
 
-        c.moveToFirst();
         Depense dep = new Depense();
         dep.setId(c.getInt(NUM_COL_ID));
         dep.setMontant(c.getFloat(NUM_COL_MONTANT));
         dep.setDate(c.getString(NUM_COL_DATE));
         dep.setCategorie(c.getString(NUM_COL_CATEG));
-        c.close();
         return dep;
+    }
+
+
+    public ArrayList<String> getAllDepense(){
+
+        ArrayList<String> listeDepense = new ArrayList<String>();
+        String ligne;
+        Depense d;
+        Cursor cursor = selectDepense();
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            d = DepenseBDD.cursorToDepense(cursor);
+            ligne = "Date : " + d.getDate() + " \nMontant : " + d.getMontant() + "\nCategorie : " + d.getCategorie();
+            listeDepense.add(ligne);
+            cursor.moveToNext();
+        }
+
+        // Make sure to close the cursor
+        cursor.close();
+        return listeDepense;
+
     }
 }
