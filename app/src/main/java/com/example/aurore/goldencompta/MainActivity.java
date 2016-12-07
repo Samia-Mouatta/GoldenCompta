@@ -5,11 +5,18 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FilterQueryProvider;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TableRow.LayoutParams;
@@ -21,9 +28,8 @@ public class MainActivity extends Activity {
     public final static int CATEGORIE = 0;
     public final static int DEPENSE = 1;
     public final static int BUDGET = 2;
-    DepenseBDD depense;
-    TableLayout t1;
-
+    private SimpleCursorAdapter dataAdapter;
+    DepenseBDD depenseBdd=new DepenseBDD(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +40,11 @@ public class MainActivity extends Activity {
         CategorieBDD categBdd = new CategorieBDD(this);
 
         //Création de l'instance de la classe DepenseBDD
-        DepenseBDD depenseBdd = new DepenseBDD(this);
+      //  depenseBdd = new DepenseBDD(this);
+        depenseBdd.open();
 
-        //Affichage du tableau----------------------------------------------------------------------
+        displayListView();
+       /* //Affichage du tableau----------------------------------------------------------------------
         TableLayout tl = (TableLayout) findViewById(R.id.tdyn);
         TableRow tr;
         depenseBdd.open();
@@ -73,9 +81,82 @@ public class MainActivity extends Activity {
         return result;
 
         //Fin affichage du tableau------------------------------------------------------------------
-/*
+
         depense = new DepenseBDD(this);
         BuildTable();*/
+
+    }
+
+    private void displayListView() {
+
+        Cursor cursor = depenseBdd.populateTable();
+
+        // The desired columns to be bound
+        String[] columns = new String[] {
+                DepenseBDD.COL_CATEG,
+                DepenseBDD.COL_DATE,
+                DepenseBDD.COL_MONTANT
+        };
+
+        // the XML defined views which the data will be bound to
+        int[] to = new int[] {
+                R.id.categ,
+                R.id.date,
+                R.id.montant,
+        };
+
+        // create the adapter using the cursor pointing to the desired data
+        //as well as the layout information
+        dataAdapter = new SimpleCursorAdapter(
+                this, R.layout.depense_info,
+                cursor,
+                columns,
+                to,
+                0);
+
+        System.out.println("Avant list view");
+        ListView listView = (ListView) findViewById(R.id.listView1);
+        // Assign adapter to ListView
+        listView.setAdapter(dataAdapter);
+
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> listView, View view,
+                                    int position, long id) {
+                // Get the cursor, positioned to the corresponding row in the result set
+                Cursor cursor = (Cursor) listView.getItemAtPosition(position);
+
+                // Get the name's depense from this row in the database.
+                String categorieName =
+                        cursor.getString(cursor.getColumnIndexOrThrow("categorie"));
+                Toast.makeText(getApplicationContext(),
+                        categorieName, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        EditText myFilter = (EditText) findViewById(R.id.myFilter);
+        myFilter.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                dataAdapter.getFilter().filter(s.toString());
+            }
+        });
+
+        dataAdapter.setFilterQueryProvider(new FilterQueryProvider() {
+            public Cursor runQuery(CharSequence constraint) {
+                return depenseBdd.fetchDepensesByName(constraint.toString());
+            }
+        });
 
     }
 

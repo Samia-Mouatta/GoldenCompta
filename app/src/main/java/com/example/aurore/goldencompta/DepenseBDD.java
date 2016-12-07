@@ -3,10 +3,14 @@ package com.example.aurore.goldencompta;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by roros on 16/11/2016.
@@ -18,10 +22,10 @@ public class DepenseBDD {
     private static final String NOM_BDD = "goldenCompta.db";
 
     private static final String TABLE_DEPENSE = "table_depense";
-    private static final String COL_ID = "id";
-    private static final String COL_MONTANT ="montant";
-    private static final String COL_DATE = "date";
-    private static final String COL_CATEG = "categorie";
+    public static final String COL_ID = "id";
+    public static final String COL_MONTANT ="montant";
+    public static final String COL_DATE = "date";
+    public static final String COL_CATEG = "categorie";
     private static final int NUM_COL_ID = 0;
     private static final int NUM_COL_MONTANT = 1;
     private static final int NUM_COL_DATE = 2;
@@ -50,13 +54,17 @@ public class DepenseBDD {
         bdd.close();
     }
 
-    public Cursor populateTable(){
+     public Cursor populateTable(){
 
         String[] columns = {maBaseSQLite.COL_CATEG,maBaseSQLite.COL_DATE,maBaseSQLite.COL_MONTANT};
         Cursor cursor = bdd.query(maBaseSQLite.TABLE_DEPENSE, columns, null, null, null, null, null);
 
+         if (cursor != null) {
+            cursor.moveToFirst();
+        }
         return cursor;
-    }
+     }
+
 
     public SQLiteDatabase getBDD(){
         return bdd;
@@ -99,7 +107,27 @@ public class DepenseBDD {
         //Suppression d'une dépense de la BDD grâce à l'ID
         return bdd.delete(TABLE_DEPENSE, COL_ID + " = " +id, null);
     }
+    public Cursor fetchDepensesByName(String inputText) throws SQLException {
+        Log.w(TAG, inputText);
+        Cursor mCursor = null;
+        if (inputText == null  ||  inputText.length () == 0)  {
+            mCursor = bdd.query(maBaseSQLite.TABLE_DEPENSE, new String[] {COL_CATEG,
+                            COL_DATE, COL_MONTANT},
+                    null, null, null, null, null);
 
+        }
+        else {
+            mCursor = bdd.query(true, maBaseSQLite.TABLE_DEPENSE, new String[] {COL_CATEG,
+                            COL_DATE, COL_MONTANT},
+                    COL_CATEG + " like '%" + inputText + "%'", null,
+                    null, null, null, null);
+        }
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
     public Cursor selectDepense(){
 
 //        String[] columns = {maBaseSQLite.COL_CATEG,maBaseSQLite.COL_DATE,maBaseSQLite.COL_MONTANT};
