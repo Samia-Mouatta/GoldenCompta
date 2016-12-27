@@ -42,6 +42,8 @@ public class FormulaireDepense extends Activity {
 
         final Spinner spinner = (Spinner) findViewById(R.id.spinnerC);
 
+
+
         List<String> list = new ArrayList<String>();
         List<String> listCategorie = new ArrayList<String>();
 
@@ -64,21 +66,27 @@ public class FormulaireDepense extends Activity {
         save.setOnClickListener(new OnClickListener(){
             @Override
             public void onClick(View v) {
+                float depR;
 
                 String dep =  newDepense.getText().toString();
                 String cat = spinner.getSelectedItem().toString();
+
+
+
+
                 // si le champ catégorie est vide
                 if (dep.equals("")) {
-                    Toast.makeText(FormulaireDepense.this,"Les champs doivent etre ", Toast.LENGTH_SHORT).show();
-                }else if() {
-
-
-                } else {
+                    Toast.makeText(FormulaireDepense.this,"Les champs doivent etre remplis", Toast.LENGTH_SHORT).show();
+               } else {
                     dBis = date.getYear() + "/" + (date.getMonth() + 1) + "/" + date.getDayOfMonth();
                     saisi = new Date(dBis);
 
                     if (saisi.before(systeme) || saisi.equals(systeme)) {
                         d = date.getDayOfMonth() + "/" + (date.getMonth() + 1) + "/" + date.getYear();
+
+                        intent.putExtra("NEWDEPENSE", dep);
+                        intent.putExtra("CATEGORIE",cat );
+                        intent.putExtra("DATE", d);
                         main.setResult(RESULT_OK, intent);
                         finish();
                     } else {
@@ -90,14 +98,10 @@ public class FormulaireDepense extends Activity {
 
 
                 System.out.println("Date du calendrier2 : " + d);
-                System.out.println("Depense : " + newDepense.getText());
+                System.out.println("Depense : " + Float.parseFloat(dep));
                 System.out.println("Catégorie : " + cat);
                 System.out.print("Date : " + d.toString());
 
-
-                intent.putExtra("NEWDEPENSE", newDepense.getText().toString());
-                intent.putExtra("CATEGORIE",cat );
-                intent.putExtra("DATE", d);
 
                }
             }
