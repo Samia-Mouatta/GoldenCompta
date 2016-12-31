@@ -19,7 +19,7 @@ import static android.content.ContentValues.TAG;
 
 public class DepenseBDD {
 
-    private static final int VERSION_BDD = 3;
+    private static final int VERSION_BDD = 4;
     private static final String NOM_BDD = "goldenCompta.db";
 
     private static final String TABLE_DEPENSE = "table_depense";

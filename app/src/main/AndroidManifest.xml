@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:icon="@drawable/golden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,6 +22,8 @@
             android:name=".FormulaireCategorie" />
         <activity
             android:name=".FormulaireDepense" />
+        <activity
+            android:name=".FormulaireBudget" />
     </application>
 
 </manifest>

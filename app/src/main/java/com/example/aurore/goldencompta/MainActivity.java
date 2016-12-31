@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
@@ -38,6 +39,14 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#00e6ac"));
+        // couleur de l'actionBar
+        getActionBar().setBackgroundDrawable(colorDrawable);
+        // icon
+        getActionBar().setDisplayUseLogoEnabled(true);
+        getActionBar().setDisplayShowHomeEnabled(true);
+
         TextView estVide;
 
         estVide = (TextView) findViewById(R.id.vide);
