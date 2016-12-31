@@ -160,6 +160,29 @@ public class DepenseBDD {
 
     }
 
+    // Total des dépenses par mois
+    public Cursor selectDepenseMois(){
+
+        String TABLE_NAME = "table_depense";
+        this.open();
+
+        // return bdd.rawQuery("SELECT SUM(montant) FROM " + TABLE_NAME + " WHERE strftime('%m', date) = strftime('%m', ( SELECT DATE('now')))"+ " GROUP BY strftime('%m',date) ", null);
+        // return bdd.rawQuery(" SELECT SUM(montant) FROM " + TABLE_NAME +  " WHERE strftime('%m', date) "+" = strftime('%m', (SELECT DATE ('now'))) GROUP BY strftime('%m', date)",null);
+        return bdd.rawQuery("SELECT SUM(montant),strftime('%m',date) as Mois FROM " + TABLE_NAME +  "  GROUP BY strftime('%m',date) ", null);
+    }
+
+    public final float getDepenseMois(){
+        Cursor c=selectDepenseMois();
+        c.moveToLast();
+        // if (c.moveToFirst())
+        float totalDep = c.getFloat(0);
+
+        return totalDep;
+
+        //   return 0;
+
+    }
+
 
     //Cette méthode permet de convertir un cursor en une dépense
     private static final Depense cursorToDepense(Cursor c){

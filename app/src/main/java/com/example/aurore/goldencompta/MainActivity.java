@@ -1,6 +1,9 @@
 package com.example.aurore.goldencompta;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -62,7 +65,7 @@ public class MainActivity extends Activity {
         values = depenseBDD.getAllDepense();
         System.out.println("Categorie : " + values.get(1));
 
-        if(values.size() != 0){
+        if (values.size() != 0) {
             System.out.println("Categorie : " + values.get(1));
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_2, android.R.id.text1, values);
             listView.setAdapter(adapter);
@@ -72,14 +75,11 @@ public class MainActivity extends Activity {
         }
 
 
-
-
-
         //Création de l'instance de la classe CategorieBDD
         CategorieBDD categBdd = new CategorieBDD(this);
 
         //Création de l'instance de la classe DepenseBDD
-      //  depenseBdd = new DepenseBDD(this);
+        //  depenseBdd = new DepenseBDD(this);
 
 
        /* //Affichage du tableau----------------------------------------------------------------------
@@ -126,7 +126,6 @@ public class MainActivity extends Activity {
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -144,15 +143,15 @@ public class MainActivity extends Activity {
                 //Ajout dans la base de données
                 CategorieBDD categBdd = new CategorieBDD(this);
                 categBdd.open();
-               // categBdd.insertCategorie(newCateg);
-               Categorie existCateg = categBdd.getCategorieWithNom(newCateg.getNom());
+                // categBdd.insertCategorie(newCateg);
+                Categorie existCateg = categBdd.getCategorieWithNom(newCateg.getNom());
 
-                if(existCateg == null){
+                if (existCateg == null) {
                     //Si la catégorie n'existe pas dans la BDD, on l'ajoute
                     categBdd.insertCategorie(new Categorie(data.getStringExtra("newCateg")));
 
                 }//Si le catégorie existe (mais normalement il ne devrait pas)
-                else{
+                else {
                     //on affiche un message indiquant que la catégorie existe dans la BDD
                     Toast.makeText(this, "Cette catégorie existe dans la BDD", Toast.LENGTH_LONG).show();
                 }
@@ -164,14 +163,39 @@ public class MainActivity extends Activity {
                 float montant = Float.parseFloat(data.getStringExtra("NEWDEPENSE"));
                 Depense newDep = new Depense(data.getStringExtra("DATE"), montant, data.getStringExtra("CATEGORIE"));
 
-                //Ajout dans la base de données
-                DepenseBDD cdepBdd = new DepenseBDD(this);
-                cdepBdd.open();
-                cdepBdd.insertDepense(newDep);
-                cdepBdd.close();
+                /*  FormulaireBudget fBudget=new FormulaireBudget();
+                int budget = fBudget.getValBudget();
+
+            //    System.out.println(" total des dépenses" + depenseBDD.getDepenseMois());
+
+                //  Si le montant a ajouté ou le montant total du mois dépasse le budget
+                if (montant > budget || depenseBDD.getDepenseMois() > budget) {
+                    // afficher une boite de dialogue d'alerte
+                    Builder builder = new Builder(this);
+                    builder.setMessage("Attention!Le montant de la dépense dépasse votre budget par mois");
+                    builder.setCancelable(true);
+                    builder.setPositiveButton("OK", new OkOnClickListener());
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                } else {*/
+
+                    //Ajout dans la base de données
+                    DepenseBDD cdepBdd = new DepenseBDD(this);
+                    cdepBdd.open();
+                    cdepBdd.insertDepense(newDep);
+                    cdepBdd.close();
+
             } else {
                 Toast.makeText(this, "Erreur lors de l'insertion", Toast.LENGTH_LONG).show();
             }
+        }
+    }
+
+    // Cliquer sur le bouton ok une fois on lit le message
+    private final class OkOnClickListener implements
+            DialogInterface.OnClickListener {
+        public void onClick(DialogInterface dialog, int which) {
+            MainActivity.this.finish();
         }
     }
 
