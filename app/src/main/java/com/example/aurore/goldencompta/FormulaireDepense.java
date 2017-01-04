@@ -82,20 +82,7 @@ public class FormulaireDepense extends Activity {
                     saisi = new Date(dBis);
 
                     if (saisi.before(systeme) || saisi.equals(systeme)) {
-                        if (date.getDayOfMonth() > 10){
-                            d = date.getDayOfMonth() + "/";
-                        } else {
-                           d = "0" + date.getDayOfMonth() + "/";
-                        }
-
-                        if (date.getMonth() > 10){
-                            d += (date.getMonth() + 1) + "/" + date.getYear();
-                        } else {
-                            d += "0"+ (date.getMonth() + 1) + "/" + date.getYear();
-                        }
-
-                        System.out.println("date : " + d);
-
+                        d = date.getDayOfMonth() + "/" + (date.getMonth() + 1) + "/" + date.getYear();
 
                         intent.putExtra("NEWDEPENSE", dep);
                         intent.putExtra("CATEGORIE",cat );

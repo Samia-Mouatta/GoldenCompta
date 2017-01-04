@@ -19,7 +19,7 @@ import static android.content.ContentValues.TAG;
 
 public class DepenseBDD {
 
-    private static final int VERSION_BDD = 3;
+    private static final int VERSION_BDD = 4;
     private static final String NOM_BDD = "goldenCompta.db";
 
     private static final String TABLE_DEPENSE = "table_depense";
@@ -157,6 +157,29 @@ public class DepenseBDD {
 
         return bdd.rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY categorie", null);
 
+
+    }
+
+    // Total des dépenses par mois
+    public Cursor selectDepenseMois(){
+
+        String TABLE_NAME = "table_depense";
+        this.open();
+
+        // return bdd.rawQuery("SELECT SUM(montant) FROM " + TABLE_NAME + " WHERE strftime('%m', date) = strftime('%m', ( SELECT DATE('now')))"+ " GROUP BY strftime('%m',date) ", null);
+        // return bdd.rawQuery(" SELECT SUM(montant) FROM " + TABLE_NAME +  " WHERE strftime('%m', date) "+" = strftime('%m', (SELECT DATE ('now'))) GROUP BY strftime('%m', date)",null);
+        return bdd.rawQuery("SELECT SUM(montant),strftime('%m',date) as Mois FROM " + TABLE_NAME +  "  GROUP BY strftime('%m',date) ", null);
+    }
+
+    public final float getDepenseMois(){
+        Cursor c=selectDepenseMois();
+        c.moveToLast();
+        // if (c.moveToFirst())
+        float totalDep = c.getFloat(0);
+
+        return totalDep;
+
+        //   return 0;
 
     }
 
