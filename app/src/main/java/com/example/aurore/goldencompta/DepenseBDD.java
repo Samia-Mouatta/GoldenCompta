@@ -108,6 +108,7 @@ public class DepenseBDD {
         //Suppression d'une dépense de la BDD grâce à l'ID
         return bdd.delete(TABLE_DEPENSE, COL_ID + " = " +id, null);
     }
+
     public Cursor fetchDepensesByName(String inputText) throws SQLException {
         Log.w(TAG, inputText);
         Cursor mCursor = null;
@@ -130,17 +131,6 @@ public class DepenseBDD {
 
     }
     public Cursor selectDepense(){
-
-//        String[] columns = {maBaseSQLite.COL_CATEG,maBaseSQLite.COL_DATE,maBaseSQLite.COL_MONTANT};
-////        Cursor cursor = bdd.query(maBaseSQLite.TABLE_DEPENSE, columns, null, null, null, null, null);
-////        return cursor;
-//
-//        SQLiteDatabase bdd= maBaseSQLite.getReadableDatabase();
-////        Cursor c = bdd.rawQuery("select " + "*" + " from " + "table_depense", new String[]{"1"});
-////        return c;
-//        Cursor cursor = bdd.query(TABLE_DEPENSE,
-//                columns, null, null, null, null, COL_ID + " DESC");
-//        return cursor;
 
         String TABLE_NAME = "table_depense";
         this.open();
@@ -209,7 +199,7 @@ public class DepenseBDD {
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             d = DepenseBDD.cursorToDepense(cursor);
-            ligne = "Date : " + d.getDate() + " \nMontant : " + d.getMontant() + "\nCategorie : " + d.getCategorie();
+            ligne = "Montant : " + d.getMontant() + "    Date : " + d.getDate() +  "\nCategorie : " + d.getCategorie();
             listeDepense.add(ligne);
             cursor.moveToNext();
         }

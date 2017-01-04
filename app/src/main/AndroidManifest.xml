@@ -24,6 +24,8 @@
             android:name=".FormulaireDepense" />
         <activity
             android:name=".FormulaireBudget" />
+        <activity
+            android:name=".FormulaireCamera" />
     </application>
 
 </manifest>

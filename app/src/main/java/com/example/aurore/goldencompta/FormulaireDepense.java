@@ -71,18 +71,26 @@ public class FormulaireDepense extends Activity {
                 String dep =  newDepense.getText().toString();
                 String cat = spinner.getSelectedItem().toString();
 
-
-
-
                 // si le champ catégorie est vide
                 if (dep.equals("")) {
                     Toast.makeText(FormulaireDepense.this,"Les champs doivent etre remplis", Toast.LENGTH_SHORT).show();
                } else {
+
                     dBis = date.getYear() + "/" + (date.getMonth() + 1) + "/" + date.getDayOfMonth();
                     saisi = new Date(dBis);
 
                     if (saisi.before(systeme) || saisi.equals(systeme)) {
-                        d = date.getDayOfMonth() + "/" + (date.getMonth() + 1) + "/" + date.getYear();
+                        if (date.getDayOfMonth() < 10){
+                            d = "O" + date.getDayOfMonth();
+                        } else {
+                            d = String.valueOf(date.getDayOfMonth());
+                        }
+                        if (date.getMonth() < 9 ){
+                            d +=  "/0" + (date.getMonth() + 1) + "/" + date.getYear();
+                        } else {
+                            d += "/" + (date.getMonth() + 1) + "/" + date.getYear();
+                        }
+
 
                         intent.putExtra("NEWDEPENSE", dep);
                         intent.putExtra("CATEGORIE",cat );
@@ -92,9 +100,6 @@ public class FormulaireDepense extends Activity {
                     } else {
                         Toast.makeText(FormulaireDepense.this,"La date doit être inférieure ou égale à la date d'aujourd'hui", Toast.LENGTH_SHORT).show();
                 }
-
-
-
 
 
                 System.out.println("Date du calendrier2 : " + d);

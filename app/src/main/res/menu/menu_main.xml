@@ -24,4 +24,14 @@
         app:showAsAction="ifRoom"
         android:icon="@android:drawable/ic_menu_add"
         android:title="Budget"/>
+    <item
+        android:id="@+id/menu_img"
+        app:showAsAction="ifRoom"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="Image"/>
+    <item
+        android:id="@+id/menu_camera"
+        app:showAsAction="ifRoom"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="Camera"/>
 </menu>
