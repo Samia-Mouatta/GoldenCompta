@@ -71,15 +71,6 @@ public class FormulaireStatistique extends Activity {
 
         depenseByCategorie.loadUrl(url);
 
-        //imgDepenseByCategorie.setImageDrawable(bmap);
-
-        //imgDepenseByCategorie.setImageResource(R.mipmap.ic_launcher);
-
-
-        //***********************************************
-
-        //webView.loadUrl("http://chart.apis.google.com/chart?cht=p3&chs=300x120&chd=t:30,60,10&chl=cars|bikes|trucks");
-
 
         //DEUXIEME GRAPHIQUE *************************
 
@@ -122,7 +113,7 @@ public class FormulaireStatistique extends Activity {
         }
 
 
-        url = url +"10-20|20-50|50-00|100";
+        url = url +"10|20|50|100";
         url = url.replace("null", "0");
         depenseByMontant.loadUrl(url);
 
