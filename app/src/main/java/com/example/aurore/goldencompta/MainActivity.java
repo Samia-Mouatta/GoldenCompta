@@ -74,7 +74,7 @@ public class MainActivity extends Activity {
         value = mesDepenses * 100 / monBudget;
 
         WebView budget = (WebView) findViewById(R.id.budget);
-        String url = "http://chart.apis.google.com/chart?cht=gom&chco=12FE01,F6FE01,FE0101&chs=300x120&chd=t:"+ value;
+        String url = "http://chart.apis.google.com/chart?cht=gom&chco=12FE01,F6FE01,FE0101&chs=300x120&chd=t:"+ value + "&chxt=x,y&chxl=0:|"+ mesDepenses +"|1:|0|"+ monBudget;
         budget.loadUrl(url);
 
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#00e6ac"));
