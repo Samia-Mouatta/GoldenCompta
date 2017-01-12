@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" android:layout_height="fill_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:orientation="vertical"
     android:background="@color/grey">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60pt"
+        android:orientation="horizontal"
+        android:background="@color/white">
+
+        <WebView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10pt"
+            android:id="@+id/budget"/>
+    </LinearLayout>
 
     <TextView
         android:layout_width="fill_parent"
@@ -11,7 +25,6 @@
         android:padding="10dp"
         android:text="@string/some_text"
         android:textSize="20sp" />
-
 
     <TextView
         android:layout_width="fill_parent"
@@ -25,6 +38,4 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
     </ListView>
-
 </LinearLayout>
-

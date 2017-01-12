@@ -1,7 +1,5 @@
 package com.example.aurore.goldencompta;
 
-import java.util.Date;
-
 /**
  * Created by roros on 16/11/2016.
  */

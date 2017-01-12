@@ -13,7 +13,7 @@ import java.util.List;
 
 public class CategorieBDD {
 
-    private static final int VERSION_BDD = 4;
+    private static final int VERSION_BDD = 10;
     private static final String NOM_BDD = "goldenCompta.db";
 
     private static final String TABLE_CATEGORIE = "table_categorie";
@@ -116,6 +116,16 @@ public class CategorieBDD {
         return listeCategories;
 
     }
+
+    public Cursor categorieDepense(){
+
+        String TABLE_NAME = "table_depense";
+        String MY_QUERY = "SELECT c.nom, SUM(d.montant) AS total FROM TABLE_CATEGORIE c JOIN TABLE_DEPENSE d ON d.categorie=c.nom GROUP BY c.nom";
+        this.open();
+        return bdd.rawQuery(MY_QUERY, null);
+    }
+
+
 
     //Cette méthode permet de convertir un cursor en une catégorie
     private Categorie cursorToCategorie(Cursor c){

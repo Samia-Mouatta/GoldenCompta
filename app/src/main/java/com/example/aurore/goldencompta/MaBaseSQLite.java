@@ -84,15 +84,23 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
         String ROW16 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('16','Cadeaux');";
         db.execSQL(ROW16);
 
-        String ROW11 = "INSERT INTO " + TABLE_DEPENSE + " Values ('1', '12,20','12/06/2009', 'Animaux');";
+        String ROW11 = "INSERT INTO " + TABLE_DEPENSE + " Values ('1', '12,20','2009-02-02 10:00:00', 'Animaux');";
         db.execSQL(ROW11);
 
-        String ROW22 = "INSERT INTO " + TABLE_DEPENSE + " Values ('2','56,32','13/06/2009', 'Courses');";
+        String ROW22 = "INSERT INTO " + TABLE_DEPENSE + " Values ('2','56,32','2007-03-03 10:00:00', 'Courses');";
         db.execSQL(ROW22);
 
-        String ROW33 = "INSERT INTO " + TABLE_DEPENSE + " Values ('3','14,50','14/06/2009', 'Pizza');";
+        String ROW33 = "INSERT INTO " + TABLE_DEPENSE + " Values ('3','14,50','2007-10-01 10:00:00', 'Pizza');";
         db.execSQL(ROW33);
 
+        String ROW34 = "INSERT INTO " + TABLE_DEPENSE + " Values ('4','38,50','2007-12-01 10:00:00', 'Pizza');";
+        db.execSQL(ROW34);
+
+        String ROW35 = "INSERT INTO " + TABLE_DEPENSE + " Values ('5','5,50','2007-06-01 10:00:00', 'Pizza');";
+        db.execSQL(ROW35);
+
+        String ROW36 = "INSERT INTO " + TABLE_DEPENSE + " Values ('6','8,50','2007-01-01 10:00:00', 'Pizza');";
+        db.execSQL(ROW36);
 
 //        String ROW35 = "INSERT INTO dep Values ('4', null, null, null, null);";
 //        db.execSQL(ROW35);

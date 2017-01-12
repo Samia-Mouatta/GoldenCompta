@@ -1,31 +1,27 @@
 package com.example.aurore.goldencompta;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-
-import static java.lang.Integer.numberOfLeadingZeros;
-import static java.lang.Integer.parseInt;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class MainActivity extends Activity {
 
@@ -43,6 +39,44 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final String BUD = "budget";
+        int mois;
+        double monBudget, mesDepenses, value;
+        String myBudget, month, depenseString;
+        Date date;
+
+        SharedPreferences preferences = getSharedPreferences(BUD, 0);
+        myBudget = preferences.getString(BUD, "Aucun budget");
+        monBudget = Double.parseDouble(myBudget);
+
+        date = new Date();
+        Calendar myCalendar = GregorianCalendar.getInstance();
+        myCalendar.setTime(date);
+        mois = myCalendar.MONTH;
+        month = String.valueOf(mois);
+        if (mois < 10) {
+            month = "0" + month;
+        }
+        DepenseBDD depense = new DepenseBDD(this);
+        Cursor depenseMois = depense.selectDepenseOneMois(month);
+        depenseMois.moveToFirst();
+        if (depenseMois.getCount() != 0) {
+            depenseString = depenseMois.getString(0).replace(",", ".");
+        }
+        else {
+            depenseString = "0";
+        }
+
+        mesDepenses = Double.parseDouble(depenseString);
+
+        Toast toast = Toast.makeText(getApplicationContext(),  "nb " + mois + "testo " + depenseMois.getString(0) , Toast.LENGTH_SHORT);
+        toast.show();
+        value = mesDepenses * 100 / monBudget;
+
+        WebView budget = (WebView) findViewById(R.id.budget);
+        String url = "http://chart.apis.google.com/chart?cht=gom&chco=12FE01,F6FE01,FE0101&chs=300x120&chd=t:"+ value;
+        budget.loadUrl(url);
+
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#00e6ac"));
         // couleur de l'actionBar
         getActionBar().setBackgroundDrawable(colorDrawable);
@@ -59,7 +93,6 @@ public class MainActivity extends Activity {
         listView = (ListView) findViewById(R.id.listView1);
         ArrayList<String> values = new ArrayList<String>();
 
-        Depense d;
 
 
         values = depenseBDD.getAllDepense();
@@ -67,7 +100,7 @@ public class MainActivity extends Activity {
 
         if (values.size() != 0) {
             System.out.println("Categorie : " + values.get(1));
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_2, android.R.id.text1, values);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
             listView.setAdapter(adapter);
             System.out.println("Categorie : " + adapter.getItem(1));
         } else {
@@ -78,50 +111,6 @@ public class MainActivity extends Activity {
         //Création de l'instance de la classe CategorieBDD
         CategorieBDD categBdd = new CategorieBDD(this);
 
-        //Création de l'instance de la classe DepenseBDD
-        //  depenseBdd = new DepenseBDD(this);
-
-
-       /* //Affichage du tableau----------------------------------------------------------------------
-        TableLayout tl = (TableLayout) findViewById(R.id.tdyn);
-        TableRow tr;
-        depenseBdd.open();
-        Cursor lesDepenses = depenseBdd.populateTable();
-
-        LayoutParams layoutParams = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-        layoutParams.setMargins(2, 2, 2, 2);
-
-        if (lesDepenses.moveToFirst()) {
-            for (int i = 0; i < depenseBdd.populateTable().getCount(); i++) {
-
-                tr = new TableRow(this);
-                tr.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-                tr.addView(generateTextView(lesDepenses.getString(0), layoutParams));
-                tr.addView(generateTextView(lesDepenses.getString(1), layoutParams));
-                tr.addView(generateTextView(lesDepenses.getString(2), layoutParams));
-                tl.addView(tr, layoutParams);
-                lesDepenses.moveToNext();
-            }
-        }
-        depenseBdd.close();
-    }
-
-    public TextView generateTextView(String texte, LayoutParams ly) {
-        TextView result = new TextView(this);
-        result.setBackgroundColor(Color.WHITE);
-        result.setTextColor(Color.DKGRAY);
-        result.setGravity(Gravity.CENTER);
-        result.setPadding(2, 2, 2, 2);
-        result.setText(texte);
-        result.setTextSize(20);
-        result.setVisibility(View.VISIBLE);
-        result.setLayoutParams(ly);
-        return result;
-
-        //Fin affichage du tableau------------------------------------------------------------------
-
-        depense = new DepenseBDD(this);
-        BuildTable();*/
 
     }
 
@@ -163,27 +152,11 @@ public class MainActivity extends Activity {
                 float montant = Float.parseFloat(data.getStringExtra("NEWDEPENSE"));
                 Depense newDep = new Depense(data.getStringExtra("DATE"), montant, data.getStringExtra("CATEGORIE"));
 
-                /*  FormulaireBudget fBudget=new FormulaireBudget();
-                int budget = fBudget.getValBudget();
-
-            //    System.out.println(" total des dépenses" + depenseBDD.getDepenseMois());
-
-                //  Si le montant a ajouté ou le montant total du mois dépasse le budget
-                if (montant > budget || depenseBDD.getDepenseMois() > budget) {
-                    // afficher une boite de dialogue d'alerte
-                    Builder builder = new Builder(this);
-                    builder.setMessage("Attention!Le montant de la dépense dépasse votre budget par mois");
-                    builder.setCancelable(true);
-                    builder.setPositiveButton("OK", new OkOnClickListener());
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                } else {*/
-
-                    //Ajout dans la base de données
-                    DepenseBDD cdepBdd = new DepenseBDD(this);
-                    cdepBdd.open();
-                    cdepBdd.insertDepense(newDep);
-                    cdepBdd.close();
+                //Ajout dans la base de données
+                DepenseBDD cdepBdd = new DepenseBDD(this);
+                cdepBdd.open();
+                cdepBdd.insertDepense(newDep);
+                cdepBdd.close();
 
             } else {
                 Toast.makeText(this, "Erreur lors de l'insertion", Toast.LENGTH_LONG).show();
@@ -223,50 +196,22 @@ public class MainActivity extends Activity {
                 Intent intentBudget = new Intent(this, FormulaireBudget.class);
                 startActivityForResult(intentBudget, BUDGET);
                 return true;
+            case R.id.menu_camera:
+                //Comportement du bouton "camera"
+                Intent intentCamera = new Intent(this, FormulaireCamera.class);
+                startActivityForResult(intentCamera, BUDGET);
+                return true;
+            case R.id.menu_statistique:
+                //Comportement du bouton "camera"
+                Intent intentStat = new Intent(this, FormulaireStatistique.class);
+                startActivityForResult(intentStat, BUDGET);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    /*
-    public void tableauDepenses(Cursor lesDepenses){
-        TableLayout tl = (TableLayout) findViewById(R.id.tdyn);
-        TableRow tr;
-        TableRow trEntete;
-        String monthTmp = "";
-        String monthDepense = "";
-        String contenu = "ok";
-        String[] tabMois={"Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre"};
-        int nbMonth;
-        TableRow.LayoutParams linLayout = new TableRow.LayoutParams();
-        //
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.FILL_PARENT);
-        layoutParams.setMargins(2, 2, 2, 2);
-        if (lesDepenses.moveToFirst())
-            for (int i = 0; i < lesDepenses.getCount(); i++) {
-                monthDepense = lesDepenses.getString(2);
-                monthDepense = monthDepense.substring(3,5);
-                if (monthDepense == monthTmp || monthTmp == "")  {
-                    nbMonth = parseInt(monthDepense)-1;
-                    trEntete = new TableRow(this);
-                    trEntete.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                    trEntete.addView(generateTextView(tabMois[nbMonth], layoutParams));
-                    tl.addView(trEntete, layoutParams);
-                    monthTmp = monthDepense;
-                }
-                tr = new TableRow(this);
-                tr.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                for (int j = 0; j<4 ; j++) {
-                    tr.addView(generateTextView(lesDepenses.getString(j), layoutParams));
-                }
-                tl.addView(tr, layoutParams);
-                lesDepenses.moveToNext();
-            }
-
-    }
-    */
-
-
+/*
     public TextView generateTextView(String texte, TableRow.LayoutParams ly) {
         TextView result = new TextView(this);
         result.setBackgroundColor(Color.LTGRAY);
@@ -279,5 +224,6 @@ public class MainActivity extends Activity {
         result.setLayoutParams(ly);
         return result;
     }
+*/
 
 }
