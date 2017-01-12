@@ -34,4 +34,9 @@
         app:showAsAction="ifRoom"
         android:icon="@android:drawable/ic_menu_add"
         android:title="Camera"/>
+    <item
+        android:id="@+id/menu_statistique"
+        app:showAsAction="ifRoom"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="Statistiques"/>
 </menu>

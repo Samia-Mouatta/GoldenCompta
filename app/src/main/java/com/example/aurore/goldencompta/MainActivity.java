@@ -1,31 +1,27 @@
 package com.example.aurore.goldencompta;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-
-import static java.lang.Integer.numberOfLeadingZeros;
-import static java.lang.Integer.parseInt;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class MainActivity extends Activity {
 
@@ -43,6 +39,38 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final String BUD = "budget";
+        int mois;
+        double monBudget, mesDepenses, value;
+        String myBudget, month, depenseString;
+        Date date;
+
+        SharedPreferences preferences = getSharedPreferences (BUD,0);
+        myBudget = preferences.getString(BUD, "Aucun budget");
+        monBudget = Double.parseDouble(myBudget);
+
+        date = new Date();
+        Calendar myCalendar = GregorianCalendar.getInstance();
+        myCalendar.setTime(date);
+        mois = myCalendar.MONTH;
+        month = String.valueOf(mois);
+        if (mois<10) {
+            month = "0" + month;
+        }
+        DepenseBDD depense = new DepenseBDD(this);
+        Cursor depenseMois = depense.selectDepenseOneMois(month);
+        depenseMois.moveToFirst();
+        depenseString = depenseMois.getString(0).replace(",", ".");
+        mesDepenses = Double.parseDouble(depenseString);
+
+        Toast toast = Toast.makeText(getApplicationContext(),  "nb " + mois + "testo " + depenseMois.getString(0) , Toast.LENGTH_SHORT);
+        toast.show();
+        value = mesDepenses * 100 / monBudget;
+
+        WebView budget = (WebView) findViewById(R.id.budget);
+        String url = "http://chart.apis.google.com/chart?cht=gom&chco=12FE01,F6FE01,FE0101&chs=300x120&chd=t:"+ value;
+        budget.loadUrl(url);
+
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#00e6ac"));
         // couleur de l'actionBar
         getActionBar().setBackgroundDrawable(colorDrawable);
@@ -59,7 +87,6 @@ public class MainActivity extends Activity {
         listView = (ListView) findViewById(R.id.listView1);
         ArrayList<String> values = new ArrayList<String>();
 
-        Depense d;
 
 
         values = depenseBDD.getAllDepense();
@@ -167,6 +194,11 @@ public class MainActivity extends Activity {
                 //Comportement du bouton "camera"
                 Intent intentCamera = new Intent(this, FormulaireCamera.class);
                 startActivityForResult(intentCamera, BUDGET);
+                return true;
+            case R.id.menu_statistique:
+                //Comportement du bouton "camera"
+                Intent intentStat = new Intent(this, FormulaireStatistique.class);
+                startActivityForResult(intentStat, BUDGET);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

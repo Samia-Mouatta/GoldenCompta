@@ -19,7 +19,7 @@ import static android.content.ContentValues.TAG;
 
 public class DepenseBDD {
 
-    private static final int VERSION_BDD = 4;
+    private static final int VERSION_BDD = 10;
     private static final String NOM_BDD = "goldenCompta.db";
 
     private static final String TABLE_DEPENSE = "table_depense";
@@ -150,6 +150,30 @@ public class DepenseBDD {
 
     }
 
+
+    /*public Cursor selectDepenseWeekend(){
+
+        String TABLE_NAME = "table_depense";
+        this.open();
+        String querry = "SELECT SUMM(montant) as total FROM table_depense WHERE ";
+        return bdd.rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY categorie", null);
+
+
+    }*/
+
+    public Cursor selectDepenseByMontant(String min, String max){
+
+        String TABLE_NAME = "table_depense";
+        this.open();
+        //String querry = "SELECT SUM(montant) FROM table_depense WHERE montant > '30,00'";
+        //String querry = "SELECT SUM(montant) FROM table_depense WHERE montant BETWEEN '10,00' AND '60,00'";
+        String querry = "SELECT SUM(montant) FROM table_depense WHERE montant BETWEEN '"+ min +"' AND '"+ max +"'";
+        return bdd.rawQuery(querry, null);
+
+
+    }
+
+
     // Total des dépenses par mois
     public Cursor selectDepenseMois(){
 
@@ -158,7 +182,16 @@ public class DepenseBDD {
 
         // return bdd.rawQuery("SELECT SUM(montant) FROM " + TABLE_NAME + " WHERE strftime('%m', date) = strftime('%m', ( SELECT DATE('now')))"+ " GROUP BY strftime('%m',date) ", null);
         // return bdd.rawQuery(" SELECT SUM(montant) FROM " + TABLE_NAME +  " WHERE strftime('%m', date) "+" = strftime('%m', (SELECT DATE ('now'))) GROUP BY strftime('%m', date)",null);
-        return bdd.rawQuery("SELECT SUM(montant),strftime('%m',date) as Mois FROM " + TABLE_NAME +  "  GROUP BY strftime('%m',date) ", null);
+        //return bdd.rawQuery("SELECT SUM(montant),strftime('%m',date) as Mois FROM " + TABLE_NAME +  "  GROUP BY strftime('%m',date) ", null);
+        return bdd.rawQuery("SELECT montant,strftime('%m',date) as Mois FROM " + TABLE_NAME +  "", null);
+    }
+
+    public Cursor selectDepenseOneMois(String month){
+
+        String TABLE_NAME = "table_depense";
+        this.open();
+        return bdd.rawQuery("SELECT montant, strftime('%m',date) as Mois FROM table_depense WHERE strftime('%m', date)='"+ month +"'", null);
+
     }
 
     public final float getDepenseMois(){
