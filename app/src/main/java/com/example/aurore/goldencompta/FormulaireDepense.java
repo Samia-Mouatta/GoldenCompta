@@ -81,7 +81,7 @@ public class FormulaireDepense extends Activity {
 
                     if (saisi.before(systeme) || saisi.equals(systeme)) {
                         if (date.getDayOfMonth() < 10){
-                            d = "O" + date.getDayOfMonth();
+                            d = "0" + date.getDayOfMonth();
                         } else {
                             d = String.valueOf(date.getDayOfMonth());
                         }
