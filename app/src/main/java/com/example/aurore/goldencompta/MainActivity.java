@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
         String myBudget, month, depenseString;
         Date date;
 
-        SharedPreferences preferences = getSharedPreferences (BUD,0);
+        SharedPreferences preferences = getSharedPreferences(BUD, 0);
         myBudget = preferences.getString(BUD, "Aucun budget");
         monBudget = Double.parseDouble(myBudget);
 
@@ -54,13 +54,19 @@ public class MainActivity extends Activity {
         myCalendar.setTime(date);
         mois = myCalendar.MONTH;
         month = String.valueOf(mois);
-        if (mois<10) {
+        if (mois < 10) {
             month = "0" + month;
         }
         DepenseBDD depense = new DepenseBDD(this);
         Cursor depenseMois = depense.selectDepenseOneMois(month);
         depenseMois.moveToFirst();
-        depenseString = depenseMois.getString(0).replace(",", ".");
+        if (depenseMois.getCount() != 0) {
+            depenseString = depenseMois.getString(0).replace(",", ".");
+        }
+        else {
+            depenseString = "0";
+        }
+
         mesDepenses = Double.parseDouble(depenseString);
 
         Toast toast = Toast.makeText(getApplicationContext(),  "nb " + mois + "testo " + depenseMois.getString(0) , Toast.LENGTH_SHORT);
