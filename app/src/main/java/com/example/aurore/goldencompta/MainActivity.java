@@ -28,6 +28,7 @@ public class MainActivity extends Activity {
     public static int CATEGORIE = 0;
     public static int DEPENSE = 1;
     public static int BUDGET = 2;
+    public static int IMAGE = 3;
 
     DepenseBDD depenseBDD = new DepenseBDD(this);
     TableLayout t1;
@@ -93,6 +94,7 @@ public class MainActivity extends Activity {
         listView = (ListView) findViewById(R.id.listView1);
         ArrayList<String> values = new ArrayList<String>();
 
+        Depense d;
 
 
         values = depenseBDD.getAllDepense();
@@ -161,6 +163,17 @@ public class MainActivity extends Activity {
             } else {
                 Toast.makeText(this, "Erreur lors de l'insertion", Toast.LENGTH_LONG).show();
             }
+        } else if (requestCode == IMAGE){
+            if(resultCode == RESULT_OK){
+                float montant = Float.parseFloat(data.getStringExtra("NEWDEPENSE_IMAGE"));
+                Depense newDep = new Depense(data.getStringExtra("DATE_IMAGE"), montant, data.getStringExtra("CATEGORIE_IMAGE"));
+
+                //Ajout dans la base de données
+                DepenseBDD cdepBdd = new DepenseBDD(this);
+                cdepBdd.open();
+                cdepBdd.insertDepense(newDep);
+                cdepBdd.close();
+            }
         }
     }
 
@@ -206,24 +219,13 @@ public class MainActivity extends Activity {
                 Intent intentStat = new Intent(this, FormulaireStatistique.class);
                 startActivityForResult(intentStat, BUDGET);
                 return true;
+            case R.id.menu_img:
+                Intent intentImage = new Intent(this, FormulaireImg.class);
+                startActivityForResult(intentImage, IMAGE);
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-/*
-    public TextView generateTextView(String texte, TableRow.LayoutParams ly) {
-        TextView result = new TextView(this);
-        result.setBackgroundColor(Color.LTGRAY);
-        result.setTextColor(Color.DKGRAY);
-        result.setGravity(Gravity.CENTER);
-        result.setPadding(2, 2, 2, 2);
-        result.setText(texte);
-        result.setTextSize(20);
-        result.setVisibility(View.VISIBLE);
-        result.setLayoutParams(ly);
-        return result;
-    }
-*/
 
 }

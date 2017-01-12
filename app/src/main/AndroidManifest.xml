@@ -27,7 +27,11 @@
         <activity
             android:name=".FormulaireCamera" />
         <activity
+            android:name=".FormulaireImg" />
+        <activity
             android:name=".FormulaireStatistique" />
     </application>
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 </manifest>
