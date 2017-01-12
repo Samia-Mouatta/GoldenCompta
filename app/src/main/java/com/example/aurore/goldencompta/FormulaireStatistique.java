@@ -85,23 +85,44 @@ public class FormulaireStatistique extends Activity {
 
         url = "http://chart.apis.google.com/chart?cht=bvs&chs=300x120&chd=t:";
 
-        depenseListe = depenseBDD.selectDepenseByMontant("00,00","15,00");
+        depenseListe = depenseBDD.selectDepenseByMontant("00,00","10,00");
         depenseListe.moveToFirst();
-        url = url + depenseListe.getString(0) + ",";
+        if (depenseListe.getCount() == 0) {
+            url = url + "0,";
+        }
+        else {
+            url = url + depenseListe.getString(0) + ",";
+        }
 
         depenseListe = depenseBDD.selectDepenseByMontant("10,00","25,00");
         depenseListe.moveToFirst();
-        url = url + depenseListe.getString(0) + ",";
+        if (depenseListe.getCount() == 0) {
+            url = url + "0,";
+        }
+        else {
+            url = url + depenseListe.getString(0) + ",";
+        }
 
         depenseListe = depenseBDD.selectDepenseByMontant("20,00","50,00");
         depenseListe.moveToFirst();
-        url = url + depenseListe.getString(0) + ",";
+        if (depenseListe.getCount() == 0) {
+            url = url + "0,";
+        }
+        else {
+            url = url + depenseListe.getString(0) + ",";
+        }
 
         depenseListe = depenseBDD.selectDepenseByMontant("50,00","90,00");
         depenseListe.moveToFirst();
-        url = url + depenseListe.getString(0) + "&chl=";
+        if (depenseListe.getCount() == 0) {
+            url = url + "0&chl=";
+        }
+        else {
+            url = url + depenseListe.getString(0) + "&chl=";
+        }
 
-        url = url +"10|20|50|100";
+
+        url = url +"10-20|20-50|50-00|100";
         url = url.replace("null", "0");
         depenseByMontant.loadUrl(url);
 
