@@ -1,6 +1,8 @@
 package com.example.aurore.goldencompta;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,6 +34,11 @@ public class MainActivity extends Activity {
 
     DepenseBDD depenseBDD = new DepenseBDD(this);
     TableLayout t1;
+    final String BUD = "budget";
+    int mois;
+    double monBudget, mesDepenses, value;
+    String myBudget, month, depenseString;
+    Date date;
 
     public final static int CHOOSE_BUTTON_REQUEST = 0;
 
@@ -40,11 +47,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final String BUD = "budget";
-        int mois;
-        double monBudget, mesDepenses, value;
-        String myBudget, month, depenseString;
-        Date date;
 
         SharedPreferences preferences = getSharedPreferences(BUD, 0);
         myBudget = preferences.getString(BUD, "Aucun budget");
@@ -59,7 +61,7 @@ public class MainActivity extends Activity {
             month = "0" + month;
         }
         DepenseBDD depense = new DepenseBDD(this);
-        Cursor depenseMois = depense.selectDepenseOneMois(month);
+        Cursor depenseMois = depense.selectDepenseOneMois("03");
         depenseMois.moveToFirst();
         if (depenseMois.getCount() != 0) {
             depenseString = depenseMois.getString(0).replace(",", ".");
@@ -70,6 +72,8 @@ public class MainActivity extends Activity {
 
         mesDepenses = Double.parseDouble(depenseString);
 
+        //System.out.println("Dépense mois : "+mesDepenses);
+
         Toast toast = Toast.makeText(getApplicationContext(),  "nb " + mois + "testo " + depenseMois.getString(0) , Toast.LENGTH_SHORT);
         toast.show();
         value = mesDepenses * 100 / monBudget;
@@ -77,6 +81,7 @@ public class MainActivity extends Activity {
         WebView budget = (WebView) findViewById(R.id.budget);
         String url = "http://chart.apis.google.com/chart?cht=gom&chco=12FE01,F6FE01,FE0101&chs=300x120&chd=t:"+ value + "&chxt=x,y&chxl=0:|"+ mesDepenses +"|1:|0|"+ monBudget;
         budget.loadUrl(url);
+
 
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#00e6ac"));
         // couleur de l'actionBar
@@ -174,6 +179,20 @@ public class MainActivity extends Activity {
                 cdepBdd.insertDepense(newDep);
                 cdepBdd.close();
             }
+        }else if (requestCode == BUDGET){
+            if (monBudget < mesDepenses) {
+                // afficher une boite de dialogue d'alerte
+                Builder builder = new Builder(this);
+                builder.setTitle("Alerte dépassement budget");
+                builder.setIcon(R.mipmap.alert);
+                builder.setMessage("Attention! Vous avez dépassé votre budget par mois");
+                builder.setCancelable(false);
+                builder.setNegativeButton("OK", new OkOnClickListener());
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+
+
         }
     }
 
@@ -181,7 +200,7 @@ public class MainActivity extends Activity {
     private final class OkOnClickListener implements
             DialogInterface.OnClickListener {
         public void onClick(DialogInterface dialog, int which) {
-            MainActivity.this.finish();
+            dialog.dismiss();
         }
     }
 

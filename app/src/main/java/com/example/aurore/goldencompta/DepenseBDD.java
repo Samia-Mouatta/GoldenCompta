@@ -180,9 +180,6 @@ public class DepenseBDD {
         String TABLE_NAME = "table_depense";
         this.open();
 
-        // return bdd.rawQuery("SELECT SUM(montant) FROM " + TABLE_NAME + " WHERE strftime('%m', date) = strftime('%m', ( SELECT DATE('now')))"+ " GROUP BY strftime('%m',date) ", null);
-        // return bdd.rawQuery(" SELECT SUM(montant) FROM " + TABLE_NAME +  " WHERE strftime('%m', date) "+" = strftime('%m', (SELECT DATE ('now'))) GROUP BY strftime('%m', date)",null);
-        //return bdd.rawQuery("SELECT SUM(montant),strftime('%m',date) as Mois FROM " + TABLE_NAME +  "  GROUP BY strftime('%m',date) ", null);
         return bdd.rawQuery("SELECT montant,strftime('%m',date) as Mois FROM " + TABLE_NAME +  "", null);
     }
 
@@ -194,16 +191,18 @@ public class DepenseBDD {
 
     }
 
+
+
     public final float getDepenseMois(){
+        float totalDep;
         Cursor c=selectDepenseMois();
-        c.moveToLast();
-        // if (c.moveToFirst())
-        float totalDep = c.getFloat(0);
+        //c.moveToLast();
+        if (c.moveToFirst()) {
+            totalDep = c.getFloat(0);
 
-        return totalDep;
-
-        //   return 0;
-
+            return totalDep;
+        }
+        return 0;
     }
 
 
