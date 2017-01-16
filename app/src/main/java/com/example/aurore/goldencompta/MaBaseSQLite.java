@@ -26,14 +26,24 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
     public  static final String CREATE_BDD2 = "CREATE TABLE categorie (id INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT NOT NULL); CREATE TABLE table_depense (id INTEGER PRIMARY KEY AUTOINCREMENT, montant REAL NOT NULL "
             + "date DATE NOT NULL, categorie);";
 
+    /**
+     * Méthode pour créer/ouvrir ou gérer une base de donnée
+     * @param context Context à utiliser pour ouvrir ou créer la base de données
+     * @param name Chaine de caractère pour le nom du fichier de la base de données
+     * @param factory CursorFactory pour crée des cursor
+     * @param version entier pour la version de la base de donnée
+     */
     public MaBaseSQLite(Context context, String name, CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 
+    /**
+     * Méthode qui initialise notre base de donnée
+     * @param db La base de donnée où l'on va créer les tables
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         //on crée la table à partir de la requête écrite dans la variable CREATE_BDD
-//        db.execSQL(CREATE_BDD);
 
         db.execSQL("CREATE TABLE table_categorie (id INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT NOT NULL);");
         db.execSQL("CREATE TABLE table_depense (id INTEGER PRIMARY KEY AUTOINCREMENT, montant REAL NOT NULL, date string NOT NULL, categorie string);");
@@ -84,39 +94,15 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
         String ROW16 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('16','Cadeaux');";
         db.execSQL(ROW16);
 
-        String ROW11 = "INSERT INTO " + TABLE_DEPENSE + " Values ('1', '12,20','2009-02-02 10:00:00', 'Animaux');";
-        db.execSQL(ROW11);
-
-        String ROW22 = "INSERT INTO " + TABLE_DEPENSE + " Values ('2','56,32','2007-03-03 10:00:00', 'Courses');";
-        db.execSQL(ROW22);
-
-        String ROW33 = "INSERT INTO " + TABLE_DEPENSE + " Values ('3','14,50','2007-10-01 10:00:00', 'Pizza');";
-        db.execSQL(ROW33);
-
-        String ROW34 = "INSERT INTO " + TABLE_DEPENSE + " Values ('4','38,50','2007-12-01 10:00:00', 'Pizza');";
-        db.execSQL(ROW34);
-
-        String ROW35 = "INSERT INTO " + TABLE_DEPENSE + " Values ('5','5,50','2007-06-01 10:00:00', 'Pizza');";
-        db.execSQL(ROW35);
-
-        String ROW36 = "INSERT INTO " + TABLE_DEPENSE + " Values ('6','8,50','2007-01-01 10:00:00', 'Pizza');";
-        db.execSQL(ROW36);
-
-//        String ROW35 = "INSERT INTO dep Values ('4', null, null, null, null);";
-//        db.execSQL(ROW35);
-
-
-//        String ROW11 = "INSERT INTO " + TABLE_DEPENSE + " Values ('1', '12,20,'12/06/2009', '120', 'Animaux');";
-//        db.execSQL(ROW11);
-
-//        String ROW22 = "INSERT INTO " + TABLE_DEPENSE + " Values ('2','56,32,'13/06/2009', '1650', 'Courses');";
-//        db.execSQL(ROW22);
-//
-//        String ROW33 = "INSERT INTO " + TABLE_DEPENSE + " Values ('3','14,50','14/06/2009', '10', 'Pizza');";
-//        db.execSQL(ROW33);
 
     }
 
+    /**
+     * Méthode qui permet de changer la version de la base de donnée
+     * @param db la base de donné
+     * @param oldVersion numéro de version actuel de la base de donnée
+     * @param newVersion numéro de la nouvelle version de la base de donnée
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         //On peut faire ce qu'on veut ici moi j'ai décidé de supprimer la table et de la recréer
