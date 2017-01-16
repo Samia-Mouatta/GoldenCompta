@@ -41,7 +41,7 @@ public class CategorieBDD {
     }
 
     /**
-     * Méthode pur ouvrir l'acés a la table
+     * Méthode pour ouvrir l'accès a la table
      */
     public void open(){
         //on ouvre la BDD en écriture

@@ -40,21 +40,35 @@ public class DepenseBDD {
 
     private MaBaseSQLite maBaseSQLite;
 
+    /**
+     * Méthode d'initialisation de la base de données
+     * @param context
+     */
     public DepenseBDD(Context context){
         //On crée la BDD et sa table
         maBaseSQLite = new MaBaseSQLite(context, NOM_BDD, null, VERSION_BDD);
     }
 
+    /**
+     * Méthode pour ouvrir l'accès a la base
+     */
     public void open(){
         //on ouvre la BDD en écriture
         bdd = maBaseSQLite.getWritableDatabase();
     }
 
+    /**
+     * Méthode pour fermer l'accès à la base
+     */
     public void close(){
         //on ferme l'accès à la BDD
         bdd.close();
     }
 
+    /**
+     * Méthode retournant toutes les dépenses
+     * @return
+     */
      public Cursor populateTable(){
 
         String[] columns = {maBaseSQLite.COL_CATEG,maBaseSQLite.COL_DATE,maBaseSQLite.COL_MONTANT};
@@ -66,13 +80,20 @@ public class DepenseBDD {
         return cursor;
      }
 
-
+    /**
+     * Méthode retournant toute le base
+     * @return
+     */
     public SQLiteDatabase getBDD(){
         return bdd;
     }
 
 
-
+    /**
+     * Méthode d'insertion d'une dépense
+     * @param dep la dépense à ajouter
+     * @return la dépense qui a bien été ajoutée
+     */
     public Depense insertDepense(Depense dep){
         ContentValues values = new ContentValues();
         //values.put(COL_ID, categ.getId());
@@ -90,9 +111,15 @@ public class DepenseBDD {
         return newDep;
     }
 
+    /**
+     * Méthode de mise a jour d'une dépense
+     * @param id id de la dépense
+     * @param dep dépense à modifier
+     * @return la dépense modifiée
+     */
     public int updateDepense(int id, Depense dep){
-        //La mise à jour d'une catégorie dans la BDD fonctionne plus ou moins comme une insertion
-        //il faut simplement préciser quel catégorie on doit mettre à jour grâce à l'ID
+        //La mise à jour d'une dépense dans la BDD fonctionne plus ou moins comme une insertion
+        //il faut simplement préciser quel dépense on doit mettre à jour grâce à l'ID
         ContentValues values = new ContentValues();
 
         Format formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -104,11 +131,22 @@ public class DepenseBDD {
         return bdd.update(TABLE_DEPENSE, values, COL_ID + " = " +id, null);
     }
 
+    /**
+     * Méthode de suppression d'une dépense
+     * @param id id de la dépense
+     * @return la dépense supprimée
+     */
     public int removeDepenseWithID(int id){
         //Suppression d'une dépense de la BDD grâce à l'ID
         return bdd.delete(TABLE_DEPENSE, COL_ID + " = " +id, null);
     }
 
+    /**
+     * Méthode retournant les dépenses classée par catégorie
+     * @param inputText
+     * @return curseur de dépense
+     * @throws SQLException
+     */
     public Cursor fetchDepensesByName(String inputText) throws SQLException {
         Log.w(TAG, inputText);
         Cursor mCursor = null;
@@ -130,6 +168,11 @@ public class DepenseBDD {
         return mCursor;
 
     }
+
+    /**
+     * Méthode retournant toutes les dépenses classées par date
+     * @return curseur de dépense
+     */
     public Cursor selectDepense(){
 
         String TABLE_NAME = "table_depense";
@@ -140,6 +183,10 @@ public class DepenseBDD {
 
     }
 
+    /**
+     * Méthode retournant les dépenses classées par catégorie
+     * @return curseur de dépense
+     */
     public Cursor selectDepenseByCat(){
 
         String TABLE_NAME = "table_depense";
@@ -150,31 +197,27 @@ public class DepenseBDD {
 
     }
 
-
-    /*public Cursor selectDepenseWeekend(){
-
-        String TABLE_NAME = "table_depense";
-        this.open();
-        String querry = "SELECT SUMM(montant) as total FROM table_depense WHERE ";
-        return bdd.rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY categorie", null);
-
-
-    }*/
-
+    /**
+     * Méthode retournant les dépenses efféctuées entre une fourchette de montant
+     * @param min borne minimale du montnant
+     * @param max borne maximale du montnant
+     * @return curseur de dépense
+     */
     public Cursor selectDepenseByMontant(String min, String max){
 
         String TABLE_NAME = "table_depense";
         this.open();
-        //String querry = "SELECT SUM(montant) FROM table_depense WHERE montant > '30,00'";
-        //String querry = "SELECT SUM(montant) FROM table_depense WHERE montant BETWEEN '10,00' AND '60,00'";
         String querry = "SELECT SUM(montant) FROM table_depense WHERE montant BETWEEN '"+ min +"' AND '"+ max +"'";
+        //String querry = "SELECT COUNT(id) FROM table_depense WHERE montant BETWEEN '"+ min +"' AND '"+ max +"'";
         return bdd.rawQuery(querry, null);
 
 
     }
 
-
-    // Total des dépenses par mois
+    /**
+     * Méthode retournant le total du montant des dépenses pour chaque mois
+     * @return curseur de dépense
+     */
     public Cursor selectDepenseMois(){
 
         String TABLE_NAME = "table_depense";
@@ -183,6 +226,11 @@ public class DepenseBDD {
         return bdd.rawQuery("SELECT montant,strftime('%m',date) as Mois FROM " + TABLE_NAME +  "", null);
     }
 
+    /**
+     * Méthode retournant le montant des dépense d'un mois
+     * @param month mois donné
+     * @return curseur de dépense
+     */
     public Cursor selectDepenseOneMois(String month){
 
         String TABLE_NAME = "table_depense";
@@ -191,22 +239,11 @@ public class DepenseBDD {
 
     }
 
-
-
-    public final float getDepenseMois(){
-        float totalDep;
-        Cursor c=selectDepenseMois();
-        //c.moveToLast();
-        if (c.moveToFirst()) {
-            totalDep = c.getFloat(0);
-
-            return totalDep;
-        }
-        return 0;
-    }
-
-
-    //Cette méthode permet de convertir un cursor en une dépense
+    /**
+     * méthode permetant de convertir un cursor en une dépense
+     * @param c curseur d'entré
+     * @return dépense de sortie
+     */
     private static final Depense cursorToDepense(Cursor c){
 
         if (c.getCount() == 0)
@@ -220,7 +257,10 @@ public class DepenseBDD {
         return dep;
     }
 
-
+    /**
+     * Méthode permettant d'obtenir toutes les dépenses en array de string
+     * @return array de string
+     */
     public ArrayList<String> getAllDepense(){
 
         ArrayList<String> listeDepense = new ArrayList<String>();

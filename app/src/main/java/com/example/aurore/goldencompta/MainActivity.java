@@ -1,7 +1,6 @@
 package com.example.aurore.goldencompta;
 
 import android.app.Activity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,57 +35,14 @@ public class MainActivity extends Activity {
 
     public final static int CHOOSE_BUTTON_REQUEST = 0;
 
+    /**
+     * Méthode principale du lancement de l'application
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        final String BUD = "budget";
-        int mois;
-        double monBudget, mesDepenses, value;
-        String myBudget, month, depenseString;
-        Date date;
-
-        SharedPreferences preferences = getSharedPreferences(BUD, 0);
-        myBudget = preferences.getString(BUD, "Aucun budget");
-        System.out.println("Mon Budget = " + myBudget);
-        if (!myBudget.equals("Aucun budget")) {
-            monBudget = Double.parseDouble(myBudget);
-        }
-        monBudget = 100;
-        date = new Date();
-        Calendar myCalendar = GregorianCalendar.getInstance();
-        myCalendar.setTime(date);
-        mois = myCalendar.MONTH;
-        month = String.valueOf(mois);
-        if (mois < 10) {
-            month = "0" + month;
-        }
-        DepenseBDD depense = new DepenseBDD(this);
-        Cursor depenseMois = depense.selectDepenseOneMois(month);
-
-        depenseMois.moveToFirst();
-        if (depenseMois.getCount() != 0) {
-            depenseString = depenseMois.getString(0).replace(",", ".");
-            Toast toast = Toast.makeText(getApplicationContext(), "nb " + mois + "testo " + depenseMois.getString(0), Toast.LENGTH_SHORT);
-            toast.show();
-        } else {
-            depenseString = "0";
-        }
-
-        mesDepenses = Double.parseDouble(depenseString);
-
-
-        if (!myBudget.equals("Aucun budget")) {
-            value = mesDepenses * 100 / monBudget;
-        } else {
-            value = mesDepenses * 100 / 500;
-        }
-
-        WebView budget = (WebView) findViewById(R.id.budget);
-
-        String url = "http://chart.apis.google.com/chart?cht=gom&chco=12FE01,F6FE01,FE0101&chs=300x120&chd=t:" + value + "&chxt=x,y&chxl=0:|" + mesDepenses + "|1:|0|" + monBudget;
-        budget.loadUrl(url);
 
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#00e6ac"));
         // couleur de l'actionBar
@@ -97,15 +53,14 @@ public class MainActivity extends Activity {
         getActionBar().setDisplayShowHomeEnabled(true);
 
         TextView estVide;
-
         estVide = (TextView) findViewById(R.id.vide);
-
 
         ListView listView;
         listView = (ListView) findViewById(R.id.listView1);
         ArrayList<String> values = new ArrayList<String>();
         Depense d;
 
+        affichageBudget();
 
         values = depenseBDD.getAllDepense();
 
@@ -125,12 +80,22 @@ public class MainActivity extends Activity {
 
     }
 
+    /**
+     * Méthode de création du menu
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
+    /**
+     * Méthode de navigation dans les items du menu
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -153,11 +118,6 @@ public class MainActivity extends Activity {
                 Intent intentBudget = new Intent(this, FormulaireBudget.class);
                 startActivityForResult(intentBudget, BUDGET);
                 return true;
-            case R.id.menu_camera:
-                //Comportement du bouton "camera"
-                Intent intentCamera = new Intent(this, FormulaireCamera.class);
-                startActivityForResult(intentCamera, BUDGET);
-                return true;
             case R.id.menu_statistique:
                 //Comportement du bouton "camera"
                 Intent intentStat = new Intent(this, FormulaireStatistique.class);
@@ -171,8 +131,13 @@ public class MainActivity extends Activity {
         }
     }
 
-
-
+    /**
+     * Méthode de mise a jour de la base de données
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -225,6 +190,63 @@ public class MainActivity extends Activity {
                 cdepBdd.close();
             }
         }
+    }
+
+    /**
+     * Méthode permettant d'afficher la jauge du budget avec l'API google chart
+     */
+    private void affichageBudget() {
+
+        String BUD = "budget";
+        int mois;
+        double monBudget, mesDepenses, value;
+        String myBudget, month, depenseString;
+        Date date;
+        DepenseBDD depense = new DepenseBDD(this);
+
+        SharedPreferences preferences = getSharedPreferences(BUD, 0);
+        myBudget = preferences.getString(BUD, "Aucun budget");
+        System.out.println("Mon Budget = " + myBudget);
+        if (!myBudget.equals("Aucun budget")) {
+            monBudget = Double.parseDouble(myBudget);
+        }
+        else {
+            monBudget = 0;
+        }
+        //monBudget = 100;
+        date = new Date();
+        Calendar myCalendar = GregorianCalendar.getInstance();
+        myCalendar.setTime(date);
+        mois = myCalendar.MONTH;
+        month = String.valueOf(mois);
+        if (mois < 10) {
+            month = "0" + month;
+        }
+
+        Cursor depenseMois = depense.selectDepenseOneMois(month);
+
+        depenseMois.moveToFirst();
+        if (depenseMois.getCount() != 0) {
+            depenseString = depenseMois.getString(0).replace(",", ".");
+            Toast toast = Toast.makeText(getApplicationContext(), "nb " + mois + "testo " + depenseMois.getString(0), Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            depenseString = "0";
+        }
+
+        mesDepenses = Double.parseDouble(depenseString);
+
+
+        if (!myBudget.equals("Aucun budget")) {
+            value = mesDepenses * 100 / monBudget;
+        } else {
+            value = mesDepenses * 100 / 500;
+        }
+
+        WebView budget = (WebView) findViewById(R.id.budget);
+
+        String url = "http://chart.apis.google.com/chart?cht=gom&chco=12FE01,F6FE01,FE0101&chs=300x120&chd=t:" + value + "&chxt=x,y&chxl=0:|" + mesDepenses + "|1:|0|" + monBudget;
+        budget.loadUrl(url);
     }
 
 

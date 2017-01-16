@@ -29,7 +29,7 @@ public class FormulaireDepense extends Activity {
 
     /**
      * Méthode qui permet d'initialiser notre Intent
-     * @param savedInstanceState le bundle utilisé pour crée la méthode
+     * @param savedInstanceState le bundle utilisé pour créer la méthode
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {

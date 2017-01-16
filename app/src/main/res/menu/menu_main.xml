@@ -30,11 +30,6 @@
         android:icon="@android:drawable/ic_menu_add"
         android:title="Image"/>
     <item
-        android:id="@+id/menu_camera"
-        app:showAsAction="ifRoom"
-        android:icon="@android:drawable/ic_menu_add"
-        android:title="Camera"/>
-    <item
         android:id="@+id/menu_statistique"
         app:showAsAction="ifRoom"
         android:icon="@android:drawable/ic_menu_add"

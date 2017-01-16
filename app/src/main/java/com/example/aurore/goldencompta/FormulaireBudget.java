@@ -10,9 +10,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
-import android.content.DialogInterface;
 
 
 /**
@@ -22,6 +19,10 @@ import android.content.DialogInterface;
 public class FormulaireBudget extends Activity {
     Activity main = this;
 
+    /**
+     * Methode d'initialisation de l'intent
+     * @param savedInstanceState le bundle utilisé pour créer la méthode
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
