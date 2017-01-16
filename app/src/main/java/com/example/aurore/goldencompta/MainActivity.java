@@ -68,14 +68,15 @@ public class MainActivity extends Activity {
         depenseMois.moveToFirst();
         if (depenseMois.getCount() != 0) {
             depenseString = depenseMois.getString(0).replace(",", ".");
+            Toast toast = Toast.makeText(getApplicationContext(), "nb " + mois + "testo " + depenseMois.getString(0), Toast.LENGTH_SHORT);
+            toast.show();
         } else {
             depenseString = "0";
         }
 
         mesDepenses = Double.parseDouble(depenseString);
 
-        Toast toast = Toast.makeText(getApplicationContext(), "nb " + mois + "testo " + depenseMois.getString(0), Toast.LENGTH_SHORT);
-        toast.show();
+
         if (!myBudget.equals("Aucun budget")) {
             value = mesDepenses * 100 / monBudget;
         } else {
@@ -107,7 +108,7 @@ public class MainActivity extends Activity {
 
 
         values = depenseBDD.getAllDepense();
-        System.out.println("Categorie : " + values.get(1));
+
 
         if (values.size() != 0) {
             System.out.println("Categorie : " + values.get(1));
