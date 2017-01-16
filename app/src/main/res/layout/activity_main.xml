@@ -16,7 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="10pt"
-            android:id="@+id/budget"/>
+            android:id="@+id/budget"
+            />
     </LinearLayout>
 
     <TextView

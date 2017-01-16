@@ -11,6 +11,11 @@ import android.widget.Toast;
 
 public class FormulaireCategorie extends Activity {
     Activity main = this;
+
+    /**
+     * Méthode qui permet d'initialiser notre Intent
+     * @param savedInstanceState le bundle utilisé pour crée la méthode
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

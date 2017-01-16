@@ -35,70 +35,35 @@ public class MainActivity extends Activity {
 
     public final static int CHOOSE_BUTTON_REQUEST = 0;
 
+    /**
+     * Méthode principale du lancement de l'application
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final String BUD = "budget";
-        int mois;
-        double monBudget, mesDepenses, value;
-        String myBudget, month, depenseString;
-        Date date;
-
-        SharedPreferences preferences = getSharedPreferences(BUD, 0);
-        myBudget = preferences.getString(BUD, "Aucun budget");
-        monBudget = Double.parseDouble(myBudget);
-
-        date = new Date();
-        Calendar myCalendar = GregorianCalendar.getInstance();
-        myCalendar.setTime(date);
-        mois = myCalendar.MONTH;
-        month = String.valueOf(mois);
-        if (mois < 10) {
-            month = "0" + month;
-        }
-        DepenseBDD depense = new DepenseBDD(this);
-        Cursor depenseMois = depense.selectDepenseOneMois(month);
-        depenseMois.moveToFirst();
-        if (depenseMois.getCount() != 0) {
-            depenseString = depenseMois.getString(0).replace(",", ".");
-        }
-        else {
-            depenseString = "0";
-        }
-
-        mesDepenses = Double.parseDouble(depenseString);
-
-        Toast toast = Toast.makeText(getApplicationContext(),  "nb " + mois + "testo " + depenseMois.getString(0) , Toast.LENGTH_SHORT);
-        toast.show();
-        value = mesDepenses * 100 / monBudget;
-
-        WebView budget = (WebView) findViewById(R.id.budget);
-        String url = "http://chart.apis.google.com/chart?cht=gom&chco=12FE01,F6FE01,FE0101&chs=300x120&chd=t:"+ value + "&chxt=x,y&chxl=0:|"+ mesDepenses +"|1:|0|"+ monBudget;
-        budget.loadUrl(url);
-
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#00e6ac"));
         // couleur de l'actionBar
         getActionBar().setBackgroundDrawable(colorDrawable);
+
         // icon
         getActionBar().setDisplayUseLogoEnabled(true);
         getActionBar().setDisplayShowHomeEnabled(true);
 
         TextView estVide;
-
         estVide = (TextView) findViewById(R.id.vide);
-
 
         ListView listView;
         listView = (ListView) findViewById(R.id.listView1);
         ArrayList<String> values = new ArrayList<String>();
-
         Depense d;
 
+        affichageBudget();
 
         values = depenseBDD.getAllDepense();
-        System.out.println("Categorie : " + values.get(1));
+
 
         if (values.size() != 0) {
             System.out.println("Categorie : " + values.get(1));
@@ -109,20 +74,70 @@ public class MainActivity extends Activity {
             estVide.setVisibility(View.VISIBLE);
         }
 
-
         //Création de l'instance de la classe CategorieBDD
         CategorieBDD categBdd = new CategorieBDD(this);
 
 
     }
 
-
+    /**
+     * Méthode de création du menu
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
+    /**
+     * Méthode de navigation dans les items du menu
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            //Retour à la page d'accueil
+            case R.id.menu_main:
+                return true;
+            //case R.id.menu_about:
+            case R.id.menu_category:
+                // Comportement du bouton "Catégorie"
+                Intent intentCategory = new Intent(this, FormulaireCategorie.class);
+                startActivityForResult(intentCategory, CATEGORIE);
+                return true;
+            case R.id.menu_depense:
+                //Comportement du bouton "Dépense"
+                Intent intentDepense = new Intent(this, FormulaireDepense.class);
+                startActivityForResult(intentDepense, DEPENSE);
+                return true;
+            case R.id.menu_budget:
+                //Comportement du bouton "budget"
+                Intent intentBudget = new Intent(this, FormulaireBudget.class);
+                startActivityForResult(intentBudget, BUDGET);
+                return true;
+            case R.id.menu_statistique:
+                //Comportement du bouton "camera"
+                Intent intentStat = new Intent(this, FormulaireStatistique.class);
+                startActivityForResult(intentStat, BUDGET);
+                return true;
+            case R.id.menu_img:
+                Intent intentImage = new Intent(this, FormulaireImg.class);
+                startActivityForResult(intentImage, IMAGE);
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Méthode de mise a jour de la base de données
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -163,8 +178,8 @@ public class MainActivity extends Activity {
             } else {
                 Toast.makeText(this, "Erreur lors de l'insertion", Toast.LENGTH_LONG).show();
             }
-        } else if (requestCode == IMAGE){
-            if(resultCode == RESULT_OK){
+        } else if (requestCode == IMAGE) {
+            if (resultCode == RESULT_OK) {
                 float montant = Float.parseFloat(data.getStringExtra("NEWDEPENSE_IMAGE"));
                 Depense newDep = new Depense(data.getStringExtra("DATE_IMAGE"), montant, data.getStringExtra("CATEGORIE_IMAGE"));
 
@@ -177,6 +192,64 @@ public class MainActivity extends Activity {
         }
     }
 
+    /**
+     * Méthode permettant d'afficher la jauge du budget avec l'API google chart
+     */
+    private void affichageBudget() {
+
+        String BUD = "budget";
+        int mois;
+        double monBudget, mesDepenses, value;
+        String myBudget, month, depenseString;
+        Date date;
+        DepenseBDD depense = new DepenseBDD(this);
+
+        SharedPreferences preferences = getSharedPreferences(BUD, 0);
+        myBudget = preferences.getString(BUD, "Aucun budget");
+        System.out.println("Mon Budget = " + myBudget);
+        if (!myBudget.equals("Aucun budget")) {
+            monBudget = Double.parseDouble(myBudget);
+        }
+        else {
+            monBudget = 0;
+        }
+        //monBudget = 100;
+        date = new Date();
+        Calendar myCalendar = GregorianCalendar.getInstance();
+        myCalendar.setTime(date);
+        mois = myCalendar.MONTH;
+        month = String.valueOf(mois);
+        if (mois < 10) {
+            month = "0" + month;
+        }
+
+        Cursor depenseMois = depense.selectDepenseOneMois(month);
+
+        depenseMois.moveToFirst();
+        if (depenseMois.getCount() != 0) {
+            depenseString = depenseMois.getString(0).replace(",", ".");
+            Toast toast = Toast.makeText(getApplicationContext(), "nb " + mois + "testo " + depenseMois.getString(0), Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            depenseString = "0";
+        }
+
+        mesDepenses = Double.parseDouble(depenseString);
+
+
+        if (!myBudget.equals("Aucun budget")) {
+            value = mesDepenses * 100 / monBudget;
+        } else {
+            value = mesDepenses * 100 / 500;
+        }
+
+        WebView budget = (WebView) findViewById(R.id.budget);
+
+        String url = "http://chart.apis.google.com/chart?cht=gom&chco=12FE01,F6FE01,FE0101&chs=300x120&chd=t:" + value + "&chxt=x,y&chxl=0:|" + mesDepenses + "|1:|0|" + monBudget;
+        budget.loadUrl(url);
+    }
+
+
     // Cliquer sur le bouton ok une fois on lit le message
     private final class OkOnClickListener implements
             DialogInterface.OnClickListener {
@@ -184,48 +257,4 @@ public class MainActivity extends Activity {
             MainActivity.this.finish();
         }
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            //Retour à la page d'accueil
-            case R.id.menu_main:
-
-                return true;
-            //case R.id.menu_about:
-            case R.id.menu_category:
-                // Comportement du bouton "Catégorie"
-                Intent intentCategory = new Intent(this, FormulaireCategorie.class);
-                startActivityForResult(intentCategory, CATEGORIE);
-                return true;
-            case R.id.menu_depense:
-                //Comportement du bouton "Dépense"
-                Intent intentDepense = new Intent(this, FormulaireDepense.class);
-                startActivityForResult(intentDepense, DEPENSE);
-                return true;
-            case R.id.menu_budget:
-                //Comportement du bouton "budget"
-                Intent intentBudget = new Intent(this, FormulaireBudget.class);
-                startActivityForResult(intentBudget, BUDGET);
-                return true;
-            case R.id.menu_camera:
-                //Comportement du bouton "camera"
-                Intent intentCamera = new Intent(this, FormulaireCamera.class);
-                startActivityForResult(intentCamera, BUDGET);
-                return true;
-            case R.id.menu_statistique:
-                //Comportement du bouton "camera"
-                Intent intentStat = new Intent(this, FormulaireStatistique.class);
-                startActivityForResult(intentStat, BUDGET);
-                return true;
-            case R.id.menu_img:
-                Intent intentImage = new Intent(this, FormulaireImg.class);
-                startActivityForResult(intentImage, IMAGE);
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-
 }

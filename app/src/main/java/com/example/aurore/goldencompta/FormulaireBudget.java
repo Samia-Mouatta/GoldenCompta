@@ -19,6 +19,10 @@ import android.widget.Toast;
 public class FormulaireBudget extends Activity {
     Activity main = this;
 
+    /**
+     * Methode d'initialisation de l'intent
+     * @param savedInstanceState le bundle utilisé pour créer la méthode
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +54,7 @@ public class FormulaireBudget extends Activity {
             public void onClick(View v) {
 
                 String str = montant.getText().toString();
+
                 SharedPreferences preferences = getSharedPreferences (BUD,0);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString(BUD, str);
@@ -58,7 +63,6 @@ public class FormulaireBudget extends Activity {
                 Toast toast = Toast.makeText(getApplicationContext(), "Budget modifié", Toast.LENGTH_SHORT);
                 toast.show();
                 montantActuel.setText(str);
-
             }
         });
 

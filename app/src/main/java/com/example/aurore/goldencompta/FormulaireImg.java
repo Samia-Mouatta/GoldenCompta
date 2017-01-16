@@ -52,7 +52,10 @@ public class FormulaireImg extends Activity {
     protected String[] listeMotCle = {"MONTANT", "TOTAL", "Montant", "Total", "montant", "total"};
     protected boolean estMotCle = false, soldeTrouver = false;
 
-
+    /**
+     * Méthode qui permet d'initialiser notre Intent
+     * @param savedInstanceState le bundle utilisé pour crée la méthode
+     */
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.formulaire_img);
@@ -136,6 +139,12 @@ public class FormulaireImg extends Activity {
     }
 
 
+    /**
+     * Méthode appeller lorsque que l'on revient de la méthode startActivity
+     * @param requestCode Code du retour pour connaitre l'intent appeller par la méthode startActivity
+     * @param resultCode Code de retour qui determine si la méthode startActivity c'est bien dérouler
+     * @param data L'intent pour récupérer les données sauvegarder dans la vue appeller par le startActivity
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -195,7 +204,10 @@ public class FormulaireImg extends Activity {
         }
     }
 
-
+    /**
+     * Méthode qui permet d'aller cercher une image dans la gallerie
+     * @param v Une view pour définir dans quel vue a été appeller la méthode
+     */
     public void btGalleryClick(View v) {
         //Création puis ouverture de la boite de dialogue
         Intent intent = new Intent(Intent.ACTION_PICK);
@@ -204,6 +216,10 @@ public class FormulaireImg extends Activity {
         startActivityForResult(Intent.createChooser(intent, ""), PICK_IMAGE);
     }
 
+    /**
+     * Méthode pour initialiser le chemin d'accés a la librairie Tesseract
+     * @param dir le nom du tesseract
+     */
     private void checkFile(File dir) {
         if (!dir.exists()&& dir.mkdirs()){
             copyFiles();
@@ -218,6 +234,9 @@ public class FormulaireImg extends Activity {
         }
     }
 
+    /**
+     * Méthode pour copier le fichier
+     */
     private void copyFiles() {
         try {
             String filepath = datapath + "/tessdata/eng.traineddata";
@@ -248,6 +267,11 @@ public class FormulaireImg extends Activity {
         }
     }
 
+    /**
+     * Méthode pour déterminer si une chaine de caractère est un réel
+     * @param nombre la chaine de caractère a vérifier
+     * @return
+     */
     public boolean estReel(String nombre) {
         try {
             Float.parseFloat(nombre);

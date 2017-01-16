@@ -31,24 +31,43 @@ public class CategorieBDD {
 
     private MaBaseSQLite maBaseSQLite;
 
+    /**
+     * Méthode pour initialiser la table de la base de donnée
+     * @param context
+     */
     public CategorieBDD(Context context){
         //On crée la BDD et sa table
         maBaseSQLite = new MaBaseSQLite(context, NOM_BDD, null, VERSION_BDD);
     }
 
+    /**
+     * Méthode pour ouvrir l'accès a la table
+     */
     public void open(){
         //on ouvre la BDD en écriture
         bdd = maBaseSQLite.getWritableDatabase();
     }
 
+    /**
+     * Méthode pour fermer l'accés à la table
+     */
     public void close(){
         bdd.close();
     }
 
+    /**
+     * Méthode qui retourne la table de la base de donnée
+     * @return la table CATEGORIE de la base de donnée
+     */
     public SQLiteDatabase getBDD(){
         return bdd;
     }
 
+    /**
+     * Méthode pour inserer une cataegorie dans une base de donnée
+     * @param categ la catégorie a ajouter
+     * @return la categorie qui a été ajouter dans la table
+     */
     public Categorie insertCategorie(Categorie categ){
         ContentValues values = new ContentValues();
         //values.put(COL_ID, categ.getId());
@@ -64,6 +83,12 @@ public class CategorieBDD {
         return newCat;
     }
 
+    /**
+     * Méthode qui met a jour une catégorie présente dans la table
+     * @param id l'identifiant de la catégorie a modifer
+     * @param categ la catégorie qui va remplacer l'ancienne
+     * @return la catégorie modifié
+     */
     public int updateCategorie(int id, Categorie categ){
         //La mise à jour d'une catégorie dans la BDD fonctionne plus ou moins comme une insertion
         //il faut simplement préciser quel catégorie on doit mettre à jour grâce à l'ID
@@ -72,18 +97,31 @@ public class CategorieBDD {
         return bdd.update(TABLE_CATEGORIE, values, COL_ID + " = " +id, null);
     }
 
+    /**
+     * Méthode pour supprimer une catégorie selon son identifiant
+     * @param id l'identifiant de la catégorie a supprimer
+     * @return le nombre de ligne supprimé
+     */
     public int removeCategorieWithID(int id){
         //Suppression d'une catégorie de la BDD grâce à l'ID
         return bdd.delete(TABLE_CATEGORIE, COL_ID + " = " +id, null);
     }
 
+    /**
+     * Méthode qui retourne une catégorie selon son nom
+     * @param nom le nom de la catégorie recherché
+     * @return la catégorie recherché dans la table
+     */
     public Categorie getCategorieWithNom(String nom){
         //Récupère dans un Cursor les valeurs correspondant à une catégorie contenue dans la BDD (ici on sélectionne la catégorie grâce à son nom)
         Cursor c = bdd.query(TABLE_CATEGORIE, new String[] {COL_ID, COL_NOM}, COL_NOM + " LIKE \"" + nom +"\"", null, null, null, null);
         return cursorToCategorie(c);
     }
 
-
+    /**
+     * Méthode qui retourne toutes les catégorie présentes dans la table
+     * @return un tableau de Catégorie
+     */
     public List<Categorie> getAllCategories() {
         List<Categorie> categories = new ArrayList<Categorie>();
         Cursor cursor = bdd.query(TABLE_CATEGORIE,
@@ -99,6 +137,10 @@ public class CategorieBDD {
         return categories;
     }
 
+    /**
+     * Méthode qui retourne tous les nom des catégories présentes dans la table
+     * @return un tableau de chaine de caractères
+     */
     public List<String> getAllCategoriesName(){
         List<String> listeCategories = new ArrayList<String>();
         String nomCategorie = " " ;
@@ -117,6 +159,10 @@ public class CategorieBDD {
 
     }
 
+    /**
+     * Méthode qui recupère le résultat d'un requête
+     * @return Cursor contenant le résultat de la requête
+     */
     public Cursor categorieDepense(){
 
         String TABLE_NAME = "table_depense";
@@ -125,9 +171,11 @@ public class CategorieBDD {
         return bdd.rawQuery(MY_QUERY, null);
     }
 
-
-
-    //Cette méthode permet de convertir un cursor en une catégorie
+    /**
+     * Méthode qui permet de convertir un Cursor en Catégorie
+     * @param c Le cursor a convertir
+     * @return La Catégorie associé au cursor
+     */
     private Categorie cursorToCategorie(Cursor c){
         if (c.getCount() == 0)
             return null;

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.webkit.WebView;
-import android.widget.Toast;
 
 /**
  * Created by Bastien on 11/01/2017.
@@ -13,6 +12,9 @@ import android.widget.Toast;
 public class FormulaireStatistique extends Activity {
 
     @Override
+    /** Méthode d'initialisation de l'intent
+     * @param savedInstanceState le bundle utilisé pour crée la méthode
+     */
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.formulaire_statistique);
@@ -125,8 +127,7 @@ public class FormulaireStatistique extends Activity {
 
         periode = depenseBDD.selectDepenseMois();
         periode.moveToFirst();
-        Toast toast = Toast.makeText(getApplicationContext(), "valeur " + periode.getString(0) + "nb " + periode.getCount() , Toast.LENGTH_SHORT);
-        toast.show();
+
         for (i=1; i<periode.getCount(); i++) {
             value = periode.getString(0);
             url = url + value + ",";
