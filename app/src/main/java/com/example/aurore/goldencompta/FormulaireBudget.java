@@ -54,29 +54,14 @@ public class FormulaireBudget extends Activity {
 
                 String str = montant.getText().toString();
 
-              if (str.equals("")) {
-                    Builder builder = new Builder(FormulaireBudget.this);
-                    builder.setTitle("Alerte");
-                    builder.setIcon(R.mipmap.alert);
-                    builder.setMessage("Attention! Vous n'avez pas rempli le champ budget");
-                    builder.setCancelable(true);
-                    // ajouter un bouton
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                }else {
-                    SharedPreferences preferences = getSharedPreferences (BUD,0);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString(BUD, str);
-                    editor.commit();
-                    Toast toast = Toast.makeText(getApplicationContext(), "Budget modifié", Toast.LENGTH_SHORT);
-                    toast.show();
-                    montantActuel.setText(str);
-               }
+                SharedPreferences preferences = getSharedPreferences (BUD,0);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString(BUD, str);
+                editor.commit();
+
+                Toast toast = Toast.makeText(getApplicationContext(), "Budget modifié", Toast.LENGTH_SHORT);
+                toast.show();
+                montantActuel.setText(str);
             }
         });
 

@@ -231,7 +231,7 @@ public class DepenseBDD {
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             d = DepenseBDD.cursorToDepense(cursor);
-            ligne = "Montant : " + d.getMontant() + "    Date : " + d.getDate() +  "\nCategorie : " + d.getCategorie();
+            ligne = "Montant : " + d.getMontant() + "\nDate : " + d.getDate() +  "\nCategorie : " + d.getCategorie();
             listeDepense.add(ligne);
             cursor.moveToNext();
         }
