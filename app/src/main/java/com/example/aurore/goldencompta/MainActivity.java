@@ -66,10 +66,10 @@ public class MainActivity extends Activity {
 
 
         if (values.size() != 0) {
-            System.out.println("Categorie : " + values.get(1));
+            //System.out.println("Categorie : " + values.get(1));
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
             listView.setAdapter(adapter);
-            System.out.println("Categorie : " + adapter.getItem(1));
+            //System.out.println("Categorie : " + adapter.getItem(1));
         } else {
             estVide.setVisibility(View.VISIBLE);
         }
