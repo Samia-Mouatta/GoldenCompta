@@ -14,6 +14,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,11 +30,9 @@ public class MainActivity extends Activity {
     public static int DEPENSE = 1;
     public static int BUDGET = 2;
     public static int IMAGE = 3;
+    private ArrayAdapter<String> adapter;
 
     DepenseBDD depenseBDD = new DepenseBDD(this);
-    TableLayout t1;
-
-    public final static int CHOOSE_BUTTON_REQUEST = 0;
 
     /**
      * Méthode principale du lancement de l'application
@@ -55,10 +54,8 @@ public class MainActivity extends Activity {
         TextView estVide;
         estVide = (TextView) findViewById(R.id.vide);
 
-        ListView listView;
-        listView = (ListView) findViewById(R.id.listView1);
+        ListView listView = (ListView) findViewById(R.id.listView1);
         ArrayList<String> values = new ArrayList<String>();
-        Depense d;
 
         affichageBudget();
 
@@ -66,17 +63,11 @@ public class MainActivity extends Activity {
 
 
         if (values.size() != 0) {
-            //System.out.println("Categorie : " + values.get(1));
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
+            adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
             listView.setAdapter(adapter);
-            //System.out.println("Categorie : " + adapter.getItem(1));
         } else {
             estVide.setVisibility(View.VISIBLE);
         }
-
-        //Création de l'instance de la classe CategorieBDD
-        CategorieBDD categBdd = new CategorieBDD(this);
-
 
     }
 
@@ -149,7 +140,6 @@ public class MainActivity extends Activity {
                 //Ajout dans la base de données
                 CategorieBDD categBdd = new CategorieBDD(this);
                 categBdd.open();
-                // categBdd.insertCategorie(newCateg);
                 Categorie existCateg = categBdd.getCategorieWithNom(newCateg.getNom());
 
                 if (existCateg == null) {
@@ -174,6 +164,7 @@ public class MainActivity extends Activity {
                 cdepBdd.open();
                 cdepBdd.insertDepense(newDep);
                 cdepBdd.close();
+                updateData(newDep);
 
             } else {
                 Toast.makeText(this, "Erreur lors de l'insertion", Toast.LENGTH_LONG).show();
@@ -257,4 +248,9 @@ public class MainActivity extends Activity {
             MainActivity.this.finish();
         }
     }
+
+    public void updateData(Depense dep){
+        adapter.add(dep.toString());
+    }
+
 }
