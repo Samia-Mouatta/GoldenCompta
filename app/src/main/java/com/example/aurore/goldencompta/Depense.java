@@ -45,4 +45,5 @@ public class Depense {
     public String toString(){
         return "Montant : "+ montant +"\nDate : "+dateDepense+"\nCatégorie : "+categ;
     }
+
 }
