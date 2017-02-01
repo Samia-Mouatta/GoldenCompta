@@ -17,15 +17,11 @@ import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.FilterQueryProvider;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -64,61 +60,23 @@ public class MainActivity extends Activity {
         getActionBar().setDisplayUseLogoEnabled(true);
         getActionBar().setDisplayShowHomeEnabled(true);
 
-        TextView estVide;
-        estVide = (TextView) findViewById(R.id.vide);
-
-        ListView listView;
-        listView = (ListView) findViewById(R.id.listView1);
-        ArrayList<String> values = new ArrayList<String>();
-        Depense d;
-
         affichageBudget();
+        afficherDepenses();
 
-        values = depenseBDD.getAllDepense();
-
-        if (values.size() != 0) {
-            //System.out.println("Categorie : " + values.get(1));
-
-            adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
-            // Assign adapter to ListView
-            listView.setAdapter(adapter);
-            //enables filtering for the contents of the given ListView
-            listView.setTextFilterEnabled(true);
-
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
-                    // When clicked, show a toast with the TextView text
-                    Toast.makeText(getApplicationContext(),
-                            ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
-                }
-            });
-            EditText myFilter = (EditText) findViewById(R.id.search);
-            myFilter.addTextChangedListener(new TextWatcher() {
-
-                public void afterTextChanged(Editable s) {
-                }
-
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    adapter.getFilter().filter(s.toString());
-
-                }
-            });
-
-
-            //System.out.println("Categorie : " + adapter.getItem(1));
-        } else {
-            estVide.setVisibility(View.VISIBLE);
-        }
 
 
         //Création de l'instance de la classe CategorieBDD
         CategorieBDD categBdd = new CategorieBDD(this);
 
 
+    }
+
+    @Override
+    protected void onResume(){
+    super.onResume();
+
+        affichageBudget();
+        afficherDepenses();
     }
 /*
     private void displayListView() {
@@ -387,6 +345,57 @@ public class MainActivity extends Activity {
 
         String url = "http://chart.apis.google.com/chart?cht=gom&chco=12FE01,F6FE01,FE0101&chs=300x120&chd=t:" + value + "&chxt=x,y&chxl=0:|" + mesDepenses + "|1:|0|" + monBudget;
         budget.loadUrl(url);
+    }
+
+    private void afficherDepenses(){
+
+        TextView estVide;
+        estVide = (TextView) findViewById(R.id.vide);
+
+        ListView listView;
+        listView = (ListView) findViewById(R.id.listView1);
+        ArrayList<String> values = new ArrayList<String>();
+        Depense d;
+
+        values = depenseBDD.getAllDepense();
+
+        if (values.size() != 0) {
+            //System.out.println("Categorie : " + values.get(1));
+
+            adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
+            // Assign adapter to ListView
+            listView.setAdapter(adapter);
+            //enables filtering for the contents of the given ListView
+            listView.setTextFilterEnabled(true);
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View view,
+                                        int position, long id) {
+                    // When clicked, show a toast with the TextView text
+                    Toast.makeText(getApplicationContext(),
+                            ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            EditText myFilter = (EditText) findViewById(R.id.search);
+            myFilter.addTextChangedListener(new TextWatcher() {
+
+                public void afterTextChanged(Editable s) {
+                }
+
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    adapter.getFilter().filter(s.toString());
+
+                }
+            });
+
+
+            //System.out.println("Categorie : " + adapter.getItem(1));
+        } else {
+            estVide.setVisibility(View.VISIBLE);
+        }
     }
 
 
