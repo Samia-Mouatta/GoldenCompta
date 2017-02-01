@@ -43,6 +43,7 @@ public class Depense {
     public void setCategorie(String categ){this.categ=categ;}
 
     public String toString(){
-        return "Id : "+id+"\nDate dépense : "+dateDepense+"\nMontant : "+montant+"\n";
+        return "Montant : "+ montant +"\nDate : "+dateDepense+"\nCatégorie : "+categ;
     }
+
 }
