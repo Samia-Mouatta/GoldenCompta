@@ -23,7 +23,7 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
             "CREATE TABLE if not exists "+ TABLE_DEPENSE + " (" + COL_ID_DEPENSE + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ COL_MONTANT + " REAL NOT NULL "
             + COL_DATE + " DATE NOT NULL, " + COL_CATEG + "); ";
 
-    public  static final String CREATE_BDD2 = "CREATE TABLE categorie (id INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT NOT NULL); CREATE TABLE table_depense (id INTEGER PRIMARY KEY AUTOINCREMENT, montant REAL NOT NULL "
+    public  static final String CREATE_BDD2 = "CREATE TABLE categorie (id INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT NOT NULL, nomMin TEXT NOT NULL); CREATE TABLE table_depense (id INTEGER PRIMARY KEY AUTOINCREMENT, montant REAL NOT NULL "
             + "date DATE NOT NULL, categorie);";
 
     /**
@@ -93,7 +93,6 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 
         String ROW16 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('16','Cadeaux');";
         db.execSQL(ROW16);
-
 
     }
 

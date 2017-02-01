@@ -19,7 +19,14 @@
             android:id="@+id/budget"
             />
     </LinearLayout>
+    <EditText
+        android:id="@+id/search"
+        android:hint="Tapez ici pour le filtre par mois ou par catégorie"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
 
+        <requestFocus />
+    </EditText>
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
