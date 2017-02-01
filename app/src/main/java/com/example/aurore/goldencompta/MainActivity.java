@@ -249,6 +249,7 @@ public class MainActivity extends Activity {
 
                 List<String> listCategorie = new ArrayList<String>();
 
+
                 listCategorie=categBdd.getAllCategoriesName();
                 String s1="";
                 int r2=0;
