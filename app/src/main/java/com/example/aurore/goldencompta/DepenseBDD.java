@@ -174,13 +174,10 @@ public class DepenseBDD {
      * @return curseur de dépense
      */
     public Cursor selectDepense(){
-
         String TABLE_NAME = "table_depense";
         this.open();
 
         return bdd.rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY date", null);
-
-
     }
 
     /**
@@ -188,13 +185,10 @@ public class DepenseBDD {
      * @return curseur de dépense
      */
     public Cursor selectDepenseByCat(){
-
         String TABLE_NAME = "table_depense";
         this.open();
 
         return bdd.rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY categorie", null);
-
-
     }
 
     /**
@@ -208,10 +202,7 @@ public class DepenseBDD {
         String TABLE_NAME = "table_depense";
         this.open();
         String querry = "SELECT SUM(montant) FROM table_depense WHERE montant BETWEEN '"+ min +"' AND '"+ max +"'";
-        //String querry = "SELECT COUNT(id) FROM table_depense WHERE montant BETWEEN '"+ min +"' AND '"+ max +"'";
         return bdd.rawQuery(querry, null);
-
-
     }
 
     /**
@@ -227,7 +218,7 @@ public class DepenseBDD {
     }
 
     /**
-     * Méthode retournant le montant des dépense d'un mois
+     * Méthode retournant le montant des dépenses d'un mois
      * @param month mois donné
      * @return curseur de dépense
      */
@@ -237,6 +228,32 @@ public class DepenseBDD {
         this.open();
         return bdd.rawQuery("SELECT montant, strftime('%m',date) as Mois FROM table_depense WHERE strftime('%m', date)='"+ month +"'", null);
 
+    }
+
+    /**
+     * Méthode retournant toutes les dépenses d'un mois
+     * @param month mois donné
+     * @return curseur de dépense
+     */
+    public Cursor selectDepenseMois(String month){
+        if(month!="00") {
+            String TABLE_NAME = "table_depense";
+            this.open();
+            return bdd.rawQuery("SELECT * FROM table_depense WHERE date >= '01/" + month + "/2017' AND date <= '31/" + month + "/2017'", null);
+        } else{
+            return null;
+        }
+    }
+
+    /**
+     * Méthode retournant toutes les dépenses d'une annee
+     * @param annee annee donné
+     * @return curseur de dépense
+     */
+    public Cursor selectDepensesAnnee(String annee){
+        String TABLE_NAME = "table_depense";
+        this.open();
+        return bdd.rawQuery("SELECT * FROM table_depense WHERE date >= '01/01" + annee + "' AND date <= '31/12" + annee + "'", null);
     }
 
     /**
@@ -262,7 +279,6 @@ public class DepenseBDD {
      * @return array de string
      */
     public ArrayList<String> getAllDepense(){
-
         ArrayList<String> listeDepense = new ArrayList<String>();
         String ligne;
         Depense d;
@@ -280,5 +296,132 @@ public class DepenseBDD {
         cursor.close();
         return listeDepense;
 
+    }
+
+    public ArrayList<Depense> getAllDepenses(){
+        ArrayList<Depense> listeDepenses = new ArrayList<>();
+        Cursor cursor = selectDepense();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()){
+            listeDepenses.add(DepenseBDD.cursorToDepense(cursor));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return listeDepenses;
+    }
+
+    /**
+     *
+     * @param mois
+     * @return
+     */
+    public ArrayList<String> getDepensesByMonth(String mois){
+        ArrayList<String> listeDepenses = new ArrayList<String>();
+        String ligne;
+        Depense d;
+        String month;
+        switch (mois){
+            case "Janvier" : month ="01"; break;
+            case "Février" : month ="02"; break;
+            case "Mars" : month ="03"; break;
+            case "Avril" : month ="04"; break;
+            case "Mai" : month ="05"; break;
+            case "Juin" : month ="06"; break;
+            case "Juillet" : month ="07"; break;
+            case "Août" : month ="08"; break;
+            case "Septembre" : month ="09"; break;
+            case "Octobre" : month ="10"; break;
+            case "Novembre" : month="11"; break;
+            case "Décembre" : month ="12"; break;
+            default: month = "00";
+        }
+        Cursor cursor = selectDepenseMois(month);
+        if(cursor != null) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                d = DepenseBDD.cursorToDepense(cursor);
+                String[] date = d.getDate().split("/");
+                if(date[1].equals(month)) {
+                    ligne = "Montant : " + d.getMontant() + "\nDate : " + d.getDate() + "\nCategorie : " + d.getCategorie();
+                    listeDepenses.add(ligne);
+                }
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        if (listeDepenses.isEmpty()) {
+            listeDepenses.add("Aucune dépense trouvée");
+        }
+        return listeDepenses;
+    }
+
+    public ArrayList<String> getDepensesByAnnee(String annee){
+        ArrayList<String> listeDepenses = new ArrayList<String>();
+        String ligne;
+        Depense d;
+        Cursor cursor = selectDepensesAnnee(annee);
+        if(cursor != null) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                d = DepenseBDD.cursorToDepense(cursor);
+                String[] date = d.getDate().split("/");
+                if(date[2].equals(annee)) {
+                    ligne = "Montant : " + d.getMontant() + "\nDate : " + d.getDate() + "\nCategorie : " + d.getCategorie();
+                    listeDepenses.add(ligne);
+                }
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        if (listeDepenses.isEmpty()) {
+            listeDepenses.add("Aucune dépense trouvée");
+        }
+        return listeDepenses;
+    }
+
+
+    public ArrayList<String> getDepensesByMonthYear(String mois, String annee){
+        ArrayList<String> listeDepenses = new ArrayList<String>();
+        String ligne;
+        Depense d;
+        String month;
+        switch (mois){
+            case "Janvier" : month ="01"; break;
+            case "Février" : month ="02"; break;
+            case "Mars" : month ="03"; break;
+            case "Avril" : month ="04"; break;
+            case "Mai" : month ="05"; break;
+            case "Juin" : month ="06"; break;
+            case "Juillet" : month ="07"; break;
+            case "Août" : month ="08"; break;
+            case "Septembre" : month ="09"; break;
+            case "Octobre" : month ="10"; break;
+            case "Novembre" : month="11"; break;
+            case "Décembre" : month ="12"; break;
+            default: month = "00";
+        }
+        Cursor cursor = selectDepense();
+        if(cursor != null) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                d = DepenseBDD.cursorToDepense(cursor);
+                String[] date = d.getDate().split("/");
+                if(date[1].equals(month) && date[2].equals(annee)) {
+                    ligne = "Montant : " + d.getMontant() + "\nDate : " + d.getDate() + "\nCategorie : " + d.getCategorie();
+                    System.out.println(ligne);
+                    listeDepenses.add(ligne);
+                }
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        if(mois.isEmpty()){
+            listeDepenses.add("Pas de mois selectionné");
+        } else if (annee.isEmpty()) {
+            listeDepenses.add("Pas d'année selectionnée");
+        } else if (listeDepenses.isEmpty()) {
+            listeDepenses.add("Aucune dépense trouvée");
+        }
+        return listeDepenses;
     }
 }

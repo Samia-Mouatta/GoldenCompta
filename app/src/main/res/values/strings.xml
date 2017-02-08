@@ -3,6 +3,6 @@
     <string name="action_settings">Settings</string>
     <string name="categorie_existe">Il faut remplir le champ catégorie</string>
     <string name="champ_vide">Vous n avez rien saisi,veuillez remplir les champs</string>
-    <string name="some_text">Dépenses!</string>
+    <string name="some_text">Dépenses</string>
     <string name="some_hint">Tapez ici pour filtrer&#8230;</string>
 </resources>

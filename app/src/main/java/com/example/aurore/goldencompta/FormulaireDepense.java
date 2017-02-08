@@ -70,8 +70,6 @@ public class FormulaireDepense extends Activity {
         save.setOnClickListener(new OnClickListener(){
             @Override
             public void onClick(View v) {
-                float depR;
-
                 String dep =  newDepense.getText().toString();
                 String cat = spinner.getSelectedItem().toString();
 

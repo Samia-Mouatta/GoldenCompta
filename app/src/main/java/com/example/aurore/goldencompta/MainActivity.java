@@ -10,7 +10,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,8 +17,9 @@ import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.ListView;
-import android.widget.TableLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,13 +37,17 @@ public class MainActivity extends Activity {
     public static int BUDGET = 2;
     public static int IMAGE = 3;
     public static int CAMERA = 4;
-    //private ArrayAdapter<String> adapter;
 
     DepenseBDD depenseBDD = new DepenseBDD(this);
-    TableLayout t1;
     ArrayAdapter<String> adapter = null;
 
-    public final static int CHOOSE_BUTTON_REQUEST = 0;
+    Spinner spinnerMois, spinnerAnnee;
+    DateAdapter dataAdapterMois , dataAdapterYear;
+    TextView dateView;
+    ArrayList<String> values;
+    ListView listView;
+    String moisSelectionne, anneeSelectionnee;
+
 
     /**
      * Méthode principale du lancement de l'application
@@ -54,6 +58,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        moisSelectionne = "";
+        anneeSelectionnee = "";
 
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#00e6ac"));
         // couleur de l'actionBar
@@ -64,10 +70,6 @@ public class MainActivity extends Activity {
         getActionBar().setDisplayShowHomeEnabled(true);
 
         TextView estVide;
-        estVide = (TextView) findViewById(R.id.vide);
-
-        ListView listView = (ListView) findViewById(R.id.listView1);
-        ArrayList<String> values = new ArrayList<String>();
 
         affichageBudget();
         afficherDepenses();
@@ -77,61 +79,142 @@ public class MainActivity extends Activity {
         CategorieBDD categBdd = new CategorieBDD(this);
 
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        affichageBudget();
-        afficherDepenses();
-    }
-/*
-    private void displayListView() {
-
         //Array list of depenses
-        ArrayList<String> values = new ArrayList<String>();
         values = depenseBDD.getAllDepense();
-        TextView estVide;
         estVide = (TextView) findViewById(R.id.vide);
 
-        if (values.size() != 0) {
-            //create an ArrayAdaptar from the String Array
-            dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
-            ListView listView = (ListView) findViewById(R.id.listView1);
-            // Assign adapter to ListView
-            listView.setAdapter(dataAdapter);
-            //enables filtering for the contents of the given ListView
-            listView.setTextFilterEnabled(true);
+        listView = (ListView) findViewById(R.id.listView1);
+        values = new ArrayList<String>();
 
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
-                    // When clicked, show a toast with the TextView text
-                    Toast.makeText(getApplicationContext(),
-                            ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
+        dateView = (TextView) findViewById(R.id.date);
+
+        spinnerMois = (Spinner) findViewById(R.id.spinnerMois);
+        dataAdapterMois = new DateAdapter(this,
+                android.R.layout.simple_spinner_item, loadMonth());
+        dataAdapterMois.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerMois.setAdapter(dataAdapterMois);
+        spinnerMois.setSelection(0);
+
+        spinnerAnnee = (Spinner) findViewById(R.id.spinnerAnnee);
+        dataAdapterYear = new DateAdapter(this,
+                android.R.layout.simple_spinner_item, loadYear());
+        dataAdapterYear.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerAnnee.setAdapter(dataAdapterYear);
+        spinnerAnnee.setSelection(0);
+
+        values = depenseBDD.getAllDepense();
+
+        affichageBudget();
+
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
+        spinnerMois.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                String item = dataAdapterMois.getItem(position);
+                moisSelectionne = spinnerMois.getSelectedItem().toString();
+                if (!anneeSelectionnee.isEmpty()) {
+                    // Assign adapter to ListView
+                    listView.setAdapter(adapter);
+                    if (item != null || !item.equals("")) {
+                        values.clear();
+                        //values = depenseBDD.getDepensesByMonth(moisSelectionne);
+                        values = depenseBDD.getDepensesByMonthYear(moisSelectionne, anneeSelectionnee);
+                        adapter.clear();
+                        for (int i = 0; i < values.size(); i++) {
+                            adapter.insert(values.get(i), i);
+                        }
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        values = depenseBDD.getAllDepense();
+                        adapter.clear();
+                        for (int i = 0; i < values.size(); i++) {
+                            adapter.insert(values.get(i), i);
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
                 }
-            });
-            EditText myFilter = (EditText) findViewById(R.id.search);
-            myFilter.addTextChangedListener(new TextWatcher() {
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                if(!anneeSelectionnee.isEmpty()) {
+                    values = depenseBDD.getDepensesByAnnee(anneeSelectionnee);
+                    adapter.clear();
+                    for (int i = 0; i < values.size(); i++) {
+                        adapter.insert(values.get(i), i);
+                    }
+                    adapter.notifyDataSetChanged();
+                } else {
+                    values = depenseBDD.getAllDepense();
+                    adapter.clear();
+                    for (int i = 0; i < values.size(); i++) {
+                        adapter.insert(values.get(i), i);
+                    }
+                    adapter.notifyDataSetChanged();
 
-                public void afterTextChanged(Editable s) {
                 }
 
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+        });
+
+
+        spinnerAnnee.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                String item = dataAdapterYear.getItem(position);
+                anneeSelectionnee = spinnerAnnee.getSelectedItem().toString();
+                if (!moisSelectionne.isEmpty()) {
+                    listView.setAdapter(adapter);
+                    if (item != null || !item.equals("") || !item.equals("")) {
+                        values.clear();
+                        //values = depenseBDD.getDepensesByAnnee(anneeSelectionnee);
+                        values = depenseBDD.getDepensesByMonthYear(moisSelectionne, anneeSelectionnee);
+                        adapter.clear();
+                        for (int i = 0; i < values.size(); i++) {
+                            adapter.insert(values.get(i), i);
+                        }
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        values = depenseBDD.getAllDepense();
+                        adapter.clear();
+                        for (int i = 0; i < values.size(); i++) {
+                            adapter.insert(values.get(i), i);
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                } else {
+                    values.clear();
+                    values = depenseBDD.getDepensesByMonthYear(moisSelectionne, anneeSelectionnee);
+                    adapter.clear();
+                    for (int i = 0; i < values.size(); i++) {
+                        adapter.insert(values.get(i), i);
+                    }
+                    adapter.notifyDataSetChanged();
+
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                if(!moisSelectionne.isEmpty()) {
+                    if(!anneeSelectionnee.isEmpty()) {
+                        values = depenseBDD.getDepensesByMonth(moisSelectionne);
+                        adapter.clear();
+                        for (int i = 0; i < values.size(); i++) {
+                            adapter.insert(values.get(i), i);
+                        }
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        values = depenseBDD.getAllDepense();
+                        adapter.clear();
+                        for (int i = 0; i < values.size(); i++) {
+                            adapter.insert(values.get(i), i);
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
                 }
 
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    dataAdapter.getFilter().filter(s.toString());
-                }
-            });
-        }else{
-            estVide.setVisibility(View.VISIBLE);
-        }
-
-
-    }*/
-
+            }
+        });
+    }
     /**
      * Méthode de création du menu
      *
@@ -173,7 +256,7 @@ public class MainActivity extends Activity {
                 startActivityForResult(intentBudget, BUDGET);
                 return true;
             case R.id.menu_statistique:
-                //Comportement du bouton "statistique"
+                //Comportement du bouton "camera"
                 Intent intentStat = new Intent(this, FormulaireStatistique.class);
                 startActivityForResult(intentStat, BUDGET);
                 return true;
@@ -196,6 +279,15 @@ public class MainActivity extends Activity {
         return s1.compareToIgnoreCase(s2);
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        affichageBudget();
+        afficherDepenses();
+    }
+
     /**
      * Méthode de mise a jour de la base de données
      *
@@ -216,83 +308,69 @@ public class MainActivity extends Activity {
                 CategorieBDD categBdd = new CategorieBDD(this);
                 categBdd.open();
                 // categBdd.insertCategorie(newCateg);
-                //    Categorie existCateg = categBdd.getCategorieWithNom(newCateg.getNom());
+            //    Categorie existCateg = categBdd.getCategorieWithNom(newCateg.getNom());
 
                 List<String> listCategorie = new ArrayList<String>();
 
 
-                listCategorie = categBdd.getAllCategoriesName();
-                String s1 = "";
-                int r2 = 0;
-                for (int i = 0; i < listCategorie.size(); i++) {
-                    s1 = listCategorie.get(i);
-                    //  System.out.println("s1 - avant: " + s1);
+                listCategorie=categBdd.getAllCategoriesName();
+                String s1="";
+                int r2=0;
+                for (int i=0;i<listCategorie.size();i++) {
+                    s1=listCategorie.get(i);
+                  //  System.out.println("s1 - avant: " + s1);
                     s1 = Normalizer.normalize(s1, Normalizer.Form.NFD);
                     s1 = s1.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-                    //  System.out.println("s1 - après: " + s1);
+                  //  System.out.println("s1 - après: " + s1);
                 }
                 String s2 = data.getStringExtra("newCateg");
-                // System.out.println("s2-avant: " + s2);
+               // System.out.println("s2-avant: " + s2);
                 s2 = Normalizer.normalize(s2, Normalizer.Form.NFD);
                 s2 = s2.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
                 //System.out.println("s2-après: " + s2);
-                for (int i = 0; i < listCategorie.size(); i++) {
-                    r2 = s1.compareToIgnoreCase(s2);
+                for (int i=0;i<listCategorie.size();i++) {
+                   r2 = s1.compareToIgnoreCase(s2);
                 }
                 //compare(r2);
-                if (r2 != 0) {
+                if(r2!=0){
                     categBdd.insertCategorie(new Categorie(data.getStringExtra("newCateg")));
-                } else {
+                }else{
                     Toast.makeText(this, "Cette catégorie existe dans la BDD", Toast.LENGTH_LONG).show();
                 }
                 categBdd.close();
             }
 
-        } else if (requestCode == DEPENSE) {
-            if (resultCode == RESULT_OK) {
-                //Si ok on ajoute dans la base de données correspondante
-                float montant = Float.parseFloat(data.getStringExtra("NEWDEPENSE"));
-                Depense newDep = new Depense(data.getStringExtra("DATE"), montant, data.getStringExtra("CATEGORIE"));
+    }else if(requestCode==DEPENSE) {
+        if (resultCode == RESULT_OK) {
+            //Si ok on ajoute dans la base de données correspondante
+            float montant = Float.parseFloat(data.getStringExtra("NEWDEPENSE"));
+            Depense newDep = new Depense(data.getStringExtra("DATE"), montant, data.getStringExtra("CATEGORIE"));
 
-                //Ajout dans la base de données
-                DepenseBDD cdepBdd = new DepenseBDD(this);
-                cdepBdd.open();
-                cdepBdd.insertDepense(newDep);
-                cdepBdd.close();
+            //Ajout dans la base de données
+            DepenseBDD cdepBdd = new DepenseBDD(this);
+            cdepBdd.open();
+            cdepBdd.insertDepense(newDep);
+            cdepBdd.close();
 
-            } else {
-                Toast.makeText(this, "Erreur lors de l'insertion", Toast.LENGTH_LONG).show();
-            }
-        } else if (requestCode == IMAGE || requestCode == CAMERA) {
-            if (resultCode == RESULT_OK) {
-                float montant = Float.parseFloat(data.getStringExtra("NEWDEPENSE_IMAGE"));
-                Depense newDep = new Depense(data.getStringExtra("DATE_IMAGE"), montant, data.getStringExtra("CATEGORIE_IMAGE"));
+        } else {
+            Toast.makeText(this, "Erreur lors de l'insertion", Toast.LENGTH_LONG).show();
+        }
+    } else if(requestCode==IMAGE) {
+        if (resultCode == RESULT_OK) {
+            float montant = Float.parseFloat(data.getStringExtra("NEWDEPENSE_IMAGE"));
+            Depense newDep = new Depense(data.getStringExtra("DATE_IMAGE"), montant, data.getStringExtra("CATEGORIE_IMAGE"));
 
-                //Ajout dans la base de données
-                DepenseBDD cdepBdd = new DepenseBDD(this);
-                cdepBdd.open();
-                cdepBdd.insertDepense(newDep);
-                cdepBdd.close();
-            }
-        }/*else if (requestCode == BUDGET){
-            if (monBudget < mesDepenses) {
-                // afficher une boite de dialogue d'alerte
-                Builder builder = new Builder(this);
-                builder.setTitle("Alerte dépassement budget");
-                builder.setIcon(R.mipmap.alert);
-                builder.setMessage("Attention! Vous avez dépassé votre budget par mois");
-                builder.setCancelable(false);
-                builder.setNegativeButton("OK", new OkOnClickListener());
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
-
-
-        }*/
+            //Ajout dans la base de données
+            DepenseBDD cdepBdd = new DepenseBDD(this);
+            cdepBdd.open();
+            cdepBdd.insertDepense(newDep);
+            cdepBdd.close();
+        }
     }
+}
 
     public static void compare(int r) {
-        if (r == 0) {
+        if (r==0) {
             System.out.println("ils sont égaux");
         } else {
             System.out.println("ils sont différents");
@@ -313,7 +391,6 @@ public class MainActivity extends Activity {
 
         SharedPreferences preferences = getSharedPreferences(BUD, 0);
         myBudget = preferences.getString(BUD, "Aucun budget");
-        System.out.println("Mon Budget = " + myBudget);
         if (!myBudget.equals("Aucun budget")) {
             monBudget = Double.parseDouble(myBudget);
         } else {
@@ -334,8 +411,6 @@ public class MainActivity extends Activity {
         depenseMois.moveToFirst();
         if (depenseMois.getCount() != 0) {
             depenseString = depenseMois.getString(0).replace(",", ".");
-            Toast toast = Toast.makeText(getApplicationContext(), "nb " + mois + "testo " + depenseMois.getString(0), Toast.LENGTH_SHORT);
-            toast.show();
         } else {
             depenseString = "0";
         }
@@ -355,7 +430,7 @@ public class MainActivity extends Activity {
         budget.loadUrl(url);
     }
 
-    private void afficherDepenses() {
+    private void afficherDepenses(){
 
         TextView estVide;
         estVide = (TextView) findViewById(R.id.vide);
@@ -387,9 +462,6 @@ public class MainActivity extends Activity {
             EditText myFilter = (EditText) findViewById(R.id.search);
             myFilter.addTextChangedListener(new TextWatcher() {
 
-                public void afterTextChanged(Editable s) {
-                }
-
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 }
 
@@ -397,26 +469,66 @@ public class MainActivity extends Activity {
                     adapter.getFilter().filter(s.toString());
 
                 }
+
+                public void afterTextChanged(Editable s) {
+                }
             });
 
-
-            //System.out.println("Categorie : " + adapter.getItem(1));
         } else {
             estVide.setVisibility(View.VISIBLE);
         }
     }
 
 
-    // Cliquer sur le bouton ok une fois on lit le message
-    private final class OkOnClickListener implements
-            DialogInterface.OnClickListener {
-        public void onClick(DialogInterface dialog, int which) {
-            MainActivity.this.finish();
-        }
+// Cliquer sur le bouton ok une fois on lit le message
+private final class OkOnClickListener implements
+        DialogInterface.OnClickListener {
+    public void onClick(DialogInterface dialog, int which) {
+        MainActivity.this.finish();
+    }
 
-        public void updateData(Depense dep) {
-            adapter.add(dep.toString());
-        }
+    public void updateData(Depense dep) {
+        adapter.add(dep.toString());
+    }
+}
 
+
+    /**
+     * Initialisation des années dans le menu déroulant
+     * @return la liste des 7 dernières années
+     */
+    private List<String> loadYear(){
+        List listYear = new ArrayList<String>();
+        listYear.add("");
+        listYear.add("2010");
+        listYear.add("2011");
+        listYear.add("2012");
+        listYear.add("2013");
+        listYear.add("2014");
+        listYear.add("2015");
+        listYear.add("2016");
+        listYear.add("2017");
+        return listYear;
+    }
+    /**
+     * Initialisation des mois dans le menu déroulant
+     * @return la liste des mois d'une année
+     */
+    private List<String> loadMonth(){
+        List listMois = new ArrayList<String>();
+        listMois.add("");
+        listMois.add("Janvier");
+        listMois.add("Février");
+        listMois.add("Mars");
+        listMois.add("Avril");
+        listMois.add("Mai");
+        listMois.add("Juin");
+        listMois.add("Juillet");
+        listMois.add("Août");
+        listMois.add("Septembre");
+        listMois.add("Octobre");
+        listMois.add("Novembre");
+        listMois.add("Décembre");
+        return listMois;
     }
 }

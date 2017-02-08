@@ -4,7 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="@color/grey">
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
     </LinearLayout>
     <EditText
         android:id="@+id/search"
-        android:hint="Tapez ici pour le filtre par mois ou par catégorie"
+        android:hint="Tapez ici pour le filtre par catégorie"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 
@@ -41,9 +41,36 @@
         android:visibility="invisible"
         android:id="@+id/vide"/>
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1" >
+
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".6"
+            android:id="@+id/spinnerMois"/>
+
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".4"
+            android:id="@+id/spinnerAnnee"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
     <ListView
         android:id="@+id/listView1"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
     </ListView>
+
+
 </LinearLayout>
