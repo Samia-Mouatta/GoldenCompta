@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.3"
+    buildToolsVersion "21.1.2"
     defaultConfig {
         applicationId "com.example.aurore.goldencompta"
         minSdkVersion 21
@@ -28,5 +28,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
     compile 'com.rmtheis:tess-two:5.4.1'
+    compile project(':scanlibrary')
     compile project(':openCVLibrary310')
 }

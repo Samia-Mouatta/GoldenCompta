@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +36,8 @@ public class MainActivity extends Activity {
     public static int DEPENSE = 1;
     public static int BUDGET = 2;
     public static int IMAGE = 3;
+    public static int CAMERA = 4;
+    //private ArrayAdapter<String> adapter;
 
     DepenseBDD depenseBDD = new DepenseBDD(this);
     TableLayout t1;
@@ -60,9 +63,14 @@ public class MainActivity extends Activity {
         getActionBar().setDisplayUseLogoEnabled(true);
         getActionBar().setDisplayShowHomeEnabled(true);
 
+        TextView estVide;
+        estVide = (TextView) findViewById(R.id.vide);
+
+        ListView listView = (ListView) findViewById(R.id.listView1);
+        ArrayList<String> values = new ArrayList<String>();
+
         affichageBudget();
         afficherDepenses();
-
 
 
         //Création de l'instance de la classe CategorieBDD
@@ -72,8 +80,8 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    protected void onResume(){
-    super.onResume();
+    protected void onResume() {
+        super.onResume();
 
         affichageBudget();
         afficherDepenses();
@@ -165,13 +173,18 @@ public class MainActivity extends Activity {
                 startActivityForResult(intentBudget, BUDGET);
                 return true;
             case R.id.menu_statistique:
-                //Comportement du bouton "camera"
+                //Comportement du bouton "statistique"
                 Intent intentStat = new Intent(this, FormulaireStatistique.class);
                 startActivityForResult(intentStat, BUDGET);
                 return true;
             case R.id.menu_img:
                 Intent intentImage = new Intent(this, FormulaireImg.class);
                 startActivityForResult(intentImage, IMAGE);
+                return true;
+            case R.id.menu_camera:
+                Intent intentCamera = new Intent(this, FormulaireCamera.class);
+                startActivityForResult(intentCamera, CAMERA);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -203,70 +216,65 @@ public class MainActivity extends Activity {
                 CategorieBDD categBdd = new CategorieBDD(this);
                 categBdd.open();
                 // categBdd.insertCategorie(newCateg);
-            //    Categorie existCateg = categBdd.getCategorieWithNom(newCateg.getNom());
+                //    Categorie existCateg = categBdd.getCategorieWithNom(newCateg.getNom());
 
                 List<String> listCategorie = new ArrayList<String>();
 
 
-                listCategorie=categBdd.getAllCategoriesName();
-                String s1="";
-                int r2=0;
-                for (int i=0;i<listCategorie.size();i++) {
-                    s1=listCategorie.get(i);
-                  //  System.out.println("s1 - avant: " + s1);
+                listCategorie = categBdd.getAllCategoriesName();
+                String s1 = "";
+                int r2 = 0;
+                for (int i = 0; i < listCategorie.size(); i++) {
+                    s1 = listCategorie.get(i);
+                    //  System.out.println("s1 - avant: " + s1);
                     s1 = Normalizer.normalize(s1, Normalizer.Form.NFD);
                     s1 = s1.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-                  //  System.out.println("s1 - après: " + s1);
+                    //  System.out.println("s1 - après: " + s1);
                 }
                 String s2 = data.getStringExtra("newCateg");
-               // System.out.println("s2-avant: " + s2);
+                // System.out.println("s2-avant: " + s2);
                 s2 = Normalizer.normalize(s2, Normalizer.Form.NFD);
                 s2 = s2.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
                 //System.out.println("s2-après: " + s2);
-                for (int i=0;i<listCategorie.size();i++) {
-                   r2 = s1.compareToIgnoreCase(s2);
+                for (int i = 0; i < listCategorie.size(); i++) {
+                    r2 = s1.compareToIgnoreCase(s2);
                 }
                 //compare(r2);
-                if(r2!=0){
+                if (r2 != 0) {
                     categBdd.insertCategorie(new Categorie(data.getStringExtra("newCateg")));
-                }else{
+                } else {
                     Toast.makeText(this, "Cette catégorie existe dans la BDD", Toast.LENGTH_LONG).show();
                 }
                 categBdd.close();
             }
 
-    }
-        else if(requestCode==DEPENSE) {
-        if (resultCode == RESULT_OK) {
-            //Si ok on ajoute dans la base de données correspondante
-            float montant = Float.parseFloat(data.getStringExtra("NEWDEPENSE"));
-            Depense newDep = new Depense(data.getStringExtra("DATE"), montant, data.getStringExtra("CATEGORIE"));
+        } else if (requestCode == DEPENSE) {
+            if (resultCode == RESULT_OK) {
+                //Si ok on ajoute dans la base de données correspondante
+                float montant = Float.parseFloat(data.getStringExtra("NEWDEPENSE"));
+                Depense newDep = new Depense(data.getStringExtra("DATE"), montant, data.getStringExtra("CATEGORIE"));
 
-            //Ajout dans la base de données
-            DepenseBDD cdepBdd = new DepenseBDD(this);
-            cdepBdd.open();
-            cdepBdd.insertDepense(newDep);
-            cdepBdd.close();
+                //Ajout dans la base de données
+                DepenseBDD cdepBdd = new DepenseBDD(this);
+                cdepBdd.open();
+                cdepBdd.insertDepense(newDep);
+                cdepBdd.close();
 
-        } else {
-            Toast.makeText(this, "Erreur lors de l'insertion", Toast.LENGTH_LONG).show();
-        }
-    }
+            } else {
+                Toast.makeText(this, "Erreur lors de l'insertion", Toast.LENGTH_LONG).show();
+            }
+        } else if (requestCode == IMAGE || requestCode == CAMERA) {
+            if (resultCode == RESULT_OK) {
+                float montant = Float.parseFloat(data.getStringExtra("NEWDEPENSE_IMAGE"));
+                Depense newDep = new Depense(data.getStringExtra("DATE_IMAGE"), montant, data.getStringExtra("CATEGORIE_IMAGE"));
 
-    else if(requestCode==IMAGE)
-
-    {
-        if (resultCode == RESULT_OK) {
-            float montant = Float.parseFloat(data.getStringExtra("NEWDEPENSE_IMAGE"));
-            Depense newDep = new Depense(data.getStringExtra("DATE_IMAGE"), montant, data.getStringExtra("CATEGORIE_IMAGE"));
-
-            //Ajout dans la base de données
-            DepenseBDD cdepBdd = new DepenseBDD(this);
-            cdepBdd.open();
-            cdepBdd.insertDepense(newDep);
-            cdepBdd.close();
-        }
-    }/*else if (requestCode == BUDGET){
+                //Ajout dans la base de données
+                DepenseBDD cdepBdd = new DepenseBDD(this);
+                cdepBdd.open();
+                cdepBdd.insertDepense(newDep);
+                cdepBdd.close();
+            }
+        }/*else if (requestCode == BUDGET){
             if (monBudget < mesDepenses) {
                 // afficher une boite de dialogue d'alerte
                 Builder builder = new Builder(this);
@@ -281,10 +289,10 @@ public class MainActivity extends Activity {
 
 
         }*/
-}
+    }
 
     public static void compare(int r) {
-        if (r==0) {
+        if (r == 0) {
             System.out.println("ils sont égaux");
         } else {
             System.out.println("ils sont différents");
@@ -347,7 +355,7 @@ public class MainActivity extends Activity {
         budget.loadUrl(url);
     }
 
-    private void afficherDepenses(){
+    private void afficherDepenses() {
 
         TextView estVide;
         estVide = (TextView) findViewById(R.id.vide);
@@ -399,11 +407,16 @@ public class MainActivity extends Activity {
     }
 
 
-// Cliquer sur le bouton ok une fois on lit le message
-private final class OkOnClickListener implements
-        DialogInterface.OnClickListener {
-    public void onClick(DialogInterface dialog, int which) {
-        MainActivity.this.finish();
+    // Cliquer sur le bouton ok une fois on lit le message
+    private final class OkOnClickListener implements
+            DialogInterface.OnClickListener {
+        public void onClick(DialogInterface dialog, int which) {
+            MainActivity.this.finish();
+        }
+
+        public void updateData(Depense dep) {
+            adapter.add(dep.toString());
+        }
+
     }
-}
 }
