@@ -30,4 +30,5 @@ dependencies {
     compile 'com.rmtheis:tess-two:5.4.1'
     compile project(':scanlibrary')
     compile project(':openCVLibrary310')
+    compile project(':achartengine-1.2.0')
 }

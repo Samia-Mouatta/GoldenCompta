@@ -1,7 +1,6 @@
 package com.example.aurore.goldencompta;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -17,6 +16,7 @@ import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -40,12 +40,14 @@ public class TableauDepense  extends Activity {
     DepenseBDD depenseBDD = new DepenseBDD(this);
     ArrayAdapter<String> adapter = null;
 
-    Spinner spinnerMois, spinnerAnnee;
-    DateAdapter dataAdapterMois , dataAdapterYear;
+    Spinner spinnerMois, spinnerAnnee, spinnerCateg;
+    DateAdapter dataAdapterMois, dataAdapterYear;
     TextView dateView;
     ArrayList<String> values;
     ListView listView;
     String moisSelectionne, anneeSelectionnee;
+    ArrayAdapter<String> categAdapter = null;
+    TextView estVide;
 
 
     /**
@@ -68,22 +70,75 @@ public class TableauDepense  extends Activity {
         getActionBar().setDisplayUseLogoEnabled(true);
         getActionBar().setDisplayShowHomeEnabled(true);
 
-        TextView estVide;
         affichageBudget();
         afficherDepenses();
 
-
+        values = new ArrayList<String>();
         //Création de l'instance de la classe CategorieBDD
         CategorieBDD categBdd = new CategorieBDD(this);
 
-
         //Array list of depenses
         values = depenseBDD.getAllDepense();
-        estVide = (TextView)findViewById(R.id.vide);
+        estVide = (TextView) findViewById(R.id.vide);
 
-        listView = (ListView)findViewById(R.id.listView1);
+        listView = (ListView) findViewById(R.id.listView1);
 
-        values = new ArrayList<String>();
+
+        spinnerCateg = (Spinner) findViewById(R.id.spinCat);
+        // spinnerCateg.setOnItemSelectedListener(this);
+
+        List<String> list = new ArrayList<String>();
+        List<String> listCategorie = new ArrayList<String>();
+
+        categBdd.open();
+        listCategorie = categBdd.getAllCategoriesName();
+        categBdd.close();
+        list.add("");
+        for (String categ : listCategorie) {
+            list.add(categ);
+        }
+
+        categAdapter = new ArrayAdapter<String>
+                (this, android.R.layout.simple_spinner_item, list);
+
+        categAdapter.setDropDownViewResource
+                (android.R.layout.simple_spinner_dropdown_item);
+
+        spinnerCateg.setAdapter(categAdapter);
+
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
+        // Assign adapter to ListView
+        spinnerCateg.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String categ = categAdapter.getItem(position);
+
+                if (values.size() != 0) {
+
+                    // Assign adapter to ListView
+                    listView.setAdapter(adapter);
+                    if (categ != null || !categ.equals("")) {
+                        adapter.getFilter().filter(categ, new Filter.FilterListener() {
+                            @Override
+                            public void onFilterComplete(int count) {
+
+                            }
+                        });
+                    } else {
+                        listView.setAdapter(adapter);
+                    }
+                } else {
+                    estVide.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
 
         dateView = (TextView)findViewById(R.id.date);
 
@@ -195,7 +250,7 @@ public class TableauDepense  extends Activity {
                        }
                    } else {
                        values.clear();
-                       values = depenseBDD.getDepensesByMonthYear(moisSelectionne, anneeSelectionnee);
+                       //values = depenseBDD.getDepensesByMonthYear(moisSelectionne, anneeSelectionnee);
                        adapter.clear();
                        for (int i = 0; i < values.size(); i++) {
                            adapter.insert(values.get(i), i);
@@ -295,14 +350,6 @@ public class TableauDepense  extends Activity {
     }
 
 
-
-    public int compare(String s1, String s2) {
-        s1 = s1.replaceAll("[^a-zA-Z0-9]+", "");
-        s2 = s2.replaceAll("[^a-zA-Z0-9]+", "");
-        return s1.compareToIgnoreCase(s2);
-    }
-
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -334,28 +381,23 @@ public class TableauDepense  extends Activity {
                 List<String> listCategorie = new ArrayList<String>();
 
 
-                listCategorie=categBdd.getAllCategoriesName();
-                String s1="";
-                int r2=0;
-                for (int i=0;i<listCategorie.size();i++) {
-                    s1=listCategorie.get(i);
-                    //  System.out.println("s1 - avant: " + s1);
+                listCategorie = categBdd.getAllCategoriesName();
+                String s1 = "";
+                int r2 = 0;
+                for (int i = 0; i < listCategorie.size(); i++) {
+                    s1 = listCategorie.get(i);
                     s1 = Normalizer.normalize(s1, Normalizer.Form.NFD);
                     s1 = s1.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-                    //  System.out.println("s1 - après: " + s1);
                 }
                 String s2 = data.getStringExtra("newCateg");
-                // System.out.println("s2-avant: " + s2);
                 s2 = Normalizer.normalize(s2, Normalizer.Form.NFD);
                 s2 = s2.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-                //System.out.println("s2-après: " + s2);
-                for (int i=0;i<listCategorie.size();i++) {
+                for (int i = 0; i < listCategorie.size(); i++) {
                     r2 = s1.compareToIgnoreCase(s2);
                 }
-                //compare(r2);
-                if(r2!=0){
+                if (r2 != 0) {
                     categBdd.insertCategorie(new Categorie(data.getStringExtra("newCateg")));
-                }else{
+                } else {
                     Toast.makeText(this, "Cette catégorie existe dans la BDD", Toast.LENGTH_LONG).show();
                 }
                 categBdd.close();
@@ -387,16 +429,23 @@ public class TableauDepense  extends Activity {
                 cdepBdd.insertDepense(newDep);
                 cdepBdd.close();
             }
-        }
+        }/*else if (requestCode == BUDGET){
+            if (monBudget < mesDepenses) {
+                // afficher une boite de dialogue d'alerte
+                Builder builder = new Builder(this);
+                builder.setTitle("Alerte dépassement budget");
+                builder.setIcon(R.mipmap.alert);
+                builder.setMessage("Attention! Vous avez dépassé votre budget par mois");
+                builder.setCancelable(false);
+                builder.setNegativeButton("OK", new OkOnClickListener());
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+
+
+        }*/
     }
 
-    public static void compare(int r) {
-        if (r==0) {
-            System.out.println("ils sont égaux");
-        } else {
-            System.out.println("ils sont différents");
-        }
-    }
 
     /**
      * Méthode permettant d'afficher la jauge du budget avec l'API google chart
@@ -451,10 +500,8 @@ public class TableauDepense  extends Activity {
         budget.loadUrl(url);
     }
 
-    private void afficherDepenses(){
+    private void afficherDepenses() {
 
-        TextView estVide;
-        estVide = (TextView) findViewById(R.id.vide);
 
         ListView listView;
         listView = (ListView) findViewById(R.id.listView1);
@@ -462,44 +509,18 @@ public class TableauDepense  extends Activity {
         Depense d;
 
         values = depenseBDD.getAllDepense();
-
+        estVide = (TextView) findViewById(R.id.vide);
         if (values.size() != 0) {
-            //System.out.println("Categorie : " + values.get(1));
 
+            CategorieBDD categBdd = new CategorieBDD(this);
             adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
             // Assign adapter to ListView
             listView.setAdapter(adapter);
-            //enables filtering for the contents of the given ListView
-            listView.setTextFilterEnabled(true);
-
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
-                    // When clicked, show a toast with the TextView text
-                    Toast.makeText(getApplicationContext(),
-                            ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
-                }
-            });
-            EditText myFilter = (EditText) findViewById(R.id.search);
-            myFilter.addTextChangedListener(new TextWatcher() {
-
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    adapter.getFilter().filter(s.toString());
-
-                }
-
-                public void afterTextChanged(Editable s) {
-                }
-            });
 
         } else {
             estVide.setVisibility(View.VISIBLE);
         }
     }
-
     /**
      * Initialisation des années dans le menu déroulant
      * @return la liste des 7 dernières années

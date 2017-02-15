@@ -217,6 +217,28 @@ public class DepenseBDD {
         return bdd.rawQuery("SELECT montant,strftime('%m',date) as Mois FROM " + TABLE_NAME +  "", null);
     }
 
+    public Cursor selectAllDepensesAnnee(String year) {
+
+        String TABLE_NAME = "table_depense";
+        this.open();
+        int i;
+        Cursor c = bdd.rawQuery("SELECT montant,strftime('%m',date) as Mois FROM " + TABLE_NAME +  " WHERE strftime('%Y', date)='"+ year +"' GROUP BY Mois, montant ORDER BY Mois", null);
+        Cursor result;
+       //return bdd.rawQuery("SELECT montant,strftime('%m',date) as Mois FROM " + TABLE_NAME +  " WHERE strftime('%Y', date)='"+ year +"' GROUP BY Mois, montant ORDER BY Mois", null);
+        //return bdd.rawQuery("SELECT montant,strftime('%m',date) as Mois FROM " + TABLE_NAME +  " WHERE strftime('%Y', date)='"+ year +"'", null);
+        c.moveToFirst();
+
+        for (i =0; i<12; i++)   {
+            if (c.getString(1) != String.valueOf(i)) {
+
+            }
+
+        }
+
+        return c;
+
+    }
+
     /**
      * Méthode retournant le montant des dépenses d'un mois
      * @param month mois donné
