@@ -41,15 +41,6 @@
             android:id="@+id/chartView"
             android:orientation="vertical"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Retour"
-        android:id="@+id/retour"
-        android:layout_weight="0.05"/>
-
-
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -62,6 +53,14 @@
             android:layout_height="130pt"
             android:id="@+id/chartLine"
             android:orientation="vertical"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Retour"
+            android:id="@+id/retour"
+            android:layout_weight="0.05"/>
 
 
     </LinearLayout>

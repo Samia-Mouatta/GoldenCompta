@@ -1,3 +1,4 @@
+
 package com.example.aurore.goldencompta;
 
 import android.app.Activity;
@@ -6,9 +7,9 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -34,18 +35,25 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static com.example.aurore.goldencompta.MainActivity.BUDGET;
+import static com.example.aurore.goldencompta.MainActivity.CAMERA;
+import static com.example.aurore.goldencompta.MainActivity.CATEGORIE;
+import static com.example.aurore.goldencompta.MainActivity.DEPENSE;
+import static com.example.aurore.goldencompta.MainActivity.IMAGE;
+
 /**
  * Created by Bastien on 11/01/2017.
  */
 
 public class FormulaireStatistique extends Activity {
-    private Activity main = this;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+    private Activity main = this;
+    private Intent intent;
 
     @Override
     /** Méthode d'initialisation de l'intent
@@ -57,6 +65,17 @@ public class FormulaireStatistique extends Activity {
         chartView();
         chartPie();
         chartLine();
+        Button retour = (Button) findViewById(R.id.retour);
+        intent = new Intent();
+
+        retour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                main.setResult(RESULT_CANCELED, intent);
+                finish();
+            }
+        });
+
 
     }
 
@@ -76,19 +95,22 @@ public class FormulaireStatistique extends Activity {
         String[] tranche = { "00,00","10,00","25,00","50,00","90,00"};
 
         for(i=1; i<tranche.length-1; i++) {
-            depenseListe = depenseBDD.selectDepenseByMontant(tranche[i],tranche[i+1]);
+            depenseListe =
+                    depenseBDD.selectDepenseByMontant(tranche[i],tranche[i+1]);
             depenseListe.moveToFirst();
             if (depenseListe.getCount() == 0) {
                 series.add(i, 0);
             } else {
-                //series.add(i, Double.parseDouble(depenseListe.getString(0).replace(",", ".")));
+                //series.add(i,
+                Double.parseDouble(depenseListe.getString(0).replace(",","."));
                 series.add(i, 8);
             }
 
         }
 
 
-        LinearLayout layoutView = (LinearLayout) findViewById(R.id.chartView);
+        LinearLayout layoutView = (LinearLayout)
+                findViewById(R.id.chartView);
         // Now we create the renderer
         XYSeriesRenderer renderer = new XYSeriesRenderer();
         renderer.setLineWidth(5);
@@ -115,10 +137,10 @@ public class FormulaireStatistique extends Activity {
         dataset.addSeries(series);
 
         //Ligne
-        //GraphicalView chartView = ChartFactory.getLineChartView(this, dataset, mRenderer);
+        GraphicalView chartView = ChartFactory.getLineChartView(this,dataset, mRenderer);
 
         //barre
-        GraphicalView chartView = ChartFactory.getBarChartView(this, dataset, mRenderer, BarChart.Type.DEFAULT);
+        //GraphicalView chartView = ChartFactory.getBarChartView(this, dataset, mRenderer, BarChart.Type.DEFAULT);
 
         layoutView.addView(chartView,0);
     }
@@ -149,14 +171,18 @@ public class FormulaireStatistique extends Activity {
 
 
         for (i = 0; i < periode.getCount(); i++) {
-            value = Double.parseDouble(periode.getString(0).replace(",", "."));
+            value = Double.parseDouble(periode.getString(0).replace(",",
+                    "."));
             mois = periode.getString(1);
             series.add(i, value);
 
             periode.moveToNext();
         }
 
-        LinearLayout layoutLine = (LinearLayout) findViewById(R.id.chartLine);
+        series.add(i+1, 1);
+
+        LinearLayout layoutLine = (LinearLayout)
+                findViewById(R.id.chartLine);
         // Now we create the renderer
         XYSeriesRenderer renderer = new XYSeriesRenderer();
         renderer.setLineWidth(5);
@@ -194,7 +220,8 @@ public class FormulaireStatistique extends Activity {
 
 
         //Ligne
-        GraphicalView chartView = ChartFactory.getLineChartView(this, dataset, mRenderer);
+        GraphicalView chartView = ChartFactory.getLineChartView(this,
+                dataset, mRenderer);
 
 
         layoutLine.addView(chartView,0);
@@ -228,8 +255,13 @@ public class FormulaireStatistique extends Activity {
             categorieListe.moveToNext();
         }
 
+        if (categorieListe.getCount() == 0) {
+            categorie.add("Aucune dépense", 100);
+        }
+
         double[] distribution = { 3.9, 12.9, 55.8, 1.9, 23.7, 1.8 } ;
-        int[] colors = { Color.BLUE, Color.MAGENTA, Color.GREEN, Color.CYAN, Color.RED,
+        int[] colors = { Color.BLUE, Color.MAGENTA, Color.GREEN,
+                Color.CYAN, Color.RED,
                 Color.YELLOW };
 
         // Instantiating a renderer for the Pie Chart
@@ -242,13 +274,14 @@ public class FormulaireStatistique extends Activity {
         }
 
         defaultRenderer.setChartTitle("Android version distribution as on October 1, 2012 ");
-        defaultRenderer.setChartTitleTextSize(20);
+                defaultRenderer.setChartTitleTextSize(20);
         defaultRenderer.setZoomButtonsVisible(true);
 
         defaultRenderer.setLabelsTextSize(25);
         defaultRenderer.setLegendTextSize(25);
 
-        GraphicalView chartView = ChartFactory.getPieChartView(this, categorie, defaultRenderer);
+        GraphicalView chartView = ChartFactory.getPieChartView(this,
+                categorie, defaultRenderer);
 
 
         layoutPie.addView(chartView,0);
@@ -258,13 +291,14 @@ public class FormulaireStatistique extends Activity {
 
         int i;
         String name, value;
-        final Intent intent = new Intent();
         WebView webView = new WebView(this);
-        Button retour = (Button) findViewById(R.id.retour);
 
-        //WebView depenseByCategorie = (WebView) findViewById(R.id.depenseByCategorie);
-        //WebView depenseByMontant = (WebView) findViewById(R.id.depenseByMontant);
-        //WebView depenseByPeriode = (WebView) findViewById(R.id.depenseByPeriode);
+        //WebView depenseByCategorie = (WebView)
+        findViewById(R.id.chartLine);
+        //WebView depenseByMontant = (WebView)
+        findViewById(R.id.chartPie);
+        //WebView depenseByPeriode = (WebView)
+        findViewById(R.id.chartView);
 
 
         CategorieBDD categorieBDD = new CategorieBDD(this);
@@ -278,7 +312,8 @@ public class FormulaireStatistique extends Activity {
 
         //PREMIER GRAPHIQUE *************************
         categorieListe.moveToFirst();
-        String url = "http://chart.apis.google.com/chart?cht=p&chs=300x120&chd=t:";
+        String url =
+                "http://chart.apis.google.com/chart?cht=p&chs=300x120&chd=t:";
 
 
         for (i = 0; i < categorieListe.getCount(); i++) {
@@ -315,7 +350,8 @@ public class FormulaireStatistique extends Activity {
 
         //DEUXIEME GRAPHIQUE *************************
 
-        url = "http://chart.apis.google.com/chart?cht=bvs&chs=300x120&chd=t:";
+        url =
+                "http://chart.apis.google.com/chart?cht=bvs&chs=300x120&chd=t:";
 
         depenseListe = depenseBDD.selectDepenseByMontant("00,00", "10,00");
         depenseListe.moveToFirst();
@@ -371,39 +407,53 @@ public class FormulaireStatistique extends Activity {
 
         url = url.substring(0, url.length() - 1);
 
-        depenseByPeriode.loadUrl(url);
-
-        retour.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                main.setResult(RESULT_CANCELED, intent);
-                finish();
-            }
-        });
         //depenseByPeriode.loadUrl(url);
 
 
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // ATTENTION: This was auto-generated to implement the AppIndexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        client = new
+                GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
 
     }
 
 
+    /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
     public Action getIndexApiAction() {
         Thing object = new Thing.Builder()
                 .setName("FormulaireStatistique Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+        // TODO: Make sure this auto-generated URL is correct.
+        .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
                 .build();
         return new Action.Builder(Action.TYPE_VIEW)
                 .setObject(object)
                 .setActionStatus(Action.STATUS_TYPE_COMPLETED)
                 .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the AppIndexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        //client.connect();
+        //AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the AppIndexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        //AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        //client.disconnect();
     }
 
     /**
@@ -415,26 +465,6 @@ public class FormulaireStatistique extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
-
-
-
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        //client.connect();
-        //AppIndex.AppIndexApi.start(client, getIndexApiAction());
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        //AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        //client.disconnect();
     }
 
     /**
