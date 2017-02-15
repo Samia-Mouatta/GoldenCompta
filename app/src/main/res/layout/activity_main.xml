@@ -1,29 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:background="@drawable/fondecran">
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:text="@string/accueil"
-        android:textSize="20sp" />
-
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Récapitulatif des dépenses"
-        android:id="@+id/button_tab_dep"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_width="270dip"
+        android:layout_height="70dip"
+        android:layout_centerInParent="true"
         android:text="Statistiques"
         android:id="@+id/button_statistiques"/>
 
-</LinearLayout>
+    <Button
+        android:id="@+id/button_scan"
+        android:layout_width="270dip"
+        android:layout_height="70dip"
+        android:text="Scan de ticket de caisse"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/button_statistiques"/>
+
+    <Button
+        android:layout_width="270dip"
+        android:layout_height="70dip"
+        android:layout_centerInParent="true"
+        android:text="Récapitulatif des dépenses"
+        android:layout_above="@id/button_statistiques"
+        android:id="@+id/button_tab_dep"/>
+
+    <Button
+        android:id="@+id/button_parametre"
+        android:layout_width="270dip"
+        android:layout_height="70dip"
+        android:text="Paramètres"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/button_scan"/>
+
+</RelativeLayout>
