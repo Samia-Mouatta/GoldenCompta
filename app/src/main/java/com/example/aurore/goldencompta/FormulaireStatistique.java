@@ -68,6 +68,7 @@ public class FormulaireStatistique extends Activity {
         Button retour = (Button) findViewById(R.id.retour);
         intent = new Intent();
 
+
         retour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
