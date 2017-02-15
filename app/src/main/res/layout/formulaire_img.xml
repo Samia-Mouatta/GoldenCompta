@@ -23,6 +23,7 @@
                 android:orientation="horizontal"
                 android:id="@+id/linear1">
 
+
                 <Button
                     android:id="@+id/btGallery"
                     android:layout_width="match_parent"

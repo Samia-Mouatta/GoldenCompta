@@ -39,6 +39,7 @@ import static com.example.aurore.goldencompta.MainActivity.IMAGE;
 
 public class TableauDepense  extends Activity {
 
+
     DepenseBDD depenseBDD = new DepenseBDD(this);
     ArrayAdapter<String> adapter = null;
 

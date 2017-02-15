@@ -60,6 +60,7 @@ public class FormulaireCategorie extends Activity {
         });
     }
 
+
     /**
      * Méthode de création du menu
      * @param menu
