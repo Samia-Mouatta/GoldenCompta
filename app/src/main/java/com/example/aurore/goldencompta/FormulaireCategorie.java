@@ -32,6 +32,8 @@ public class FormulaireCategorie extends Activity {
         final Intent intent = new Intent();
         final EditText Newcategorie = (EditText) findViewById(R.id.newCategorie);
         final Button loginButton = (Button) findViewById(R.id.Save);
+        final Button retour = (Button) findViewById(R.id.Retour);
+
         loginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v){
@@ -46,6 +48,14 @@ public class FormulaireCategorie extends Activity {
                     finish();
                 }
 
+            }
+        });
+
+        retour.setOnClickListener(new OnClickListener(){
+            @Override
+            public void onClick(View v){
+                main.setResult(RESULT_CANCELED, intent);
+                finish();
             }
         });
     }

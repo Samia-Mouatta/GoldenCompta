@@ -27,12 +27,27 @@
         android:textAlignment="center"
         android:inputType="text"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Sauvegarder"
-        android:id="@+id/Save"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Sauvegarder"
+            android:id="@+id/Save"
+            android:layout_weight="0.05"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Retour"
+            android:id="@+id/Retour"
+            android:layout_weight="0.05"/>
+
+    </LinearLayout>
+
 
 </LinearLayout>

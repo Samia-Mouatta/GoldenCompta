@@ -47,8 +47,10 @@ public class FormulaireDepense extends Activity {
         final DatePicker date = (DatePicker) findViewById(R.id.date);
 
         final Button save = (Button) findViewById(R.id.Save);
+        final Button retour = (Button) findViewById(R.id.retour);
 
         final Spinner spinner = (Spinner) findViewById(R.id.spinnerC);
+
 
 
 
@@ -107,17 +109,20 @@ public class FormulaireDepense extends Activity {
                         Toast.makeText(FormulaireDepense.this,"La date doit être inférieure ou égale à la date d'aujourd'hui", Toast.LENGTH_SHORT).show();
                 }
 
-
-                System.out.println("Date du calendrier2 : " + d);
-                System.out.println("Depense : " + Float.parseFloat(dep));
-                System.out.println("Catégorie : " + cat);
-                System.out.print("Date : " + d.toString());
-
-
+                    
                }
             }
         });
+
+        retour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                main.setResult(RESULT_CANCELED, intent);
+                finish();
+            }
+        });
     }
+
 
 
     /**

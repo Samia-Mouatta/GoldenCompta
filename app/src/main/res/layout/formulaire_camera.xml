@@ -128,7 +128,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/refus"
-                    android:text="Refuser"
+                    android:text="Retour"
                     style="@style/Widget.AppCompat.Button"/>
             </LinearLayout>
 

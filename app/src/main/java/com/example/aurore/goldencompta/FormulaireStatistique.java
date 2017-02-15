@@ -1,11 +1,16 @@
 package com.example.aurore.goldencompta;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.google.android.gms.appindexing.Action;
@@ -34,6 +39,7 @@ import java.util.GregorianCalendar;
  */
 
 public class FormulaireStatistique extends Activity {
+    private Activity main = this;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -252,7 +258,9 @@ public class FormulaireStatistique extends Activity {
 
         int i;
         String name, value;
+        final Intent intent = new Intent();
         WebView webView = new WebView(this);
+        Button retour = (Button) findViewById(R.id.retour);
 
         //WebView depenseByCategorie = (WebView) findViewById(R.id.depenseByCategorie);
         //WebView depenseByMontant = (WebView) findViewById(R.id.depenseByMontant);
@@ -363,6 +371,15 @@ public class FormulaireStatistique extends Activity {
 
         url = url.substring(0, url.length() - 1);
 
+        depenseByPeriode.loadUrl(url);
+
+        retour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                main.setResult(RESULT_CANCELED, intent);
+                finish();
+            }
+        });
         //depenseByPeriode.loadUrl(url);
 
 
@@ -375,10 +392,8 @@ public class FormulaireStatistique extends Activity {
     }
 
 
-    /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
     public Action getIndexApiAction() {
         Thing object = new Thing.Builder()
                 .setName("FormulaireStatistique Page") // TODO: Define a title for the content shown.
@@ -391,7 +406,19 @@ public class FormulaireStatistique extends Activity {
                 .build();
     }
 
+    /**
+     * Méthode de création du menu
+     * @param menu
+     * @return
+     */
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+
+
     public void onStart() {
         super.onStart();
 
@@ -404,10 +431,61 @@ public class FormulaireStatistique extends Activity {
     @Override
     public void onStop() {
         super.onStop();
-
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         //AppIndex.AppIndexApi.end(client, getIndexApiAction());
         //client.disconnect();
     }
+
+    /**
+     * Méthode de navigation dans les items du menu
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            //Retour à la page d'accueil
+            case R.id.accueil:
+                Intent accueil = new Intent(this, MainActivity.class);
+                startActivity(accueil);
+                return true;
+            //case R.id.menu_about:
+            case R.id.tab_dep:
+                Intent tabDep = new Intent(this, TableauDepense.class);
+                startActivity(tabDep);
+                return true;
+            case R.id.menu_category:
+                // Comportement du bouton "Catégorie"
+                Intent intentCategory = new Intent(this, FormulaireCategorie.class);
+                startActivityForResult(intentCategory, CATEGORIE);
+                return true;
+            case R.id.menu_depense:
+                //Comportement du bouton "Dépense"
+                Intent intentDepense = new Intent(this, FormulaireDepense.class);
+                startActivityForResult(intentDepense, DEPENSE);
+                return true;
+            case R.id.menu_budget:
+                //Comportement du bouton "budget"
+                Intent intentBudget = new Intent(this, FormulaireBudget.class);
+                startActivityForResult(intentBudget, BUDGET);
+                return true;
+            case R.id.menu_statistique:
+                //Comportement du bouton "camera"
+                Intent intentStat = new Intent(this, FormulaireStatistique.class);
+                startActivity(intentStat);
+                return true;
+            case R.id.menu_img:
+                Intent intentImage = new Intent(this, FormulaireImg.class);
+                startActivityForResult(intentImage, IMAGE);
+                return true;
+            case R.id.menu_camera:
+                Intent intentCamera = new Intent(this, FormulaireCamera.class);
+                startActivityForResult(intentCamera, CAMERA);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 }

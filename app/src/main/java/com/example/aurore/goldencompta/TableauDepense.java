@@ -1,6 +1,7 @@
 package com.example.aurore.goldencompta;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.ListView;
@@ -48,6 +50,9 @@ public class TableauDepense  extends Activity {
     String moisSelectionne, anneeSelectionnee;
     ArrayAdapter<String> categAdapter = null;
     TextView estVide;
+    private Activity main = this;
+    private Button retour;
+    private Intent intent;
 
 
     /**
@@ -61,6 +66,8 @@ public class TableauDepense  extends Activity {
         setContentView(R.layout.tableau_depenses);
         moisSelectionne = "";
         anneeSelectionnee = "";
+        retour = (Button) findViewById(R.id.retour);
+        intent = new Intent();
 
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#00e6ac"));
         // couleur de l'actionBar
@@ -284,6 +291,14 @@ public class TableauDepense  extends Activity {
            }
 
         );
+
+        retour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                main.setResult(RESULT_CANCELED, intent);
+                finish();
+            }
+        });
     }
 
 
@@ -347,6 +362,14 @@ public class TableauDepense  extends Activity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+
+
+    public int compare(String s1, String s2) {
+        s1 = s1.replaceAll("[^a-zA-Z0-9]+", "");
+        s2 = s2.replaceAll("[^a-zA-Z0-9]+", "");
+        return s1.compareToIgnoreCase(s2);
     }
 
 
@@ -429,21 +452,15 @@ public class TableauDepense  extends Activity {
                 cdepBdd.insertDepense(newDep);
                 cdepBdd.close();
             }
-        }/*else if (requestCode == BUDGET){
-            if (monBudget < mesDepenses) {
-                // afficher une boite de dialogue d'alerte
-                Builder builder = new Builder(this);
-                builder.setTitle("Alerte dépassement budget");
-                builder.setIcon(R.mipmap.alert);
-                builder.setMessage("Attention! Vous avez dépassé votre budget par mois");
-                builder.setCancelable(false);
-                builder.setNegativeButton("OK", new OkOnClickListener());
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
+        }
+    }
 
-
-        }*/
+    public static void compare(int r) {
+        if (r==0) {
+            System.out.println("ils sont égaux");
+        } else {
+            System.out.println("ils sont différents");
+        }
     }
 
 

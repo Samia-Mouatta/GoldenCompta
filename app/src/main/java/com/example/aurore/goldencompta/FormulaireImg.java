@@ -48,6 +48,7 @@ public class FormulaireImg extends Activity {
     protected String contenu;
     protected TextView ocr;
     protected Button confirmer;
+    protected Button refuser;
     protected String d, dBis;
     protected Date systeme = new Date();
     protected Date saisi;
@@ -67,6 +68,7 @@ public class FormulaireImg extends Activity {
         final DatePicker date = (DatePicker) findViewById(R.id.date);
         final Intent intent = new Intent();
         confirmer = (Button) findViewById(R.id.accept);
+        refuser = (Button) findViewById(R.id.refus);
 
         List<String> list = new ArrayList<String>();
         List<String> listCategorie = new ArrayList<String>();
@@ -136,6 +138,14 @@ public class FormulaireImg extends Activity {
 
 
                 }
+            }
+        });
+
+        refuser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                main.setResult(RESULT_CANCELED, intent);
+                finish();
             }
         });
 

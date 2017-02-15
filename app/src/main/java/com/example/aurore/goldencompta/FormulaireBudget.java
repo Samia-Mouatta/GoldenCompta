@@ -38,6 +38,7 @@ public class FormulaireBudget extends Activity {
         final String Test = "budget";
         final Intent intent = new Intent();
         final Button save = (Button) findViewById(R.id.Save);
+        final Button retour = (Button) findViewById(R.id.retour);
         final TextView montantActuel = (TextView) findViewById(R.id.MontantActuel);
         final EditText montant = (EditText) findViewById(R.id.montant);
 
@@ -78,6 +79,14 @@ public class FormulaireBudget extends Activity {
                     toast.show();
                     montantActuel.setText(str);
                 }
+            }
+        });
+
+        retour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                main.setResult(RESULT_CANCELED, intent);
+                finish();
             }
         });
 

@@ -41,6 +41,13 @@
             android:id="@+id/chartView"
             android:orientation="vertical"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Retour"
+        android:id="@+id/retour"
+        android:layout_weight="0.05"/>
 
 
         <TextView

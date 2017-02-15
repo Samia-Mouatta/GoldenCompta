@@ -78,5 +78,13 @@
         android:layout_height="fill_parent">
     </ListView>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Retour"
+        android:id="@+id/retour"
+        android:layout_weight="0.05"/>
+
 
 </LinearLayout>
