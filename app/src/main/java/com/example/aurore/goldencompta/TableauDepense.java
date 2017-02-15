@@ -1,7 +1,6 @@
 package com.example.aurore.goldencompta;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -251,7 +250,7 @@ public class TableauDepense  extends Activity {
                        }
                    } else {
                        values.clear();
-                       values = depenseBDD.getDepensesByMonthYear(moisSelectionne, anneeSelectionnee);
+                       //values = depenseBDD.getDepensesByMonthYear(moisSelectionne, anneeSelectionnee);
                        adapter.clear();
                        for (int i = 0; i < values.size(); i++) {
                            adapter.insert(values.get(i), i);
