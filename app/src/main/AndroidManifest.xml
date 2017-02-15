@@ -35,6 +35,8 @@
             android:name=".FormulaireStatistique" />
         <activity
             android:name=".FormulaireCamera" />
+        <activity
+            android:name=".TableauDepense" />
     </application>
 
 </manifest>
