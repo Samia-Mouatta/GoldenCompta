@@ -19,6 +19,7 @@
             android:id="@+id/budget"
             />
 
+
     </LinearLayout>
 
     <TextView

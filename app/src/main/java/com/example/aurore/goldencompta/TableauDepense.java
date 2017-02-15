@@ -110,7 +110,6 @@ public class TableauDepense  extends Activity {
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
         // Assign adapter to ListView
         spinnerCateg.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String categ = categAdapter.getItem(position);
