@@ -43,7 +43,7 @@ public class TableauDepense  extends Activity {
     DepenseBDD depenseBDD = new DepenseBDD(this);
     ArrayAdapter<String> adapter = null;
 
-    Spinner spinnerMois, spinnerAnnee, spinnerCateg;
+    Spinner spinnerMois, spinnerAnnee;
     DateAdapter dataAdapterMois, dataAdapterYear;
     TextView dateView;
     ArrayList<String> values;
@@ -92,8 +92,7 @@ public class TableauDepense  extends Activity {
         listView = (ListView) findViewById(R.id.listView1);
 
 
-        spinnerCateg = (Spinner) findViewById(R.id.spinCat);
-        // spinnerCateg.setOnItemSelectedListener(this);
+        //spinnerCateg = (Spinner) findViewById(R.id.spinCat);
 
         List<String> list = new ArrayList<String>();
         List<String> listCategorie = new ArrayList<String>();
@@ -111,42 +110,6 @@ public class TableauDepense  extends Activity {
 
         categAdapter.setDropDownViewResource
                 (android.R.layout.simple_spinner_dropdown_item);
-
-        spinnerCateg.setAdapter(categAdapter);
-
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
-        // Assign adapter to ListView
-        spinnerCateg.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String categ = categAdapter.getItem(position);
-
-                if (values.size() != 0) {
-
-                    // Assign adapter to ListView
-                    listView.setAdapter(adapter);
-                    if (categ != null || !categ.equals("")) {
-                        adapter.getFilter().filter(categ, new Filter.FilterListener() {
-                            @Override
-                            public void onFilterComplete(int count) {
-
-                            }
-                        });
-                    } else {
-                        listView.setAdapter(adapter);
-                    }
-                } else {
-                    estVide.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-
 
         dateView = (TextView)findViewById(R.id.date);
 
