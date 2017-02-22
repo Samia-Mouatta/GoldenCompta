@@ -214,7 +214,6 @@ public class TableauDepense  extends Activity {
                            listView.setAdapter(adapter);
                            if (item != null || !item.equals("")) {
                                values.clear();
-                               //values = depenseBDD.getDepensesByAnnee(anneeSelectionnee);
                                values = depenseBDD.getDepensesByMonthYear(moisSelectionne, anneeSelectionnee);
                            } else {
                                values.clear();
@@ -371,8 +370,6 @@ public class TableauDepense  extends Activity {
                 //Ajout dans la base de données
                 CategorieBDD categBdd = new CategorieBDD(this);
                 categBdd.open();
-                // categBdd.insertCategorie(newCateg);
-                //    Categorie existCateg = categBdd.getCategorieWithNom(newCateg.getNom());
 
                 List<String> listCategorie = new ArrayList<String>();
 
