@@ -430,7 +430,6 @@ public class DepenseBDD {
                 String[] date = d.getDate().split("/");
                 if(date[1].equals(month) && date[2].equals(annee)) {
                     ligne = "Montant : " + d.getMontant() + "\nDate : " + d.getDate() + "\nCategorie : " + d.getCategorie();
-                    System.out.println(ligne);
                     listeDepenses.add(ligne);
                 }
                 cursor.moveToNext();

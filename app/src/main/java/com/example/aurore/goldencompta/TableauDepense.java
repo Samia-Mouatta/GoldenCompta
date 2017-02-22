@@ -139,44 +139,41 @@ public class TableauDepense  extends Activity {
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
         spinnerMois.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-
           {
               @Override
               public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                   String item = dataAdapterMois.getItem(position);
                   moisSelectionne = spinnerMois.getSelectedItem().toString();
-                  if (!anneeSelectionnee.isEmpty()) {
-                      // Assign adapter to ListView
-                      listView.setAdapter(adapter);
-                      if (item != null || !item.equals("")) {
-                          values.clear();
-                          //values = depenseBDD.getDepensesByMonth(moisSelectionne);
-                          values = depenseBDD.getDepensesByMonthYear(moisSelectionne, anneeSelectionnee);
-                          adapter.clear();
-                          for (int i = 0; i < values.size(); i++) {
-                              adapter.insert(values.get(i), i);
+                  if(position>0) {
+                      if (!anneeSelectionnee.isEmpty()) {
+                          // Assign adapter to ListView
+                          listView.setAdapter(adapter);
+                          if (item != null || !item.equals("")) {
+                              values.clear();
+                              values = depenseBDD.getDepensesByMonthYear(moisSelectionne, anneeSelectionnee);
+                              adapter.clear();
+                              for (int i = 0; i < values.size(); i++) {
+                                  adapter.insert(values.get(i), i);
+                              }
+                              adapter.notifyDataSetChanged();
+                          } else {
+                              values = depenseBDD.getAllDepense();
+                              adapter.clear();
+                              for (int i = 0; i < values.size(); i++) {
+                                  adapter.insert(values.get(i), i);
+                              }
+                              adapter.notifyDataSetChanged();
                           }
-                          adapter.notifyDataSetChanged();
                       } else {
-                          values = depenseBDD.getAllDepense();
+                          values.clear();
+                          values = depenseBDD.getDepensesByMonth(moisSelectionne);
                           adapter.clear();
                           for (int i = 0; i < values.size(); i++) {
                               adapter.insert(values.get(i), i);
                           }
                           adapter.notifyDataSetChanged();
-                      }
-                  }
-              }
 
-              @Override
-              public void onNothingSelected(AdapterView<?> adapterView) {
-                  if (!anneeSelectionnee.isEmpty()) {
-                      values = depenseBDD.getDepensesByAnnee(anneeSelectionnee);
-                      adapter.clear();
-                      for (int i = 0; i < values.size(); i++) {
-                          adapter.insert(values.get(i), i);
                       }
-                      adapter.notifyDataSetChanged();
                   } else {
                       values = depenseBDD.getAllDepense();
                       adapter.clear();
@@ -186,7 +183,20 @@ public class TableauDepense  extends Activity {
                       adapter.notifyDataSetChanged();
 
                   }
+              }
 
+              @Override
+              public void onNothingSelected(AdapterView<?> adapterView) {
+                  if (!anneeSelectionnee.isEmpty()) {
+                      values = depenseBDD.getDepensesByAnnee(anneeSelectionnee);
+                  } else {
+                      values = depenseBDD.getAllDepense();
+                  }
+                  adapter.clear();
+                  for (int i = 0; i < values.size(); i++) {
+                      adapter.insert(values.get(i), i);
+                  }
+                  adapter.notifyDataSetChanged();
               }
           }
 
@@ -194,40 +204,44 @@ public class TableauDepense  extends Activity {
 
 
         spinnerAnnee.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-
            {
                @Override
                public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                    String item = dataAdapterYear.getItem(position);
                    anneeSelectionnee = spinnerAnnee.getSelectedItem().toString();
-                   if (!moisSelectionne.isEmpty()) {
-                       listView.setAdapter(adapter);
-                       if (item != null || !item.equals("") || !item.equals("")) {
-                           values.clear();
-                           //values = depenseBDD.getDepensesByAnnee(anneeSelectionnee);
-                           values = depenseBDD.getDepensesByMonthYear(moisSelectionne, anneeSelectionnee);
+                   if(position >0) {
+                       if (!moisSelectionne.isEmpty()) {
+                           listView.setAdapter(adapter);
+                           if (item != null || !item.equals("")) {
+                               values.clear();
+                               //values = depenseBDD.getDepensesByAnnee(anneeSelectionnee);
+                               values = depenseBDD.getDepensesByMonthYear(moisSelectionne, anneeSelectionnee);
+                           } else {
+                               values.clear();
+                               values = depenseBDD.getAllDepense();
+                           }
                            adapter.clear();
                            for (int i = 0; i < values.size(); i++) {
                                adapter.insert(values.get(i), i);
                            }
                            adapter.notifyDataSetChanged();
                        } else {
-                           values = depenseBDD.getAllDepense();
+                           values.clear();
+                           values = depenseBDD.getDepensesByAnnee(anneeSelectionnee);
                            adapter.clear();
                            for (int i = 0; i < values.size(); i++) {
                                adapter.insert(values.get(i), i);
                            }
                            adapter.notifyDataSetChanged();
+
                        }
                    } else {
-                       values.clear();
-                       //values = depenseBDD.getDepensesByMonthYear(moisSelectionne, anneeSelectionnee);
+                       values = depenseBDD.getAllDepense();
                        adapter.clear();
                        for (int i = 0; i < values.size(); i++) {
                            adapter.insert(values.get(i), i);
                        }
                        adapter.notifyDataSetChanged();
-
                    }
                }
 
@@ -236,19 +250,14 @@ public class TableauDepense  extends Activity {
                    if (!moisSelectionne.isEmpty()) {
                        if (!anneeSelectionnee.isEmpty()) {
                            values = depenseBDD.getDepensesByMonth(moisSelectionne);
-                           adapter.clear();
-                           for (int i = 0; i < values.size(); i++) {
-                               adapter.insert(values.get(i), i);
-                           }
-                           adapter.notifyDataSetChanged();
                        } else {
                            values = depenseBDD.getAllDepense();
-                           adapter.clear();
-                           for (int i = 0; i < values.size(); i++) {
-                               adapter.insert(values.get(i), i);
-                           }
-                           adapter.notifyDataSetChanged();
                        }
+                       adapter.clear();
+                       for (int i = 0; i < values.size(); i++) {
+                           adapter.insert(values.get(i), i);
+                       }
+                       adapter.notifyDataSetChanged();
                    }
 
                }
@@ -418,15 +427,6 @@ public class TableauDepense  extends Activity {
             }
         }
     }
-
-    public static void compare(int r) {
-        if (r==0) {
-            System.out.println("ils sont égaux");
-        } else {
-            System.out.println("ils sont différents");
-        }
-    }
-
 
     /**
      * Méthode permettant d'afficher la jauge du budget avec l'API google chart
