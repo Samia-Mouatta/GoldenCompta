@@ -42,4 +42,10 @@ public class Depense {
         return "Montant : "+ montant +"\nDate : "+dateDepense+"\nCatégorie : "+categ;
     }
 
+    public boolean equals(Object obj) {
+        return  (obj instanceof Depense) &&
+                (((Depense)obj).getMontant() == this.montant) &&
+                ((Depense)obj).getCategorie().equals(categ) &&
+                ((Depense)obj).getDate().equals(dateDepense);
+    }
 }
