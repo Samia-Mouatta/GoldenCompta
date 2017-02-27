@@ -1,17 +1,18 @@
 package com.example.aurore.goldencompta;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
@@ -19,7 +20,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -27,9 +27,7 @@ import android.widget.Toast;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import static com.example.aurore.goldencompta.MainActivity.BUDGET;
@@ -38,7 +36,7 @@ import static com.example.aurore.goldencompta.MainActivity.CATEGORIE;
 import static com.example.aurore.goldencompta.MainActivity.DEPENSE;
 import static com.example.aurore.goldencompta.MainActivity.IMAGE;
 
-public class TableauDepense extends Activity {
+public class TableauDepense  extends Activity {
 
 
     DepenseBDD depenseBDD = new DepenseBDD(this);
@@ -80,7 +78,7 @@ public class TableauDepense extends Activity {
         getActionBar().setDisplayShowHomeEnabled(true);
 
         affichageBudget();
-        afficherDepenses();
+        //afficherDepenses();
 
         values = new ArrayList<String>();
         //Création de l'instance de la classe CategorieBDD
@@ -114,7 +112,7 @@ public class TableauDepense extends Activity {
 
         dateView = (TextView) findViewById(R.id.date);
 
-        spinnerMois = (Spinner) findViewById(R.id.spinnerMois);
+        spinnerMois = (Spinner)findViewById(R.id.spinnerMois);
 
         dataAdapterMois = new DateAdapter(this,
                 android.R.layout.simple_spinner_item, loadMonth()
@@ -124,7 +122,7 @@ public class TableauDepense extends Activity {
         spinnerMois.setAdapter(dataAdapterMois);
         spinnerMois.setSelection(0);
 
-        spinnerAnnee = (Spinner) findViewById(R.id.spinnerAnnee);
+        spinnerAnnee = (Spinner)findViewById(R.id.spinnerAnnee);
 
         dataAdapterYear = new DateAdapter(this,
                 android.R.layout.simple_spinner_item, loadYear()
@@ -264,12 +262,60 @@ public class TableauDepense extends Activity {
                 finish();
             }
         });
+
+        ArrayList<String> action = new ArrayList<String>();
+        ArrayAdapter<String> dataAdapterAction = new DateAdapter(this, android.R.layout.simple_spinner_item, action);
+
+
+        registerForContextMenu(listView);
+
+
+    }
+
+
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.contextal_menu, menu);
+
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        String txt;
+        int posMin, posMax, id;
+        txt = adapter.getItem(info.position);
+        String montant, date, cat;
+        DepenseBDD depense = new DepenseBDD(this);
+        depense.open();
+        CategorieBDD categorie = new CategorieBDD(this);
+
+        posMax = txt.indexOf("-");
+        id = Integer.parseInt(txt.substring(0,posMax-1));
+        //Toast.makeText(this, "-"+id+"-", Toast.LENGTH_LONG).show();
+        switch (item.getItemId()) {
+            case R.id.delete:
+                Log.i("Hello!", "Clicked! 1!");
+                depense.removeDepenseWithID(id);
+                onResume();
+                return true;
+            case R.id.edit:
+                Log.i("Hello!", "Clicked! 2!");
+                Intent intentEdit = new Intent(this, FormulaireEditDepense.class);
+                intentEdit.putExtra("id", id);
+                startActivityForResult(intentEdit, 5);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 
 
     /**
      * Méthode de création du menu
-     *
      * @param menu
      * @return
      */
@@ -281,7 +327,6 @@ public class TableauDepense extends Activity {
 
     /**
      * Méthode de navigation dans les items du menu
-     *
      * @param item
      * @return
      */
@@ -329,6 +374,14 @@ public class TableauDepense extends Activity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+
+
+    public int compare(String s1, String s2) {
+        s1 = s1.replaceAll("[^a-zA-Z0-9]+", "");
+        s2 = s2.replaceAll("[^a-zA-Z0-9]+", "");
+        return s1.compareToIgnoreCase(s2);
     }
 
 
@@ -414,6 +467,7 @@ public class TableauDepense extends Activity {
                     Toast.makeText(this, " Votre dépense existe déjà dans la liste", Toast.LENGTH_LONG).show();
                 }
                 cdepBdd.close();
+
             } else {
                 Toast.makeText(this, "Erreur lors de l'insertion", Toast.LENGTH_LONG).show();
             }
@@ -430,7 +484,6 @@ public class TableauDepense extends Activity {
             }
         }
     }
-
 
     /**
      * Méthode permettant d'afficher la jauge du budget avec l'API google chart
@@ -452,7 +505,7 @@ public class TableauDepense extends Activity {
             monBudget = 0;
         }
         //monBudget = 100;
-        date = new Date();
+        /*date = new Date();
         Calendar myCalendar = GregorianCalendar.getInstance();
         myCalendar.setTime(date);
         mois = myCalendar.MONTH;
@@ -468,7 +521,11 @@ public class TableauDepense extends Activity {
             depenseString = depenseMois.getString(0).replace(",", ".");
         } else {
             depenseString = "0";
-        }
+        }*/
+
+        float dep = depense.getTotalDepenseMois();
+        depenseString = Float.toString(dep);
+        depenseString = depenseString.replace(",", ".");
 
         mesDepenses = Double.parseDouble(depenseString);
 
@@ -484,7 +541,7 @@ public class TableauDepense extends Activity {
         String url = "http://chart.apis.google.com/chart?cht=gom&chco=12FE01,F6FE01,FE0101&chs=300x120&chd=t:" + value + "&chxt=x,y&chxl=0:|" + mesDepenses + "|1:|0|" + monBudget;
         budget.loadUrl(url);
 
-        if (monBudget < mesDepenses) {
+        /*if (monBudget < mesDepenses) {
             // afficher une boite de dialogue d'alerte
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Alerte dépassement budget");
@@ -494,7 +551,7 @@ public class TableauDepense extends Activity {
             builder.setNegativeButton("OK", new OkOnClickListener());
             AlertDialog dialog = builder.create();
             dialog.show();
-        }
+        }*/
     }
 
     private void afficherDepenses() {
@@ -537,6 +594,7 @@ public class TableauDepense extends Activity {
                 }
             });
 
+
         } else {
             estVide.setVisibility(View.VISIBLE);
         }
@@ -553,7 +611,7 @@ public class TableauDepense extends Activity {
      *
      * @return la liste des 7 dernières années
      */
-    private List<String> loadYear() {
+    private List<String> loadYear(){
         List listYear = new ArrayList<String>();
         listYear.add("");
         listYear.add("2010");

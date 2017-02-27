@@ -10,6 +10,9 @@ import android.util.Log;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import static android.content.ContentValues.TAG;
 
@@ -123,9 +126,10 @@ public class DepenseBDD {
         ContentValues values = new ContentValues();
 
         Format formatter = new SimpleDateFormat("dd/MM/yyyy");
-        String s = formatter.format(dep.getDate());
-        values.put(COL_DATE, s);
 
+        //String s = formatter.format(dep.getDate());
+        //values.put(COL_DATE, s);
+        values.put(COL_DATE, dep.getDate());
         values.put(COL_MONTANT, dep.getMontant());
         values.put(COL_CATEG, dep.getCategorie());
         return bdd.update(TABLE_DEPENSE, values, COL_ID + " = " +id, null);
@@ -136,10 +140,16 @@ public class DepenseBDD {
      * @param id id de la dépense
      * @return la dépense supprimée
      */
-    public int removeDepenseWithID(int id){
+    public void removeDepenseWithID(Integer id){
         //Suppression d'une dépense de la BDD grâce à l'ID
-        return bdd.delete(TABLE_DEPENSE, COL_ID + " = " +id, null);
+        bdd.delete(TABLE_DEPENSE, COL_ID + " = " +id, null);
     }
+
+    public void removeDepenseWithInfo(String montant, String date, String cat){
+        //Suppression d'une dépense de la BDD grâce à l'ID
+        bdd.delete(TABLE_DEPENSE, COL_MONTANT + " = " +montant+ "and" + COL_DATE + "=" + date + "and" + COL_CATEG + " = " + cat, null);
+    }
+
 
     /**
      * Méthode retournant les dépenses classée par catégorie
@@ -191,6 +201,7 @@ public class DepenseBDD {
         return bdd.rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY categorie", null);
     }
 
+
     /**
      * Méthode retournant les dépenses efféctuées entre une fourchette de montant
      * @param min borne minimale du montnant
@@ -205,6 +216,14 @@ public class DepenseBDD {
         return bdd.rawQuery(querry, null);
     }
 
+    public Cursor getDepenseByID(Integer id){
+
+        String TABLE_NAME = "table_depense";
+        this.open();
+        String querry = "SELECT * FROM table_depense WHERE id = '"+ id +"'";
+        return bdd.rawQuery(querry, null);
+    }
+
     /**
      * Méthode retournant le total du montant des dépenses pour chaque mois
      * @return curseur de dépense
@@ -216,6 +235,84 @@ public class DepenseBDD {
 
         return bdd.rawQuery("SELECT montant,strftime('%m',date) as Mois FROM " + TABLE_NAME +  "", null);
     }
+
+    public ArrayList<String> selectAllDepensesAnnee1 (Integer annee)   {
+        Cursor c = selectDepense();
+        Cursor result;
+
+        int i, year, month, mois;
+        float totalDepense;
+        String date;
+        Depense d;
+        ArrayList<String> res = new ArrayList<String>();
+        ArrayList<String> tmp = new ArrayList<String>();
+
+
+            for (i = 0; i<12; i++) {
+                totalDepense = 0;
+                if (c.getCount()!=0)    {
+                    c.moveToFirst();
+                    totalDepense = 0;
+                    while (!c.isAfterLast()) {
+                        d = cursorToDepense(c);
+                        date = d.getDate();
+                        year = Integer.parseInt(date.substring(6,10));
+                        month = Integer.parseInt(date.substring(3,5));
+
+                        if (year == annee && month == i) {
+                            Log.i(TAG, "mois " + i + " - "+ month + " annee " + year + " - " + annee + " - " + d.getMontant());
+                            totalDepense = totalDepense + d.getMontant();
+
+                        }
+                        c.moveToNext();
+                    }
+
+            }
+                Log.i(TAG, "total mois de " + i + " - " + Float.toString(totalDepense));
+
+            res.add(Float.toString(totalDepense));
+        }
+
+
+        return res;
+    }
+
+    public float getTotalDepenseMois ()   {
+        Cursor c = selectDepense();
+        Cursor result;
+        Date dateToday = new Date();
+        Calendar myCalendar = GregorianCalendar.getInstance();
+        myCalendar.setTime(dateToday);
+        int annee = myCalendar.get(Calendar.YEAR);
+        int mois = myCalendar.get(Calendar.MONTH)+1;
+
+        int i, year, month;
+        float totalDepense;
+        String date;
+        Depense d;
+
+
+        totalDepense = 0;
+        if (c.getCount()!=0)    {
+            c.moveToFirst();
+
+            while (!c.isAfterLast()) {
+                d = cursorToDepense(c);
+                date = d.getDate();
+                year = Integer.parseInt(date.substring(6,10));
+                month = Integer.parseInt(date.substring(3,5));
+
+                if (year == annee && month == mois) {
+                    totalDepense = totalDepense + d.getMontant();
+                }
+                c.moveToNext();
+            }
+
+        }
+
+        return totalDepense;
+    }
+
 
     public Cursor selectAllDepensesAnnee(String year) {
 
@@ -283,7 +380,7 @@ public class DepenseBDD {
      * @param c curseur d'entré
      * @return dépense de sortie
      */
-    private static final Depense cursorToDepense(Cursor c){
+    public static final Depense cursorToDepense(Cursor c){
 
         if (c.getCount() == 0)
             return null;
@@ -309,7 +406,7 @@ public class DepenseBDD {
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             d = DepenseBDD.cursorToDepense(cursor);
-            ligne = "Montant : " + d.getMontant() + "\nDate : " + d.getDate() +  "\nCategorie : " + d.getCategorie();
+            ligne = d.getId() + " - Montant : " + d.getMontant() + "\nDate : " + d.getDate() +  "\nCategorie : " + d.getCategorie();
             listeDepense.add(ligne);
             cursor.moveToNext();
         }
@@ -444,5 +541,25 @@ public class DepenseBDD {
             listeDepenses.add("Aucune dépense trouvée");
         }
         return listeDepenses;
+    }
+
+    public  Integer montantMaxYear(int Year)   {
+        int res, montant;
+        String annee;
+        res = 0;
+        Cursor c = this.populateTable();
+        c.moveToFirst();
+        while(!c.isAfterLast()) {
+            annee = c.getString(1);
+            annee = annee.substring(6);
+            montant = Integer.parseInt(c.getString(2));
+            if (Integer.parseInt(annee) == Year && montant > res)   {
+                res = montant;
+            }
+            c.moveToNext();
+        }
+
+        return res;
+
     }
 }

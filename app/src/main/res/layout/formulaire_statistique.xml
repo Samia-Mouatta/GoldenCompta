@@ -10,10 +10,6 @@
         android:gravity="top"
         android:scrollbarAlwaysDrawVerticalTrack="true">
 
-
-
-
-
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -45,7 +41,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="Dépenses par Periode : "
+            android:id="@+id/textViewLine"
             android:textSize="20sp" />
 
         <LinearLayout
@@ -53,7 +49,6 @@
             android:layout_height="130pt"
             android:id="@+id/chartLine"
             android:orientation="vertical"/>
-
 
         <Button
             android:layout_width="wrap_content"

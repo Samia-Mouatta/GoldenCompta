@@ -97,14 +97,28 @@ public class CategorieBDD {
         return bdd.update(TABLE_CATEGORIE, values, COL_ID + " = " +id, null);
     }
 
+    public int getIdCategorie(String Cat)  {
+        Cursor c;
+        int id = 0;
+        //        colNom, null, "nom = ", null, null, COL_NOM);
+        String Querry = "SELECT * from table_categorie WHERE nom = '" + Cat +"'";
+        c = bdd.rawQuery(Querry, null);
+        if (c.getCount() != 0) {
+            c.moveToFirst();
+            id = c.getInt(0);
+        }
+        return id;
+
+    }
+
     /**
      * Méthode pour supprimer une catégorie selon son identifiant
      * @param id l'identifiant de la catégorie a supprimer
      * @return le nombre de ligne supprimé
      */
-    public int removeCategorieWithID(int id){
+    public boolean removeCategorieWithID(int id){
         //Suppression d'une catégorie de la BDD grâce à l'ID
-        return bdd.delete(TABLE_CATEGORIE, COL_ID + " = " +id, null);
+        return bdd.delete(TABLE_CATEGORIE, COL_ID + " = " +id, null) > 0;
     }
 
     /**

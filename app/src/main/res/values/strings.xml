@@ -6,4 +6,7 @@
     <string name="depense">Liste des dépenses</string>
     <string name="accueil">Bienvenu dans l application GoldenCompta !</string>
     <string name="some_hint">Tapez ici pour filtrer&#8230;</string>
+
+    <string name="delete">Edit</string>
+    <string name="edit">Delete</string>
 </resources>
