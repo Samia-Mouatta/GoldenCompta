@@ -23,7 +23,7 @@ public class FormulaireEditDepense extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.formulaire_edit_depense);
+        //setContentView(R.layout.formulaire_edit_depense);
 
         final DepenseBDD depenseBdd = new DepenseBDD(this);
         final CategorieBDD categorieBDD = new CategorieBDD(this);
@@ -34,10 +34,10 @@ public class FormulaireEditDepense extends Activity {
         List<String> list = new ArrayList<String>();
 
         final EditText montant = (EditText) findViewById(R.id.montant);
-        final EditText date = (EditText) findViewById(R.id.date);
+        /*final EditText date = (EditText) findViewById(R.id.date);
         final Spinner spinnerCat = (Spinner) findViewById(R.id.spinnerCategorie);
         Button save = (Button) findViewById(R.id.save);
-        Button exit = (Button) findViewById(R.id.exit);
+        Button exit = (Button) findViewById(R.id.exit);*/
 
         depenseBdd.open();
         categorieBDD.open();
@@ -63,11 +63,11 @@ public class FormulaireEditDepense extends Activity {
                 (android.R.layout.simple_spinner_dropdown_item);
 
 
-        spinnerCat.setAdapter(dataAdapter);
+        /*spinnerCat.setAdapter(dataAdapter);
         spinnerCat.setSelection(idC-1);
 
         Toast.makeText(this, c.getString(1), Toast.LENGTH_LONG).show();
-        /*depense = depenseBdd.cursorToDepense(depenseBdd.getDepenseByID(id));*/
+        /*depense = depenseBdd.cursorToDepense(depenseBdd.getDepenseByID(id));*
 
 
 
@@ -92,7 +92,7 @@ public class FormulaireEditDepense extends Activity {
 
 
         montant.setText(c.getString(1));
-        date.setText(c.getString(2));
+        date.setText(c.getString(2));*/
 
 
     }

@@ -544,7 +544,8 @@ public class DepenseBDD {
     }
 
     public  Integer montantMaxYear(int Year)   {
-        int res, montant;
+        Integer res;
+        float montant;
         String annee;
         res = 0;
         Cursor c = this.populateTable();
@@ -552,9 +553,9 @@ public class DepenseBDD {
         while(!c.isAfterLast()) {
             annee = c.getString(1);
             annee = annee.substring(6);
-            montant = Integer.parseInt(c.getString(2));
+            montant = Float.parseFloat(c.getString(2));
             if (Integer.parseInt(annee) == Year && montant > res)   {
-                res = montant;
+                res = (int)montant;
             }
             c.moveToNext();
         }
