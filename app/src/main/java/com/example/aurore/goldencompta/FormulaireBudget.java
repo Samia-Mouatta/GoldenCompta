@@ -42,7 +42,7 @@ public class FormulaireBudget extends Activity {
         final TextView montantActuel = (TextView) findViewById(R.id.MontantActuel);
         final EditText montant = (EditText) findViewById(R.id.montant);
 
-//        AFIICHAGE DU BUDGET
+        // AFFICHAGE DU BUDGET
         // On veut la chaîne de caractères d'identifiant FAVORITE_COLOR
         // Si on ne trouve pas cette valeur, on veut rendre "FFFFFF"
         SharedPreferences preferences = getSharedPreferences (BUD,0);

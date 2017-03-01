@@ -25,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.SQLOutput;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Date;
@@ -139,119 +140,119 @@ public class TableauDepense  extends Activity {
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
         spinnerMois.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
 
-                                              {
-                                                  @Override
-                                                  public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                                                      String item = dataAdapterMois.getItem(position);
-                                                      moisSelectionne = spinnerMois.getSelectedItem().toString();
-                                                      if (!anneeSelectionnee.isEmpty()) {
-                                                          // Assign adapter to ListView
-                                                          listView.setAdapter(adapter);
-                                                          if (item != null || !item.equals("")) {
-                                                              values.clear();
-                                                              //values = depenseBDD.getDepensesByMonth(moisSelectionne);
-                                                              values = depenseBDD.getDepensesByMonthYear(moisSelectionne, anneeSelectionnee);
-                                                              adapter.clear();
-                                                              for (int i = 0; i < values.size(); i++) {
-                                                                  adapter.insert(values.get(i), i);
-                                                              }
-                                                              adapter.notifyDataSetChanged();
-                                                          } else {
-                                                              values = depenseBDD.getAllDepense();
-                                                              adapter.clear();
-                                                              for (int i = 0; i < values.size(); i++) {
-                                                                  adapter.insert(values.get(i), i);
-                                                              }
-                                                              adapter.notifyDataSetChanged();
-                                                          }
-                                                      }
-                                                  }
+              {
+                  @Override
+                  public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                      String item = dataAdapterMois.getItem(position);
+                      moisSelectionne = spinnerMois.getSelectedItem().toString();
+                      if (!anneeSelectionnee.isEmpty()) {
+                          // Assign adapter to ListView
+                          listView.setAdapter(adapter);
+                          if (item != null || !item.equals("")) {
+                              values.clear();
+                              //values = depenseBDD.getDepensesByMonth(moisSelectionne);
+                              values = depenseBDD.getDepensesByMonthYear(moisSelectionne, anneeSelectionnee);
+                              adapter.clear();
+                              for (int i = 0; i < values.size(); i++) {
+                                  adapter.insert(values.get(i), i);
+                              }
+                              adapter.notifyDataSetChanged();
+                          } else {
+                              values = depenseBDD.getAllDepense();
+                              adapter.clear();
+                              for (int i = 0; i < values.size(); i++) {
+                                  adapter.insert(values.get(i), i);
+                              }
+                              adapter.notifyDataSetChanged();
+                          }
+                      }
+                  }
 
-                                                  @Override
-                                                  public void onNothingSelected(AdapterView<?> adapterView) {
-                                                      if (!anneeSelectionnee.isEmpty()) {
-                                                          values = depenseBDD.getDepensesByAnnee(anneeSelectionnee);
-                                                          adapter.clear();
-                                                          for (int i = 0; i < values.size(); i++) {
-                                                              adapter.insert(values.get(i), i);
-                                                          }
-                                                          adapter.notifyDataSetChanged();
-                                                      } else {
-                                                          values = depenseBDD.getAllDepense();
-                                                          adapter.clear();
-                                                          for (int i = 0; i < values.size(); i++) {
-                                                              adapter.insert(values.get(i), i);
-                                                          }
-                                                          adapter.notifyDataSetChanged();
+                  @Override
+                  public void onNothingSelected(AdapterView<?> adapterView) {
+                      if (!anneeSelectionnee.isEmpty()) {
+                          values = depenseBDD.getDepensesByAnnee(anneeSelectionnee);
+                          adapter.clear();
+                          for (int i = 0; i < values.size(); i++) {
+                              adapter.insert(values.get(i), i);
+                          }
+                          adapter.notifyDataSetChanged();
+                      } else {
+                          values = depenseBDD.getAllDepense();
+                          adapter.clear();
+                          for (int i = 0; i < values.size(); i++) {
+                              adapter.insert(values.get(i), i);
+                          }
+                          adapter.notifyDataSetChanged();
 
-                                                      }
+                      }
 
-                                                  }
-                                              }
+                  }
+          }
 
         );
 
 
         spinnerAnnee.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
 
-                                               {
-                                                   @Override
-                                                   public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                                                       String item = dataAdapterYear.getItem(position);
-                                                       anneeSelectionnee = spinnerAnnee.getSelectedItem().toString();
-                                                       if (!moisSelectionne.isEmpty()) {
-                                                           listView.setAdapter(adapter);
-                                                           if (item != null || !item.equals("") || !item.equals("")) {
-                                                               values.clear();
-                                                               //values = depenseBDD.getDepensesByAnnee(anneeSelectionnee);
-                                                               values = depenseBDD.getDepensesByMonthYear(moisSelectionne, anneeSelectionnee);
-                                                               adapter.clear();
-                                                               for (int i = 0; i < values.size(); i++) {
-                                                                   adapter.insert(values.get(i), i);
-                                                               }
-                                                               adapter.notifyDataSetChanged();
-                                                           } else {
-                                                               values = depenseBDD.getAllDepense();
-                                                               adapter.clear();
-                                                               for (int i = 0; i < values.size(); i++) {
-                                                                   adapter.insert(values.get(i), i);
-                                                               }
-                                                               adapter.notifyDataSetChanged();
-                                                           }
-                                                       } else {
-                                                           values.clear();
-                                                           //values = depenseBDD.getDepensesByMonthYear(moisSelectionne, anneeSelectionnee);
-                                                           adapter.clear();
-                                                           for (int i = 0; i < values.size(); i++) {
-                                                               adapter.insert(values.get(i), i);
-                                                           }
-                                                           adapter.notifyDataSetChanged();
+           {
+               @Override
+               public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                   String item = dataAdapterYear.getItem(position);
+                   anneeSelectionnee = spinnerAnnee.getSelectedItem().toString();
+                   if (!moisSelectionne.isEmpty()) {
+                       listView.setAdapter(adapter);
+                       if (item != null || !item.equals("") || !item.equals("")) {
+                           values.clear();
+                           //values = depenseBDD.getDepensesByAnnee(anneeSelectionnee);
+                           values = depenseBDD.getDepensesByMonthYear(moisSelectionne, anneeSelectionnee);
+                           adapter.clear();
+                           for (int i = 0; i < values.size(); i++) {
+                               adapter.insert(values.get(i), i);
+                           }
+                           adapter.notifyDataSetChanged();
+                       } else {
+                           values = depenseBDD.getAllDepense();
+                           adapter.clear();
+                           for (int i = 0; i < values.size(); i++) {
+                               adapter.insert(values.get(i), i);
+                           }
+                           adapter.notifyDataSetChanged();
+                       }
+                   } else {
+                       values.clear();
+                       //values = depenseBDD.getDepensesByMonthYear(moisSelectionne, anneeSelectionnee);
+                       adapter.clear();
+                       for (int i = 0; i < values.size(); i++) {
+                           adapter.insert(values.get(i), i);
+                       }
+                       adapter.notifyDataSetChanged();
 
-                                                       }
-                                                   }
+                   }
+               }
 
-                                                   @Override
-                                                   public void onNothingSelected(AdapterView<?> adapterView) {
-                                                       if (!moisSelectionne.isEmpty()) {
-                                                           if (!anneeSelectionnee.isEmpty()) {
-                                                               values = depenseBDD.getDepensesByMonth(moisSelectionne);
-                                                               adapter.clear();
-                                                               for (int i = 0; i < values.size(); i++) {
-                                                                   adapter.insert(values.get(i), i);
-                                                               }
-                                                               adapter.notifyDataSetChanged();
-                                                           } else {
-                                                               values = depenseBDD.getAllDepense();
-                                                               adapter.clear();
-                                                               for (int i = 0; i < values.size(); i++) {
-                                                                   adapter.insert(values.get(i), i);
-                                                               }
-                                                               adapter.notifyDataSetChanged();
-                                                           }
-                                                       }
+               @Override
+               public void onNothingSelected(AdapterView<?> adapterView) {
+                   if (!moisSelectionne.isEmpty()) {
+                       if (!anneeSelectionnee.isEmpty()) {
+                           values = depenseBDD.getDepensesByMonth(moisSelectionne);
+                           adapter.clear();
+                           for (int i = 0; i < values.size(); i++) {
+                               adapter.insert(values.get(i), i);
+                           }
+                           adapter.notifyDataSetChanged();
+                       } else {
+                           values = depenseBDD.getAllDepense();
+                           adapter.clear();
+                           for (int i = 0; i < values.size(); i++) {
+                               adapter.insert(values.get(i), i);
+                           }
+                           adapter.notifyDataSetChanged();
+                       }
+                   }
 
-                                                   }
-                                               }
+               }
+           }
 
         );
 
@@ -274,7 +275,7 @@ public class TableauDepense  extends Activity {
 
 
 
-    @Override
+    /*@Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
@@ -311,7 +312,7 @@ public class TableauDepense  extends Activity {
             default:
                 return super.onContextItemSelected(item);
         }
-    }
+    }*/
 
 
     /**
@@ -410,11 +411,8 @@ public class TableauDepense  extends Activity {
                 //Ajout dans la base de données
                 CategorieBDD categBdd = new CategorieBDD(this);
                 categBdd.open();
-                // categBdd.insertCategorie(newCateg);
-                //    Categorie existCateg = categBdd.getCategorieWithNom(newCateg.getNom());
 
                 List<String> listCategorie = new ArrayList<String>();
-
 
                 listCategorie = categBdd.getAllCategoriesName();
                 String s1 = "";
@@ -437,7 +435,6 @@ public class TableauDepense  extends Activity {
                 }
                 categBdd.close();
             }
-
         } else if (requestCode == DEPENSE) {
             if (resultCode == RESULT_OK) {
                 //Si ok on ajoute dans la base de données correspondante
@@ -453,15 +450,18 @@ public class TableauDepense  extends Activity {
 
                 Depense ldp = new Depense();
 
-                boolean r = false;
+                boolean exists = true;
 
-                for (int i = 0; i < listDep.size(); i++) {
-                    // ldp = listDep.get(i);
+                int i = 0;
+                int taille = listDep.size();
+                while(!exists && i < listDep.size()){
+                    ldp = listDep.get(i);
                     //comparer les dépenses existants avec la nouvelle dépense à ajouter
-                    r = listDep.get(i).equals(newDep);
+                    exists = ldp.equals(newDep);
+                    i++;
                 }
                 // si les dépenses sont différents
-                if (!r) {
+                if (!exists) {
                     cdepBdd.insertDepense(newDep);
                 } else {
                     Toast.makeText(this, " Votre dépense existe déjà dans la liste", Toast.LENGTH_LONG).show();
