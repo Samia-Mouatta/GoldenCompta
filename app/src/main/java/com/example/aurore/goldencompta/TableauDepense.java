@@ -471,7 +471,7 @@ public class TableauDepense  extends Activity {
                 cdepBdd.insertDepense(newDep);
                 cdepBdd.close();
             }
-        } else if (requestCode == CATEGORIE) {
+        } else if (requestCode == BUDGET) {
             if (resultCode == RESULT_OK) {
                 float montant = Float.parseFloat(data.getStringExtra("NEWBUDGET"));
                 Budget budget = new Budget(montant);
@@ -479,7 +479,12 @@ public class TableauDepense  extends Activity {
                 //Ajout dans base de données
                 BudgetBDD budgetBDD = new BudgetBDD(this);
                 budgetBDD.open();
+                budgetBDD.majBudget();
                 budgetBDD.insert(budget);
+                Toast.makeText(this, "Budget enregistré", Toast.LENGTH_LONG).show();
+
+                ArrayList<String> test = budgetBDD.getAllBudget();
+                System.out.println(test);
                 budgetBDD.close();
             }
         }

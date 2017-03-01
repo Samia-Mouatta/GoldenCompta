@@ -115,7 +115,6 @@ public class BudgetBDD {
      * @return dépense de sortie
      */
     public static final Budget cursorToBudget(Cursor c){
-
         if (c.getCount() == 0)
             return null;
 
@@ -124,6 +123,62 @@ public class BudgetBDD {
         dep.setMontant(c.getFloat(NUM_COL_MONTANT));
         dep.setDateDeb(c.getString(NUM_COL_DATE_DEB));
         return dep;
+    }
+
+    /**
+     * Méthode retournant toutes les budget classées par date
+     * @return curseur de budget
+     */
+    public Cursor selectBudget(){
+        this.open();
+        return bdd.rawQuery("SELECT * FROM table_budget ORDER BY dateDeb", null);
+    }
+
+    /**
+     * Méthode retournant le dernier budget enregistré
+     * @return curseur de budget
+     */
+    public Cursor selectLastBudget(){
+        this.open();
+        return bdd.rawQuery("SELECT * FROM table_budget WHERE table_budget.dateDeb = (SELECT MAX(dateDeb) FROM table_budget)", null);
+    }
+
+    /**
+     * Méthode permettant d'obtenir toutes les budgets en array de string
+     * @return array de string
+     */
+    public ArrayList<String> getAllBudget(){
+        ArrayList<String> listeBudget = new ArrayList<String>();
+        String ligne;
+        Budget d;
+        Cursor cursor = selectBudget();
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            d = BudgetBDD.cursorToBudget(cursor);
+            ligne = d.getId() + " - Montant : " + d.getMontant() + "\nDate Debut: " + d.getDateDeb() +  "\nDate Fin : " + d.getDateFin();
+            listeBudget.add(ligne);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return listeBudget;
+    }
+
+    /**
+     * Mise à jour de l'ancien budget : Ajout d'une date de fin
+     */
+    public void majBudget(){
+        Budget d;
+        Cursor cursor = selectLastBudget();
+        System.out.println(".......................................");
+        cursor.moveToLast();
+        d = BudgetBDD.cursorToBudget(cursor);
+        System.out.println("Montant : " + d.getMontant() + "\nDate Debut: " + d.getDateDeb() +  "\nDate Fin : " + d.getDateFin());
+
+        Date dateajd = new Date();
+        d.setDateFin(dateajd.toString());
+
+        cursor.close();
     }
 
 }

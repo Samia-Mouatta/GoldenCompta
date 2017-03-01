@@ -405,11 +405,8 @@ public class DepenseBDD {
             listeDepense.add(ligne);
             cursor.moveToNext();
         }
-
-        // Make sure to close the cursor
         cursor.close();
         return listeDepense;
-
     }
 
     public ArrayList<Depense> getAllDepenses(){

@@ -43,7 +43,7 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 
         db.execSQL("CREATE TABLE table_categorie (id INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT NOT NULL);");
         db.execSQL("CREATE TABLE table_depense (id INTEGER PRIMARY KEY AUTOINCREMENT, montant REAL NOT NULL, date string NOT NULL, categorie string);");
-        db.execSQL("CREATE TABLE table_budget (id INTEGER PRIMARY KEY AUTOINCREMENT, montant REAL NOT NULL, dateDeb DATE NOT NULL, dateFin DATE NOT NULL);");
+        db.execSQL("CREATE TABLE table_budget (id INTEGER PRIMARY KEY AUTOINCREMENT, montant REAL NOT NULL, dateDeb DATE NOT NULL, dateFin DATE);");
 
 
         String ROW1 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('1','Animaux');";

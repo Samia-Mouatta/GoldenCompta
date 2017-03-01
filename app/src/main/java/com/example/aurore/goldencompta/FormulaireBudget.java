@@ -73,8 +73,6 @@ public class FormulaireBudget extends Activity {
                     editor.putString(BUD, str);
                     editor.commit();
 
-                    Toast toast = Toast.makeText(getApplicationContext(), "Budget modifié", Toast.LENGTH_SHORT);
-                    toast.show();
                     montantActuel.setText(str);
 
                     intent.putExtra("NEWBUDGET", str);
