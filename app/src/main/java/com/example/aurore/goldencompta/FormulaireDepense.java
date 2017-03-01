@@ -52,8 +52,6 @@ public class FormulaireDepense extends Activity {
         final Spinner spinner = (Spinner) findViewById(R.id.spinnerC);
 
 
-
-
         List<String> list = new ArrayList<String>();
         List<String> listCategorie = new ArrayList<String>();
 

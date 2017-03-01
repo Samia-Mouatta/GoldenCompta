@@ -70,7 +70,6 @@ public class CategorieBDD {
      */
     public Categorie insertCategorie(Categorie categ){
         ContentValues values = new ContentValues();
-        //values.put(COL_ID, categ.getId());
         values.put(COL_NOM, categ.getNom());
 
         long insertId = bdd.insert(TABLE_CATEGORIE, null, values);

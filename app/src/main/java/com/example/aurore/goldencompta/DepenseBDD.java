@@ -16,10 +16,6 @@ import java.util.GregorianCalendar;
 
 import static android.content.ContentValues.TAG;
 
-/**
- * Created by roros on 16/11/2016.
- */
-
 public class DepenseBDD {
 
     private static final int VERSION_BDD = 10;
@@ -381,7 +377,6 @@ public class DepenseBDD {
      * @return dépense de sortie
      */
     public static final Depense cursorToDepense(Cursor c){
-
         if (c.getCount() == 0)
             return null;
 

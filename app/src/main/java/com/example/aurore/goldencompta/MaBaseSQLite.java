@@ -19,20 +19,8 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 
     public static final String TABLE_BUDGET = "table_budget";
     private static final String COL_ID_BUDGET = "id";
-    public static final String COL_DATE_DEB = "date_deb";
-    public static final String COL_DATE_FIN = "date_fin";
-
-
-    public  static final String CREATE_BDD = "CREATE TABLE if not exists " + TABLE_CATEGORIE + " ("
-            + COL_ID_CATEG + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_NOM + " TEXT NOT NULL); " +
-            "CREATE TABLE if not exists "+ TABLE_DEPENSE + " (" + COL_ID_DEPENSE + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ COL_MONTANT + " REAL NOT NULL "
-            + COL_DATE + " DATE NOT NULL, " + COL_CATEG + "); ";
-
-    public  static final String CREATE_BDD2 = "CREATE TABLE categorie (id INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT NOT NULL, nomMin TEXT NOT NULL); CREATE TABLE table_depense (id INTEGER PRIMARY KEY AUTOINCREMENT, montant REAL NOT NULL "
-            + "date DATE NOT NULL, categorie);";
-
-    //public  static final String CREATE_BDD3 = "CREATE TABLE budget (id INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT NOT NULL, nomMin TEXT NOT NULL); CREATE TABLE table_depense (id INTEGER PRIMARY KEY AUTOINCREMENT, montant REAL NOT NULL "
-            //+ "date DATE NOT NULL, categorie);";
+    public static final String COL_DATE_DEB = "dateDeb";
+    public static final String COL_DATE_FIN = "dateFin";
 
     /**
      * Méthode pour créer/ouvrir ou gérer une base de donnée
@@ -55,7 +43,7 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 
         db.execSQL("CREATE TABLE table_categorie (id INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT NOT NULL);");
         db.execSQL("CREATE TABLE table_depense (id INTEGER PRIMARY KEY AUTOINCREMENT, montant REAL NOT NULL, date string NOT NULL, categorie string);");
-        db.execSQL("CREATE TABLE table_budget (id INTEGER PRIMARY KEY AUTOINCREMENT, montant REAL NOT NULL, date_deb DATE NOT NULL, date_fin DATE NOT NULL);");
+        db.execSQL("CREATE TABLE table_budget (id INTEGER PRIMARY KEY AUTOINCREMENT, montant REAL NOT NULL, dateDeb DATE NOT NULL, dateFin DATE NOT NULL);");
 
 
         String ROW1 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('1','Animaux');";

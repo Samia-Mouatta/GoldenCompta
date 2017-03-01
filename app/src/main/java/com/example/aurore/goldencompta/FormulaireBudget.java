@@ -35,7 +35,6 @@ public class FormulaireBudget extends Activity {
 
         final String budget;
         final String BUD = "budget";
-        final String Test = "budget";
         final Intent intent = new Intent();
         final Button save = (Button) findViewById(R.id.Save);
         final Button retour = (Button) findViewById(R.id.retour);
@@ -52,7 +51,6 @@ public class FormulaireBudget extends Activity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String str = montant.getText().toString();
 
                 if (str.equals("")) {
@@ -78,6 +76,10 @@ public class FormulaireBudget extends Activity {
                     Toast toast = Toast.makeText(getApplicationContext(), "Budget modifié", Toast.LENGTH_SHORT);
                     toast.show();
                     montantActuel.setText(str);
+
+                    intent.putExtra("NEWBUDGET", str);
+                    main.setResult(RESULT_OK, intent);
+                    finish();
                 }
             }
         });
@@ -90,10 +92,7 @@ public class FormulaireBudget extends Activity {
                 finish();
             }
         });
-
-
     }
-
 
 
     /**

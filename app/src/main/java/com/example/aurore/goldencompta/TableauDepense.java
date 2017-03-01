@@ -380,8 +380,6 @@ public class TableauDepense  extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        affichageBudget();
         afficherDepenses();
     }
 
@@ -472,6 +470,17 @@ public class TableauDepense  extends Activity {
                 cdepBdd.open();
                 cdepBdd.insertDepense(newDep);
                 cdepBdd.close();
+            }
+        } else if (requestCode == CATEGORIE) {
+            if (resultCode == RESULT_OK) {
+                float montant = Float.parseFloat(data.getStringExtra("NEWBUDGET"));
+                Budget budget = new Budget(montant);
+
+                //Ajout dans base de données
+                BudgetBDD budgetBDD = new BudgetBDD(this);
+                budgetBDD.open();
+                budgetBDD.insert(budget);
+                budgetBDD.close();
             }
         }
     }
