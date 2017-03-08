@@ -6,15 +6,24 @@ import java.util.Date;
 public class Budget {
     private int id;
     private float montant;
-    private String dateDeb;
-    private String dateFin;
+    private String datedeb;
+    private String datefin;
 
     public Budget(){};
 
     public Budget(float montant){
         this.montant = montant;
         Date ajd = new Date();
-        this.dateDeb = ajd.toString();
+        this.datedeb = ajd.toString();
+        System.out.println("J'initialise la date d'ajd ! " + this.datedeb);
+        this.datefin = null;
+    }
+
+    public Budget(int id, float montant, String datedeb, String datefin){
+        this.id = id;
+        this.montant = montant;
+        this.datedeb = datedeb;
+        this.datefin = datefin;
     }
 
     public float getMontant() {
@@ -22,11 +31,11 @@ public class Budget {
     }
 
     public String getDateDeb() {
-        return dateDeb;
+        return datedeb;
     }
 
     public String getDateFin() {
-        return dateFin;
+        return datefin;
     }
 
     public int getId() {
@@ -34,11 +43,11 @@ public class Budget {
     }
 
     public void setDateDeb(String dateDeb) {
-        this.dateDeb = dateDeb;
+        this.datedeb = dateDeb;
     }
 
     public void setDateFin(String dateFin) {
-        this.dateFin = dateFin;
+        this.datefin = dateFin;
     }
 
     public void setId(int id) {

@@ -19,8 +19,8 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
 
     public static final String TABLE_BUDGET = "table_budget";
     private static final String COL_ID_BUDGET = "id";
-    public static final String COL_DATE_DEB = "dateDeb";
-    public static final String COL_DATE_FIN = "dateFin";
+    public static final String COL_DATE_DEB = "datedeb";
+    public static final String COL_DATE_FIN = "datefin";
 
     /**
      * Méthode pour créer/ouvrir ou gérer une base de donnée
@@ -41,9 +41,9 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         //on crée la table à partir de la requête écrite dans la variable CREATE_BDD
 
-        db.execSQL("CREATE TABLE table_categorie (id INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT NOT NULL);");
-        db.execSQL("CREATE TABLE table_depense (id INTEGER PRIMARY KEY AUTOINCREMENT, montant REAL NOT NULL, date string NOT NULL, categorie string);");
-        db.execSQL("CREATE TABLE table_budget (id INTEGER PRIMARY KEY AUTOINCREMENT, montant REAL NOT NULL, dateDeb DATE NOT NULL, dateFin DATE);");
+        db.execSQL("CREATE TABLE "+ TABLE_CATEGORIE+" (id INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT NOT NULL);");
+        db.execSQL("CREATE TABLE "+ TABLE_DEPENSE +" (id INTEGER PRIMARY KEY AUTOINCREMENT, montant REAL NOT NULL, date string NOT NULL, categorie string);");
+        db.execSQL("CREATE TABLE "+ TABLE_BUDGET +" ("+COL_ID_BUDGET+" INTEGER PRIMARY KEY AUTOINCREMENT, "+COL_MONTANT+" REAL NOT NULL, "+COL_DATE_DEB+" DATE NOT NULL, "+COL_DATE_FIN+" DATE);");
 
 
         String ROW1 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('1','Animaux');";
@@ -94,24 +94,17 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
     }
 
     /**
-     * Méthode qui permet de changer la version de la base de donnée
-     * @param db la base de donné
-     * @param oldVersion numéro de version actuel de la base de donnée
-     * @param newVersion numéro de la nouvelle version de la base de donnée
+     * Méthode qui permet de changer la version de la base de données
+     * @param db la base de données
+     * @param oldVersion numéro de version actuel de la base de données
+     * @param newVersion numéro de la nouvelle version de la base de données
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //On peut faire ce qu'on veut ici moi j'ai décidé de supprimer la table et de la recréer
-        //comme ça lorsque je change la version les id repartent de 0
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIE + ";");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DEPENSE + ";");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_BUDGET + ";");
         onCreate(db);
     }
-
-    public void onOpen()    {
-
-    }
-
 
 }

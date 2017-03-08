@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.text.Format;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -121,10 +122,6 @@ public class DepenseBDD {
         //il faut simplement préciser quel dépense on doit mettre à jour grâce à l'ID
         ContentValues values = new ContentValues();
 
-        Format formatter = new SimpleDateFormat("dd/MM/yyyy");
-
-        //String s = formatter.format(dep.getDate());
-        //values.put(COL_DATE, s);
         values.put(COL_DATE, dep.getDate());
         values.put(COL_MONTANT, dep.getMontant());
         values.put(COL_CATEG, dep.getCategorie());
@@ -138,6 +135,7 @@ public class DepenseBDD {
      */
     public void removeDepenseWithID(Integer id){
         //Suppression d'une dépense de la BDD grâce à l'ID
+        System.out.println("Suppression du numéro : " + id);
         bdd.delete(TABLE_DEPENSE, COL_ID + " = " +id, null);
     }
 
@@ -352,7 +350,6 @@ public class DepenseBDD {
      */
     public Cursor selectDepenseMois(String month){
         if(month!="00") {
-            String TABLE_NAME = "table_depense";
             this.open();
             return bdd.rawQuery("SELECT * FROM table_depense WHERE date >= '01/" + month + "/2017' AND date <= '31/" + month + "/2017'", null);
         } else{
@@ -366,7 +363,6 @@ public class DepenseBDD {
      * @return curseur de dépense
      */
     public Cursor selectDepensesAnnee(String annee){
-        String TABLE_NAME = "table_depense";
         this.open();
         return bdd.rawQuery("SELECT * FROM table_depense WHERE date >= '01/01" + annee + "' AND date <= '31/12" + annee + "'", null);
     }
@@ -553,6 +549,61 @@ public class DepenseBDD {
         }
 
         return res;
+
+    }
+
+    /**
+     * Fonction permettant de supprimer les dépenses antérieures à une certaine date
+     * @param dateChoose
+     */
+
+    public void nettoyage(String dateChoose){
+        ContentValues values = new ContentValues();
+
+        ArrayList<Depense> listeDepenses = getAllDepenses();
+        int taille = listeDepenses.size();
+        Date ajd = new Date();
+        Integer mois = ajd.getMonth();
+        Integer annee = ajd.getYear();
+        Date date = new Date (1990, 01, 01);
+
+        switch (dateChoose){
+            case  "1 mois" :
+                //Nettoyage tous les mois avant celui en cours
+                date = new Date(annee, mois-1, 31);
+                break;
+            case "6 mois":
+                //Nettoyage en janvier et en juillet
+                if(mois >= 07)
+                    date = new Date(annee, 07, 31);
+                else
+                    date = new Date(annee, 01, 31);
+                break;
+            case "1 ans":
+                //Nettoyage tous les 1ers de l'an
+                date = new Date(annee-1, 01, 01);
+                break;
+            case "2 ans":
+                date = new Date(annee-2, 01, 01);
+                break;
+           case "3 ans":
+               date = new Date(annee-3, 01, 01);
+                break;
+            case "Tout supprimer":
+                date = new Date();
+            default: //Jamais
+        }
+
+
+        for(int i = 0 ; i < taille; i++){
+            System.out.println("Avant le bordel : " + listeDepenses.get(i).getDate());
+            if (listeDepenses.get(i).getDateD().before(date)) {
+                //listeDepenses.remove(i);
+                removeDepenseWithID(listeDepenses.get(i).getId());
+            }
+            System.out.println("Après le bordel : " + listeDepenses.get(i).getDate());
+        }
+
 
     }
 }

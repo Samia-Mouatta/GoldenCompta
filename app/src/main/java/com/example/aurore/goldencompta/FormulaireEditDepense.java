@@ -14,30 +14,26 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Bastien on 24/02/2017.
- */
-
 public class FormulaireEditDepense extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.formulaire_edit_depense);
+        setContentView(R.layout.formulaire_edit_depense);
 
         final DepenseBDD depenseBdd = new DepenseBDD(this);
         final CategorieBDD categorieBDD = new CategorieBDD(this);
         final Depense depense = new Depense();
-        final int idD, idC, num;
+        final int idD, idC;
         Cursor c;
         List<String> listCategorie = new ArrayList<String>();
         List<String> list = new ArrayList<String>();
 
         final EditText montant = (EditText) findViewById(R.id.montant);
-        /*final EditText date = (EditText) findViewById(R.id.date);
+        final EditText date = (EditText) findViewById(R.id.date);
         final Spinner spinnerCat = (Spinner) findViewById(R.id.spinnerCategorie);
         Button save = (Button) findViewById(R.id.save);
-        Button exit = (Button) findViewById(R.id.exit);*/
+        Button exit = (Button) findViewById(R.id.exit);
 
         depenseBdd.open();
         categorieBDD.open();
@@ -63,13 +59,10 @@ public class FormulaireEditDepense extends Activity {
                 (android.R.layout.simple_spinner_dropdown_item);
 
 
-        /*spinnerCat.setAdapter(dataAdapter);
+        spinnerCat.setAdapter(dataAdapter);
         spinnerCat.setSelection(idC-1);
 
         Toast.makeText(this, c.getString(1), Toast.LENGTH_LONG).show();
-        /*depense = depenseBdd.cursorToDepense(depenseBdd.getDepenseByID(id));*
-
-
 
         save.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)   {
@@ -89,11 +82,8 @@ public class FormulaireEditDepense extends Activity {
             }
         });
 
-
-
         montant.setText(c.getString(1));
-        date.setText(c.getString(2));*/
-
+        date.setText(c.getString(2));
 
     }
 

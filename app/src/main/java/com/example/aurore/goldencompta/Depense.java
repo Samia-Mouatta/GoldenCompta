@@ -1,5 +1,7 @@
 package com.example.aurore.goldencompta;
 
+import java.util.Date;
+
 public class Depense {
     int id;
     String dateDepense;
@@ -24,6 +26,11 @@ public class Depense {
 
     public String getDate() {
         return dateDepense;
+    }
+
+    public Date getDateD(){
+        String[] date = dateDepense.split("/");
+        return  new Date(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]));
     }
 
     public void setDate(String dateDepense) {

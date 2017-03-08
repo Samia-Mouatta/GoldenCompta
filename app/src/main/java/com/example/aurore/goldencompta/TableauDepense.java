@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -439,7 +440,7 @@ public class TableauDepense  extends Activity {
 
                 Depense ldp = new Depense();
 
-                boolean exists = true;
+                boolean exists = false;
 
                 int i = 0;
                 int taille = listDep.size();
@@ -450,7 +451,7 @@ public class TableauDepense  extends Activity {
                     i++;
                 }
                 // si les dépenses sont différents
-                if (!exists) {
+                if (!exists || taille == 0) {
                     cdepBdd.insertDepense(newDep);
                 } else {
                     Toast.makeText(this, " Votre dépense existe déjà dans la liste", Toast.LENGTH_LONG).show();
@@ -474,17 +475,28 @@ public class TableauDepense  extends Activity {
         } else if (requestCode == BUDGET) {
             if (resultCode == RESULT_OK) {
                 float montant = Float.parseFloat(data.getStringExtra("NEWBUDGET"));
-                Budget budget = new Budget(montant);
+                String nettoyage = data.getStringExtra("NEWDATENETTOYAGE");
 
-                //Ajout dans base de données
+                Budget budget = new Budget(montant);
+                System.out.println(budget.getDateDeb());
                 BudgetBDD budgetBDD = new BudgetBDD(this);
                 budgetBDD.open();
-                budgetBDD.majBudget();
-                budgetBDD.insert(budget);
+                Budget lastbugd = new Budget();
+                lastbugd = budgetBDD.selectLastBudget();
+                budgetBDD.insertBudget(budget);
+
+                if (lastbugd != null) {
+                    Date ajd = new Date();
+                    lastbugd.setDateFin(ajd.toString());
+
+                    budgetBDD.updateBudget(lastbugd.getId(), lastbugd);
+                }
                 Toast.makeText(this, "Budget enregistré", Toast.LENGTH_LONG).show();
+
 
                 ArrayList<String> test = budgetBDD.getAllBudget();
                 System.out.println(test);
+                depenseBDD.nettoyage(nettoyage);
                 budgetBDD.close();
             }
         }

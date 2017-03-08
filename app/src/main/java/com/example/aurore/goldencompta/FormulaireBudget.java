@@ -10,10 +10,15 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.aurore.goldencompta.MainActivity.BUDGET;
 import static com.example.aurore.goldencompta.MainActivity.CAMERA;
@@ -35,23 +40,47 @@ public class FormulaireBudget extends Activity {
 
         final String budget;
         final String BUD = "budget";
+        final String NETT = "dateNettoyage";
+        final String nettoyage;
         final Intent intent = new Intent();
         final Button save = (Button) findViewById(R.id.Save);
         final Button retour = (Button) findViewById(R.id.retour);
         final TextView montantActuel = (TextView) findViewById(R.id.MontantActuel);
         final EditText montant = (EditText) findViewById(R.id.montant);
+        final Spinner spinner = (Spinner) findViewById(R.id.spinnerChoix);
+
+        List<String> list = new ArrayList<String>();
+
+        list.add("Jamais");
+        list.add("1 mois");
+        list.add("6 mois");
+        list.add("1 ans");
+        list.add("2 ans");
+        list.add("3 ans");
+        list.add("Tout supprimer");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
+                (this, android.R.layout.simple_spinner_item,list);
+
+        dataAdapter.setDropDownViewResource
+                (android.R.layout.simple_spinner_dropdown_item);
+
+        spinner.setAdapter(dataAdapter);
 
         // AFFICHAGE DU BUDGET
         // On veut la chaîne de caractères d'identifiant FAVORITE_COLOR
         // Si on ne trouve pas cette valeur, on veut rendre "FFFFFF"
+
         SharedPreferences preferences = getSharedPreferences (BUD,0);
         budget = preferences.getString(BUD, "Aucun budget");
+
         montantActuel.setText(budget);
         //Listener sur le bouton valider pour mettre à jours le budget
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String str = montant.getText().toString();
+                String dateNett = spinner.getSelectedItem().toString();
 
                 if (str.equals("")) {
                     Builder builder = new Builder(FormulaireBudget.this);
@@ -76,6 +105,7 @@ public class FormulaireBudget extends Activity {
                     montantActuel.setText(str);
 
                     intent.putExtra("NEWBUDGET", str);
+                    intent.putExtra("NEWDATENETTOYAGE", dateNett);
                     main.setResult(RESULT_OK, intent);
                     finish();
                 }

@@ -21,11 +21,11 @@ public class BudgetBDD {
     private static final int VERSION_BDD = 10;
     private static final String NOM_BDD = "goldenCompta.db";
 
-    private static final String TABLE_DEPENSE = "table_budget";
+    private static final String TABLE_BUDGET = "table_budget";
     public static final String COL_ID = "id";
     public static final String COL_MONTANT ="montant";
-    public static final String COL_DATE_DEB = "dateDeb";
-    public static final String COL_DATE_FIN = "dateFin";
+    public static final String COL_DATE_DEB = "datedeb";
+    public static final String COL_DATE_FIN = "datefin";
     private static final int NUM_COL_ID = 0;
     private static final int NUM_COL_MONTANT = 1;
     private static final int NUM_COL_DATE_DEB = 2;
@@ -88,24 +88,21 @@ public class BudgetBDD {
     }
 
 
-
     /**
      * Méthode d'insertion d'un budget
      * @param budget le budget à ajouter
      */
-    public Budget insert(Budget budget){
+    public void insertBudget(Budget budget){
         ContentValues values = new ContentValues();
         values.put(COL_MONTANT, budget.getMontant());
-        values.put(COL_DATE_DEB, budget.getDateDeb().toString());
+        Date ajd = new Date();
+        values.put(COL_DATE_DEB, ajd.toString());
 
-        long insertId = bdd.insert(TABLE_DEPENSE, null, values);
-        Cursor cursor = bdd.query(TABLE_DEPENSE,
+        long insertId = bdd.insert(TABLE_BUDGET, null, values);
+        bdd.query(TABLE_BUDGET,
                 allColumns, COL_ID + " = " + insertId, null,
                 null, null, null);
-        cursor.moveToFirst();
-        Budget Newbudget = cursorToBudget(cursor);
-        cursor.close();
-        return Newbudget;
+
     }
 
 
@@ -118,11 +115,7 @@ public class BudgetBDD {
         if (c.getCount() == 0)
             return null;
 
-        Budget dep = new Budget();
-        dep.setId(c.getInt(NUM_COL_ID));
-        dep.setMontant(c.getFloat(NUM_COL_MONTANT));
-        dep.setDateDeb(c.getString(NUM_COL_DATE_DEB));
-        return dep;
+        return new Budget(c.getInt(NUM_COL_ID), c.getFloat(NUM_COL_MONTANT), c.getString(NUM_COL_DATE_DEB), c.getString(NUM_COL_DATE_FIN));
     }
 
     /**
@@ -131,16 +124,23 @@ public class BudgetBDD {
      */
     public Cursor selectBudget(){
         this.open();
-        return bdd.rawQuery("SELECT * FROM table_budget ORDER BY dateDeb", null);
+        return bdd.rawQuery("SELECT * FROM "+TABLE_BUDGET+" ORDER BY "+COL_DATE_DEB+"", null);
     }
 
     /**
      * Méthode retournant le dernier budget enregistré
      * @return curseur de budget
      */
-    public Cursor selectLastBudget(){
+    public Cursor gettLastBudget(){
         this.open();
-        return bdd.rawQuery("SELECT * FROM table_budget WHERE table_budget.dateDeb = (SELECT MAX(dateDeb) FROM table_budget)", null);
+        return bdd.rawQuery("SELECT * FROM "+TABLE_BUDGET, null);
+    }
+
+    public Budget selectLastBudget(){
+        Cursor cursor = selectBudget();
+        cursor.moveToLast();
+
+        return BudgetBDD.cursorToBudget(cursor);
     }
 
     /**
@@ -164,21 +164,36 @@ public class BudgetBDD {
         return listeBudget;
     }
 
-    /**
-     * Mise à jour de l'ancien budget : Ajout d'une date de fin
-     */
-    public void majBudget(){
-        Budget d;
-        Cursor cursor = selectLastBudget();
-        System.out.println(".......................................");
-        cursor.moveToLast();
-        d = BudgetBDD.cursorToBudget(cursor);
-        System.out.println("Montant : " + d.getMontant() + "\nDate Debut: " + d.getDateDeb() +  "\nDate Fin : " + d.getDateFin());
 
-        Date dateajd = new Date();
-        d.setDateFin(dateajd.toString());
 
+    public ArrayList<Budget> getAllBudgets(){
+        ArrayList<Budget> listeBudget = new ArrayList<>();
+        Cursor cursor = selectBudget();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()){
+            listeBudget.add(BudgetBDD.cursorToBudget(cursor));
+            cursor.moveToNext();
+        }
         cursor.close();
+        return listeBudget;
     }
+
+    /**
+     * Méthode de mise a jour d'une dépense
+     * @param id id de la dépense
+     * @param dep dépense à modifier
+     * @return la dépense modifiée
+     */
+    public int updateBudget(int id, Budget dep){
+        ContentValues values = new ContentValues();
+
+        values.put(COL_MONTANT, dep.getMontant());
+        values.put(COL_DATE_DEB, dep.getDateDeb());
+        values.put(COL_DATE_FIN, dep.getDateFin());
+
+        return bdd.update(TABLE_BUDGET, values, COL_ID + " = " +id, null);
+    }
+
+
 
 }
