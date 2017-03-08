@@ -478,7 +478,6 @@ public class TableauDepense  extends Activity {
                 String nettoyage = data.getStringExtra("NEWDATENETTOYAGE");
 
                 Budget budget = new Budget(montant);
-                System.out.println(budget.getDateDeb());
                 BudgetBDD budgetBDD = new BudgetBDD(this);
                 budgetBDD.open();
                 Budget lastbugd = new Budget();
@@ -492,10 +491,6 @@ public class TableauDepense  extends Activity {
                     budgetBDD.updateBudget(lastbugd.getId(), lastbugd);
                 }
                 Toast.makeText(this, "Budget enregistré", Toast.LENGTH_LONG).show();
-
-
-                ArrayList<String> test = budgetBDD.getAllBudget();
-                System.out.println(test);
                 depenseBDD.nettoyage(nettoyage);
                 budgetBDD.close();
             }

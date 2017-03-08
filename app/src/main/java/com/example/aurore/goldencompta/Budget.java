@@ -15,7 +15,6 @@ public class Budget {
         this.montant = montant;
         Date ajd = new Date();
         this.datedeb = ajd.toString();
-        System.out.println("J'initialise la date d'ajd ! " + this.datedeb);
         this.datefin = null;
     }
 
