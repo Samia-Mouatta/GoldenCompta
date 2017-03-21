@@ -210,6 +210,7 @@ public class DepenseBDD {
         return bdd.rawQuery(querry, null);
     }
 
+
     public Cursor getDepenseByID(Integer id){
 
         String TABLE_NAME = "table_depense";

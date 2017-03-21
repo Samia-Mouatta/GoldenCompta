@@ -28,6 +28,7 @@ package com.example.aurore.goldencompta;
  * Created by samia on 01/03/2017.
  */
 
+
 public class FormulaireEconomie extends Activity {
 
     private Activity main = this;
