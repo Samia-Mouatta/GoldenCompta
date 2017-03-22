@@ -376,6 +376,17 @@ public class DepenseBDD {
     }
 
     /**
+     * Méthode retournant le total des dépenses entre deux mois
+     * @return curseur de dépense
+     */
+    public Cursor selectDepenseBewteenMonth(String m1,String m2){
+        String TABLE_NAME = "table_depense";
+        this.open();
+        String querry = "SELECT SUM(montant),strftime('%m', date) as Mois FROM table_depense WHERE Mois BETWEEN '"+m1+"' AND '"+m2+"'";
+        return bdd.rawQuery(querry, null);
+    }
+
+    /**
      * Méthode permettant d'obtenir toutes les dépenses en array de string
      * @return array de string
      */

@@ -2,6 +2,7 @@ package com.example.aurore.goldencompta;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,10 +14,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,7 +46,7 @@ import static com.example.aurore.goldencompta.MainActivity.DEPENSE;
 import static com.example.aurore.goldencompta.MainActivity.IMAGE;
 import static com.example.aurore.goldencompta.R.id.date;
 
-public class FormulaireCamera extends Activity {
+public class FormulaireCamera extends BaseActivity {
     protected Activity main = this;
     private static final int REQUEST_CODE = 99;
     private Button cameraButton;
@@ -68,8 +71,25 @@ public class FormulaireCamera extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences preferencesD = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        boolean useDarkTheme = preferencesD.getBoolean(PREF_DARK_THEME, false);
+
+        if(useDarkTheme) {
+            setTheme(R.style.AppTheme_Dark_NoActionBar);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.formulaire_camera);
+
+        Switch toggle = (Switch) findViewById(R.id.switch1);
+        toggle.setChecked(useDarkTheme);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton view, boolean isChecked) {
+                toggleTheme(isChecked);
+            }
+        });
+
         final Spinner spinner = (Spinner) findViewById(R.id.spinnerC);
         confirmer = (Button) findViewById(R.id.accept);
         refuser = (Button) findViewById(R.id.refus);
@@ -303,56 +323,5 @@ public class FormulaireCamera extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
-
-    /**
-     * Méthode de navigation dans les items du menu
-     * @param item
-     * @return
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            //Retour à la page d'accueil
-            case R.id.accueil:
-                Intent accueil = new Intent(this, MainActivity.class);
-                startActivity(accueil);
-                return true;
-            //case R.id.menu_about:
-            case R.id.tab_dep:
-                Intent tabDep = new Intent(this, TableauDepense.class);
-                startActivity(tabDep);
-                return true;
-            case R.id.menu_category:
-                // Comportement du bouton "Catégorie"
-                Intent intentCategory = new Intent(this, FormulaireCategorie.class);
-                startActivityForResult(intentCategory, CATEGORIE);
-                return true;
-            case R.id.menu_depense:
-                //Comportement du bouton "Dépense"
-                Intent intentDepense = new Intent(this, FormulaireDepense.class);
-                startActivityForResult(intentDepense, DEPENSE);
-                return true;
-            case R.id.menu_budget:
-                //Comportement du bouton "budget"
-                Intent intentBudget = new Intent(this, FormulaireBudget.class);
-                startActivityForResult(intentBudget, BUDGET);
-                return true;
-            case R.id.menu_statistique:
-                //Comportement du bouton "camera"
-                Intent intentStat = new Intent(this, FormulaireStatistique.class);
-                startActivity(intentStat);
-                return true;
-            case R.id.menu_img:
-                Intent intentImage = new Intent(this, FormulaireImg.class);
-                startActivityForResult(intentImage, IMAGE);
-                return true;
-            case R.id.menu_camera:
-                Intent intentCamera = new Intent(this, FormulaireCamera.class);
-                startActivityForResult(intentCamera, CAMERA);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 }

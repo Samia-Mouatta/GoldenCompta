@@ -12,8 +12,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.view.View.OnClickListener;
 import java.util.ArrayList;
@@ -26,7 +28,7 @@ import static com.example.aurore.goldencompta.MainActivity.DEPENSE;
 import static com.example.aurore.goldencompta.MainActivity.IMAGE;
 
 
-public class FormulaireBudget extends Activity {
+public class FormulaireBudget extends BaseActivity {
     Activity main = this;
 
     /**
@@ -35,8 +37,24 @@ public class FormulaireBudget extends Activity {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        SharedPreferences preferencesD = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        boolean useDarkTheme = preferencesD.getBoolean(PREF_DARK_THEME, false);
+
+        if(useDarkTheme) {
+            setTheme(R.style.AppTheme_Dark_NoActionBar);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.formulaire_budget);
+
+        Switch toggle = (Switch) findViewById(R.id.switch1);
+        toggle.setChecked(useDarkTheme);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton view, boolean isChecked) {
+                toggleTheme(isChecked);
+            }
+        });
 
         final String BUD = "budget";
         final String NETT = "dateNettoyage";

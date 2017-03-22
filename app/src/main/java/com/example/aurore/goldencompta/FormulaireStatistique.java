@@ -3,6 +3,7 @@ package com.example.aurore.goldencompta;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -11,7 +12,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.gms.appindexing.Action;
@@ -41,11 +44,7 @@ import static com.example.aurore.goldencompta.MainActivity.CATEGORIE;
 import static com.example.aurore.goldencompta.MainActivity.DEPENSE;
 import static com.example.aurore.goldencompta.MainActivity.IMAGE;
 
-/**
- * Created by Bastien on 11/01/2017.
- */
-
-public class FormulaireStatistique extends Activity {
+public class FormulaireStatistique extends BaseActivity {
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -65,8 +64,24 @@ public class FormulaireStatistique extends Activity {
      * @param savedInstanceState le bundle utilisé pour crée la méthode
      */
     public void onCreate(Bundle savedInstanceState) {
+        SharedPreferences preferencesD = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        boolean useDarkTheme = preferencesD.getBoolean(PREF_DARK_THEME, false);
+
+        if(useDarkTheme) {
+            setTheme(R.style.AppTheme_Dark_NoActionBar);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.formulaire_statistique);
+
+        Switch toggle = (Switch) findViewById(R.id.switch1);
+        toggle.setChecked(useDarkTheme);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton view, boolean isChecked) {
+                toggleTheme(isChecked);
+            }
+        });
         Button retour = (Button) findViewById(R.id.retour);
         TextView txtViewLine = (TextView) findViewById(R.id.textViewLine);
 
@@ -379,58 +394,6 @@ public class FormulaireStatistique extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
-
-    /**
-     * Méthode de navigation dans les items du menu
-     *
-     * @param item
-     * @return
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            //Retour à la page d'accueil
-            case R.id.accueil:
-                Intent accueil = new Intent(this, MainActivity.class);
-                startActivity(accueil);
-                return true;
-            //case R.id.menu_about:
-            case R.id.tab_dep:
-                Intent tabDep = new Intent(this, TableauDepense.class);
-                startActivity(tabDep);
-                return true;
-            case R.id.menu_category:
-                // Comportement du bouton "Catégorie"
-                Intent intentCategory = new Intent(this, FormulaireCategorie.class);
-                startActivityForResult(intentCategory, CATEGORIE);
-                return true;
-            case R.id.menu_depense:
-                //Comportement du bouton "Dépense"
-                Intent intentDepense = new Intent(this, FormulaireDepense.class);
-                startActivityForResult(intentDepense, DEPENSE);
-                return true;
-            case R.id.menu_budget:
-                //Comportement du bouton "budget"
-                Intent intentBudget = new Intent(this, FormulaireBudget.class);
-                startActivityForResult(intentBudget, BUDGET);
-                return true;
-            case R.id.menu_statistique:
-                //Comportement du bouton "camera"
-                Intent intentStat = new Intent(this, FormulaireStatistique.class);
-                startActivity(intentStat);
-                return true;
-            case R.id.menu_img:
-                Intent intentImage = new Intent(this, FormulaireImg.class);
-                startActivityForResult(intentImage, IMAGE);
-                return true;
-            case R.id.menu_camera:
-                Intent intentCamera = new Intent(this, FormulaireCamera.class);
-                startActivityForResult(intentCamera, CAMERA);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     /**

@@ -7,12 +7,10 @@
     <item
         android:id="@+id/accueil"
         app:showAsAction="ifRoom"
-        android:icon="@android:drawable/btn_default"
         android:title="Page d'accueil"/>
     <item
         android:id="@+id/tab_dep"
         app:showAsAction="ifRoom"
-        android:icon="@android:drawable/ic_media_next"
         android:title="Récapitulatif des dépenses"/>
     <item
         android:id="@+id/menu_category"
@@ -44,4 +42,9 @@
         app:showAsAction="ifRoom"
         android:icon="@android:drawable/ic_menu_add"
         android:title="Statistiques"/>
+    <item
+        android:id="@+id/menu_economie"
+        app:showAsAction="ifRoom"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="Economies Réalisées"/>
 </menu>

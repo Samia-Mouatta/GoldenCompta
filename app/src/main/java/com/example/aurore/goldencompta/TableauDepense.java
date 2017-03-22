@@ -3,6 +3,7 @@ package com.example.aurore.goldencompta;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -17,9 +18,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.text.Normalizer;
@@ -33,7 +36,7 @@ import static com.example.aurore.goldencompta.MainActivity.CATEGORIE;
 import static com.example.aurore.goldencompta.MainActivity.DEPENSE;
 import static com.example.aurore.goldencompta.MainActivity.IMAGE;
 
-public class TableauDepense  extends Activity {
+public class TableauDepense extends BaseActivity {
 
     DepenseBDD depenseBDD = new DepenseBDD(this);
     ArrayAdapter<String> adapter = null;
@@ -58,8 +61,24 @@ public class TableauDepense  extends Activity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences preferencesD = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        boolean useDarkTheme = preferencesD.getBoolean(PREF_DARK_THEME, false);
+
+        if(useDarkTheme) {
+            setTheme(R.style.AppTheme_Dark_NoActionBar);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tableau_depenses);
+
+        Switch toggle = (Switch) findViewById(R.id.switch1);
+        toggle.setChecked(useDarkTheme);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton view, boolean isChecked) {
+                toggleTheme(isChecked);
+            }
+        });
+
         moisSelectionne = "";
         anneeSelectionnee = "";
         retour = (Button) findViewById(R.id.retour);
@@ -228,10 +247,8 @@ public class TableauDepense  extends Activity {
                            adapter.notifyDataSetChanged();
                        }
                    }
-
                }
            }
-
         );
 
         retour.setOnClickListener(new View.OnClickListener() {
@@ -263,24 +280,21 @@ public class TableauDepense  extends Activity {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         String txt;
-        int posMin, posMax, id;
+        int posMax, id;
         txt = adapter.getItem(info.position);
         String montant, date, cat;
         DepenseBDD depense = new DepenseBDD(this);
         depense.open();
-        CategorieBDD categorie = new CategorieBDD(this);
 
         posMax = txt.indexOf("-");
         id = Integer.parseInt(txt.substring(0,posMax-1));
         //Toast.makeText(this, "-"+id+"-", Toast.LENGTH_LONG).show();
         switch (item.getItemId()) {
             case R.id.delete:
-                Log.i("Hello!", "Clicked! 1!");
                 depense.removeDepenseWithID(id);
                 onResume();
                 return true;
             case R.id.edit:
-                Log.i("Hello!", "Clicked! 2!");
                 Intent intentEdit = new Intent(this, FormulaireEditDepense.class);
                 intentEdit.putExtra("id", id);
                 startActivityForResult(intentEdit, 5);
@@ -300,65 +314,6 @@ public class TableauDepense  extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
-
-    /**
-     * Méthode de navigation dans les items du menu
-     * @param item
-     * @return
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            //Retour à la page d'accueil
-            case R.id.accueil:
-                Intent accueil = new Intent(this, MainActivity.class);
-                startActivity(accueil);
-                return true;
-            //case R.id.menu_about:
-            case R.id.tab_dep:
-                Intent tabDep = new Intent(this, TableauDepense.class);
-                startActivity(tabDep);
-                return true;
-            case R.id.menu_category:
-                // Comportement du bouton "Catégorie"
-                Intent intentCategory = new Intent(this, FormulaireCategorie.class);
-                startActivityForResult(intentCategory, CATEGORIE);
-                return true;
-            case R.id.menu_depense:
-                //Comportement du bouton "Dépense"
-                Intent intentDepense = new Intent(this, FormulaireDepense.class);
-                startActivityForResult(intentDepense, DEPENSE);
-                return true;
-            case R.id.menu_budget:
-                //Comportement du bouton "budget"
-                Intent intentBudget = new Intent(this, FormulaireBudget.class);
-                startActivityForResult(intentBudget, BUDGET);
-                return true;
-            case R.id.menu_statistique:
-                //Comportement du bouton "Stat"
-                Intent intentStat = new Intent(this, FormulaireStatistique.class);
-                startActivity(intentStat);
-                return true;
-            case R.id.menu_img:
-                Intent intentImage = new Intent(this, FormulaireImg.class);
-                startActivityForResult(intentImage, IMAGE);
-                return true;
-            case R.id.menu_camera:
-                Intent intentCamera = new Intent(this, FormulaireCamera.class);
-                startActivityForResult(intentCamera, CAMERA);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-
-
-    public int compare(String s1, String s2) {
-        s1 = s1.replaceAll("[^a-zA-Z0-9]+", "");
-        s2 = s2.replaceAll("[^a-zA-Z0-9]+", "");
-        return s1.compareToIgnoreCase(s2);
     }
 
 
@@ -390,18 +345,20 @@ public class TableauDepense  extends Activity {
 
                 listCategorie = categBdd.getAllCategoriesName();
                 String s1 = "";
-                int r2 = 0;
-                for (int i = 0; i < listCategorie.size(); i++) {
-                    s1 = listCategorie.get(i);
-                    s1 = Normalizer.normalize(s1, Normalizer.Form.NFD);
-                    s1 = s1.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-                }
+                int r2 = 1;
                 String s2 = data.getStringExtra("newCateg");
                 s2 = Normalizer.normalize(s2, Normalizer.Form.NFD);
                 s2 = s2.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-                for (int i = 0; i < listCategorie.size(); i++) {
+                int i = 0;
+                while(i < listCategorie.size() && r2==1) {
+                    s1 = listCategorie.get(i);
+                    s1 = Normalizer.normalize(s1, Normalizer.Form.NFD);
+                    s1 = s1.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+
                     r2 = s1.compareToIgnoreCase(s2);
+                    i++;
                 }
+
                 if (r2 != 0) {
                     categBdd.insertCategorie(new Categorie(data.getStringExtra("newCateg")));
                 } else {

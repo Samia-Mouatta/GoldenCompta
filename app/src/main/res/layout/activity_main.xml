@@ -15,34 +15,38 @@
         android:layout_alignParentEnd="true" />
 
     <Button
+        android:id="@+id/button_parametre"
         android:layout_width="270dip"
         android:layout_height="70dip"
-        android:layout_centerInParent="true"
-        android:text="Statistiques"
-        android:id="@+id/button_statistiques"/>
+        android:text="Paramètres"
+        android:layout_marginTop="18dp"
+        android:layout_below="@+id/button_scan"
+        android:layout_alignStart="@+id/button_scan" />
 
     <Button
         android:id="@+id/button_scan"
         android:layout_width="270dip"
         android:layout_height="70dip"
         android:text="Scan de ticket de caisse"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/button_statistiques"/>
+        android:layout_below="@+id/button_statistiques"
+        android:layout_alignStart="@+id/button_statistiques"
+        android:layout_marginTop="16dp" />
 
     <Button
         android:layout_width="270dip"
         android:layout_height="70dip"
-        android:layout_centerInParent="true"
+        android:text="Statistiques"
+        android:id="@+id/button_statistiques"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="270dip"
+        android:layout_height="70dip"
         android:text="Récapitulatif des dépenses"
-        android:layout_above="@id/button_statistiques"
-        android:id="@+id/button_tab_dep"/>
-
-    <Button
-        android:id="@+id/button_parametre"
-        android:layout_width="270dip"
-        android:layout_height="70dip"
-        android:text="Paramètres"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/button_scan"/>
+        android:id="@+id/button_tab_dep"
+        android:layout_above="@+id/button_statistiques"
+        android:layout_alignStart="@+id/button_statistiques"
+        android:layout_marginBottom="13dp" />
 
 </RelativeLayout>

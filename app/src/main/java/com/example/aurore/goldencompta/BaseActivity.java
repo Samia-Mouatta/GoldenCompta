@@ -1,5 +1,7 @@
 package com.example.aurore.goldencompta;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -9,7 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
+import android.widget.Switch;
+
 import static com.example.aurore.goldencompta.MainActivity.BUDGET;
 import static com.example.aurore.goldencompta.MainActivity.CAMERA;
 import static com.example.aurore.goldencompta.MainActivity.CATEGORIE;
@@ -18,6 +23,9 @@ import static com.example.aurore.goldencompta.MainActivity.IMAGE;
 
 public class BaseActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
+
+    public static final String PREFS_NAME = "prefs";
+    public static final String PREF_DARK_THEME = "dark_theme";
 
     private NavigationView navigationView;
     private DrawerLayout fullLayout;
@@ -150,5 +158,17 @@ public class BaseActivity extends AppCompatActivity implements
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+
+    public void toggleTheme(boolean darkTheme) {
+        SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
+        editor.putBoolean(PREF_DARK_THEME, darkTheme);
+        editor.apply();
+
+        Intent intent = getIntent();
+        finish();
+
+        startActivity(intent);
     }
 }
