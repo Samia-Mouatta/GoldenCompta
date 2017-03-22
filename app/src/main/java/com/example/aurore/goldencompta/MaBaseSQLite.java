@@ -91,6 +91,22 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
         String ROW16 = "INSERT INTO " + TABLE_CATEGORIE + " Values ('16','Cadeaux');";
         db.execSQL(ROW16);
 
+        //Dépense pour les tests
+        String ROW17 = "INSERT INTO " + TABLE_DEPENSE+ " Values ('1','10.3','21/10/2015', 'Animaux');";
+        db.execSQL(ROW17);
+
+        String ROW18 = "INSERT INTO " + TABLE_DEPENSE+ " Values ('2','120.3','15/02/2016', 'Electricité');";
+        db.execSQL(ROW18);
+
+        String ROW19 = "INSERT INTO " + TABLE_DEPENSE+ " Values ('3','1.3','15/07/2016', 'Electricité');";
+        db.execSQL(ROW19);
+
+        String ROW20 = "INSERT INTO " + TABLE_DEPENSE+ " Values ('4','12.3','15/01/2017', 'Electricité');";
+        db.execSQL(ROW20);
+
+        String ROW21 = "INSERT INTO " + TABLE_DEPENSE+ " Values ('5','12.3','15/01/2014', 'Electricité');";
+        db.execSQL(ROW21);
+
     }
 
     /**

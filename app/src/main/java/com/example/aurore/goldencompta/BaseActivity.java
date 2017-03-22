@@ -25,6 +25,13 @@ import static com.example.aurore.goldencompta.MainActivity.ECONOMIE;
 public class BaseActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
 
+    public static int CATEGORIE = 0;
+    public static int DEPENSE = 1;
+    public static int BUDGET = 2;
+    public static int IMAGE = 3;
+    public static int CAMERA = 4;
+    public static int EDIT = 6;
+
     public static final String PREFS_NAME = "prefs";
     public static final String PREF_DARK_THEME = "dark_theme";
 
@@ -33,6 +40,8 @@ public class BaseActivity extends AppCompatActivity implements
     private Toolbar toolbar;
     private ActionBarDrawerToggle drawerToggle;
     private int selectedNavItemId;
+
+    DepenseBDD depenseBDD = new DepenseBDD(this);
 
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
@@ -176,4 +185,6 @@ public class BaseActivity extends AppCompatActivity implements
 
         startActivity(intent);
     }
+
+
 }

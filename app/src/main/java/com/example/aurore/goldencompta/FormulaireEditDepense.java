@@ -56,7 +56,7 @@ public class FormulaireEditDepense extends BaseActivity {
         //final EditText date = (EditText) findViewById(R.id.date);
 
         final DatePicker date = (DatePicker) findViewById(R.id.date);
-        EditText dateBase = (EditText)findViewById(R.id.date);
+        //EditText dateBase = (EditText)findViewById(R.id.date);
 
         final Spinner spinnerCat = (Spinner) findViewById(R.id.spinnerCategorie);
         Button save = (Button) findViewById(R.id.save);
@@ -89,38 +89,39 @@ public class FormulaireEditDepense extends BaseActivity {
         spinnerCat.setAdapter(dataAdapter);
         spinnerCat.setSelection(idC-1);
 
-        Toast.makeText(this, c.getString(1), Toast.LENGTH_LONG).show();
-
-        String dBis = date.getYear() + "/" + (date.getMonth() + 1) + "/" + date.getDayOfMonth();
-        Date saisi = new Date(dBis);
-
-        if (saisi.before(ajd) || saisi.equals(ajd)) {
-            if (date.getDayOfMonth() < 10) {
-                d = "0" + date.getDayOfMonth();
-            } else {
-                d = String.valueOf(date.getDayOfMonth());
-            }
-            if (date.getMonth() < 9) {
-                d += "/0" + (date.getMonth() + 1) + "/" + date.getYear();
-            } else {
-                d += "/" + (date.getMonth() + 1) + "/" + date.getYear();
-            }
-
-
+        //Toast.makeText(this, c.getString(1), Toast.LENGTH_LONG).show();
         save.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)   {
-                depense.setMontant(Float.parseFloat(montant.getText().toString()));
-                depense.setId(idD);
-                depense.setCategorie(spinnerCat.getSelectedItem().toString());
-                depense.setDate(d.toString());
-                depenseBdd.updateDepense(idD, depense);
-                finish();
-            }
-        });finish();
-        } else {
-            Toast.makeText(FormulaireEditDepense.this,"La date doit être inférieure ou égale à la date d'aujourd'hui", Toast.LENGTH_SHORT).show();
-        }
 
+                String dBis = date.getYear() + "/" + (date.getMonth() + 1) + "/" + date.getDayOfMonth();
+                Date saisi = new Date(dBis);
+                System.out.println((saisi.getYear() + 1900) +"/"  + saisi.getMonth() + "/" + saisi.getDate());
+                System.out.println((ajd.getYear() + 1900) +"/"  +ajd.getMonth() + "/" + ajd.getDate());
+
+                if (saisi.before(ajd) || saisi.equals(ajd)) {
+                    if (date.getDayOfMonth() < 10) {
+                        d = "0" + date.getDayOfMonth();
+                    } else {
+                        d = String.valueOf(date.getDayOfMonth());
+                    }
+                    if (date.getMonth() < 9) {
+                        d += "/0" + (date.getMonth() + 1) + "/" + date.getYear();
+                    } else {
+                        d += "/" + (date.getMonth() + 1) + "/" + date.getYear();
+                    }
+
+                    depense.setMontant(Float.parseFloat(montant.getText().toString()));
+                    depense.setId(idD);
+                    depense.setCategorie(spinnerCat.getSelectedItem().toString());
+                    depense.setDate(d);
+                    depenseBdd.updateDepense(idD, depense);
+                    finish();
+
+
+                } else {
+                    Toast.makeText(FormulaireEditDepense.this,"La date doit être inférieure ou égale à la date d'aujourd'hui", Toast.LENGTH_SHORT).show();
+                }
+        }});
         exit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)   {
                 finish();
@@ -129,5 +130,6 @@ public class FormulaireEditDepense extends BaseActivity {
 
         montant.setText(c.getString(1));
         //date.setText(c.getString(2));
+
     }
 }

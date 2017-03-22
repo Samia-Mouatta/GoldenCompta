@@ -41,22 +41,16 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         >
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Date :"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
 
-    <EditText
-        android:layout_width="match_parent"
+    <DatePicker
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="date"
+        android:datePickerMode="spinner"
+        android:spinnersShown="true"
+        android:calendarViewShown="false"
+        android:layout_gravity="center"
         android:id="@+id/date"/>
+
     </LinearLayout>
 
     <LinearLayout

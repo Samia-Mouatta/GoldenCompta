@@ -479,7 +479,7 @@ public class DepenseBDD {
                 d = DepenseBDD.cursorToDepense(cursor);
                 String[] date = d.getDate().split("/");
                 if(date[1].equals(month)) {
-                    ligne = "Montant : " + d.getMontant() + "\nDate : " + d.getDate() + "\nCategorie : " + d.getCategorie();
+                    ligne =  d.getId() +  " - Montant : " + d.getMontant() + "\nDate : " + d.getDate() + "\nCategorie : " + d.getCategorie();
                     listeDepenses.add(ligne);
                 }
                 cursor.moveToNext();
@@ -503,7 +503,7 @@ public class DepenseBDD {
                 d = DepenseBDD.cursorToDepense(cursor);
                 String[] date = d.getDate().split("/");
                 if(date[2].equals(annee)) {
-                    ligne = "Montant : " + d.getMontant() + "\nDate : " + d.getDate() + "\nCategorie : " + d.getCategorie();
+                    ligne = d.getId() +  " - Montant : " + d.getMontant() + "\nDate : " + d.getDate() + "\nCategorie : " + d.getCategorie();
                     listeDepenses.add(ligne);
                 }
                 cursor.moveToNext();
@@ -544,7 +544,7 @@ public class DepenseBDD {
                 d = DepenseBDD.cursorToDepense(cursor);
                 String[] date = d.getDate().split("/");
                 if(date[1].equals(month) && date[2].equals(annee)) {
-                    ligne = "Montant : " + d.getMontant() + "\nDate : " + d.getDate() + "\nCategorie : " + d.getCategorie();
+                    ligne =  d.getId() +  " - Montant : " + d.getMontant() + "\nDate : " + d.getDate() + "\nCategorie : " + d.getCategorie();
                     listeDepenses.add(ligne);
                 }
                 cursor.moveToNext();

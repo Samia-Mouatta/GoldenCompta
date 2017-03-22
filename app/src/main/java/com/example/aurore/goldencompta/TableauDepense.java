@@ -30,15 +30,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.example.aurore.goldencompta.MainActivity.BUDGET;
-import static com.example.aurore.goldencompta.MainActivity.CAMERA;
-import static com.example.aurore.goldencompta.MainActivity.CATEGORIE;
-import static com.example.aurore.goldencompta.MainActivity.DEPENSE;
-import static com.example.aurore.goldencompta.MainActivity.IMAGE;
 
 public class TableauDepense extends BaseActivity {
 
-    DepenseBDD depenseBDD = new DepenseBDD(this);
+
     ArrayAdapter<String> adapter = null;
 
     Spinner spinnerMois, spinnerAnnee;
@@ -297,7 +292,7 @@ public class TableauDepense extends BaseActivity {
             case R.id.edit:
                 Intent intentEdit = new Intent(this, FormulaireEditDepense.class);
                 intentEdit.putExtra("id", id);
-                startActivityForResult(intentEdit, 5);
+                startActivityForResult(intentEdit, EDIT);
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -402,7 +397,7 @@ public class TableauDepense extends BaseActivity {
             } else {
                 Toast.makeText(this, "Erreur lors de l'insertion", Toast.LENGTH_LONG).show();
             }
-        } else if (requestCode == IMAGE) {
+        } else if (requestCode == IMAGE || requestCode == CAMERA) {
             if (resultCode == RESULT_OK) {
                 float montant = Float.parseFloat(data.getStringExtra("NEWDEPENSE_IMAGE"));
                 Depense newDep = new Depense(data.getStringExtra("DATE_IMAGE"), montant, data.getStringExtra("CATEGORIE_IMAGE"));
@@ -455,13 +450,8 @@ public class TableauDepense extends BaseActivity {
             // Assign adapter to ListView
             listView.setAdapter(adapter);
             listView.setTextFilterEnabled(true);
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-                    // When clicked, show a toast with the TextView text
-                    Toast.makeText(getApplicationContext(),((TextView) view).getText(), Toast.LENGTH_SHORT).show();
-                }
 
-            });
+
             EditText myFilter = (EditText) findViewById(R.id.search);
             myFilter.addTextChangedListener(new TextWatcher() {
                 public void afterTextChanged(Editable s) {}

@@ -13,7 +13,10 @@ package com.example.aurore.goldencompta;
         import android.widget.TextView;
         import android.widget.Toast;
 
+        import java.text.Normalizer;
+        import java.util.ArrayList;
         import java.util.Date;
+        import java.util.List;
 
         import static com.example.aurore.goldencompta.MainActivity.BUDGET;
         import static com.example.aurore.goldencompta.MainActivity.CAMERA;
@@ -21,12 +24,9 @@ package com.example.aurore.goldencompta;
         import static com.example.aurore.goldencompta.MainActivity.DEPENSE;
         import static com.example.aurore.goldencompta.MainActivity.IMAGE;
 
-/**
- * Created by samia on 01/03/2017.
- */
 
 
-public class FormulaireEconomie extends Activity {
+public class FormulaireEconomie extends BaseActivity {
 
     private Activity main = this;
     String d, date_deb,date_fin;
@@ -186,6 +186,121 @@ public class FormulaireEconomie extends Activity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Méthode de mise a jour de la base de données
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CATEGORIE) {
+            if (resultCode == RESULT_OK) {
+                //Si ok on ajoute dans la base de données correspondante
+                Categorie newCateg = new Categorie(data.getStringExtra("newCateg"));
+
+                //Ajout dans la base de données
+                CategorieBDD categBdd = new CategorieBDD(this);
+                categBdd.open();
+
+                List<String> listCategorie = new ArrayList<String>();
+
+                listCategorie = categBdd.getAllCategoriesName();
+                String s1 = "";
+                int r2 = 1;
+                String s2 = data.getStringExtra("newCateg");
+                s2 = Normalizer.normalize(s2, Normalizer.Form.NFD);
+                s2 = s2.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+                int i = 0;
+                while(i < listCategorie.size() && r2==1) {
+                    s1 = listCategorie.get(i);
+                    s1 = Normalizer.normalize(s1, Normalizer.Form.NFD);
+                    s1 = s1.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+
+                    r2 = s1.compareToIgnoreCase(s2);
+                    i++;
+                }
+
+                if (r2 != 0) {
+                    categBdd.insertCategorie(new Categorie(data.getStringExtra("newCateg")));
+                } else {
+                    Toast.makeText(this, "Cette catégorie existe dans la BDD", Toast.LENGTH_LONG).show();
+                }
+                categBdd.close();
+            }
+        } else if (requestCode == DEPENSE) {
+            if (resultCode == RESULT_OK) {
+                //Si ok on ajoute dans la base de données correspondante
+                float montant = Float.parseFloat(data.getStringExtra("NEWDEPENSE"));
+                Depense newDep = new Depense(data.getStringExtra("DATE"), montant, data.getStringExtra("CATEGORIE"));
+
+                //Ajout dans la base de données
+                DepenseBDD cdepBdd = new DepenseBDD(this);
+                cdepBdd.open();
+
+                List<Depense> listDep = new ArrayList<Depense>();
+                listDep = cdepBdd.getAllDepenses();
+
+                Depense ldp = new Depense();
+
+                boolean exists = false;
+
+                int i = 0;
+                int taille = listDep.size();
+                while(!exists && i < listDep.size()){
+                    ldp = listDep.get(i);
+                    //comparer les dépenses existants avec la nouvelle dépense à ajouter
+                    exists = ldp.equals(newDep);
+                    i++;
+                }
+                // si les dépenses sont différents
+                if (!exists || taille == 0) {
+                    cdepBdd.insertDepense(newDep);
+                } else {
+                    Toast.makeText(this, " Votre dépense existe déjà dans la liste", Toast.LENGTH_LONG).show();
+                }
+                cdepBdd.close();
+
+            } else {
+                Toast.makeText(this, "Erreur lors de l'insertion", Toast.LENGTH_LONG).show();
+            }
+        } else if (requestCode == IMAGE || requestCode == CAMERA) {
+            if (resultCode == RESULT_OK) {
+                float montant = Float.parseFloat(data.getStringExtra("NEWDEPENSE_IMAGE"));
+                Depense newDep = new Depense(data.getStringExtra("DATE_IMAGE"), montant, data.getStringExtra("CATEGORIE_IMAGE"));
+
+                //Ajout dans la base de données
+                DepenseBDD cdepBdd = new DepenseBDD(this);
+                cdepBdd.open();
+                cdepBdd.insertDepense(newDep);
+                cdepBdd.close();
+            }
+        } else if (requestCode == BUDGET) {
+            if (resultCode == RESULT_OK) {
+                float montant = Float.parseFloat(data.getStringExtra("NEWBUDGET"));
+                String nettoyage = data.getStringExtra("NEWDATENETTOYAGE");
+
+                Budget budget = new Budget(montant);
+                BudgetBDD budgetBDD = new BudgetBDD(this);
+                budgetBDD.open();
+                Budget lastbugd = new Budget();
+                lastbugd = budgetBDD.selectLastBudget();
+                budgetBDD.insertBudget(budget);
+
+                if (lastbugd != null) {
+                    Date ajd = new Date();
+                    lastbugd.setDateFin(ajd.toString());
+
+                    budgetBDD.updateBudget(lastbugd.getId(), lastbugd);
+                }
+                Toast.makeText(this, "Budget enregistré", Toast.LENGTH_LONG).show();
+                depenseBDD.nettoyage(nettoyage);
+                budgetBDD.close();
+            }
         }
     }
 }
