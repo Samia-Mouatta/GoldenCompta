@@ -72,7 +72,6 @@ public class FormulaireEditDepense extends Activity {
                 depense.setDate(date.getText().toString());
                 depenseBdd.updateDepense(idD, depense);
                 finish();
-
             }
         });
 
@@ -84,8 +83,5 @@ public class FormulaireEditDepense extends Activity {
 
         montant.setText(c.getString(1));
         date.setText(c.getString(2));
-
     }
-
-
 }

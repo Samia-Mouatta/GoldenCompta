@@ -3,8 +3,6 @@ package com.example.aurore.goldencompta;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -16,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -25,8 +22,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.sql.SQLOutput;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,15 +64,6 @@ public class TableauDepense  extends Activity {
         anneeSelectionnee = "";
         retour = (Button) findViewById(R.id.retour);
         intent = new Intent();
-
-        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#00e6ac"));
-        // couleur de l'actionBar
-        getActionBar().setBackgroundDrawable(colorDrawable);
-
-        // icon
-        getActionBar().setDisplayUseLogoEnabled(true);
-        getActionBar().setDisplayShowHomeEnabled(true);
-
         values = new ArrayList<String>();
         //Création de l'instance de la classe CategorieBDD
         CategorieBDD categBdd = new CategorieBDD(this);
@@ -261,8 +247,6 @@ public class TableauDepense  extends Activity {
 
 
         registerForContextMenu(listView);
-
-
     }
 
 
@@ -501,13 +485,10 @@ public class TableauDepense  extends Activity {
         ListView listView;
         listView = (ListView) findViewById(R.id.listView1);
         ArrayList<String> values = new ArrayList<String>();
-        Depense d;
 
         values = depenseBDD.getAllDepense();
         estVide = (TextView) findViewById(R.id.vide);
         if (values.size() != 0) {
-
-            CategorieBDD categBdd = new CategorieBDD(this);
             adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
             // Assign adapter to ListView
             listView.setAdapter(adapter);
@@ -521,17 +502,12 @@ public class TableauDepense  extends Activity {
             });
             EditText myFilter = (EditText) findViewById(R.id.search);
             myFilter.addTextChangedListener(new TextWatcher() {
-                public void afterTextChanged(Editable s) {
+                public void afterTextChanged(Editable s) {}
 
-                }
-
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     adapter.getFilter().filter(s.toString());
-
                 }
             });
 

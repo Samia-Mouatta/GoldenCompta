@@ -44,11 +44,4 @@
         app:showAsAction="ifRoom"
         android:icon="@android:drawable/ic_menu_add"
         android:title="Statistiques"/>
-    <item
-        android:id="@+id/menu_economie"
-        app:showAsAction="ifRoom"
-        android:icon="@android:drawable/ic_menu_add"
-        android:title="Economies Réalisées"/>
-
-
 </menu>

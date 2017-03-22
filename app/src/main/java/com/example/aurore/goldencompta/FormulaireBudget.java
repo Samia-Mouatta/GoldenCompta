@@ -15,8 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-
+import android.view.View.OnClickListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +24,7 @@ import static com.example.aurore.goldencompta.MainActivity.CAMERA;
 import static com.example.aurore.goldencompta.MainActivity.CATEGORIE;
 import static com.example.aurore.goldencompta.MainActivity.DEPENSE;
 import static com.example.aurore.goldencompta.MainActivity.IMAGE;
+
 
 public class FormulaireBudget extends Activity {
     Activity main = this;
@@ -38,10 +38,10 @@ public class FormulaireBudget extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.formulaire_budget);
 
-        final String budget;
         final String BUD = "budget";
         final String NETT = "dateNettoyage";
-        final String nettoyage;
+        final String budget;
+        final int nettoyage;
         final Intent intent = new Intent();
         final Button save = (Button) findViewById(R.id.Save);
         final Button retour = (Button) findViewById(R.id.retour);
@@ -70,12 +70,14 @@ public class FormulaireBudget extends Activity {
         // AFFICHAGE DU BUDGET
         // On veut la chaîne de caractères d'identifiant FAVORITE_COLOR
         // Si on ne trouve pas cette valeur, on veut rendre "FFFFFF"
-
-        SharedPreferences preferences = getSharedPreferences (BUD,0);
+        SharedPreferences preferences = getSharedPreferences (BUD ,MODE_PRIVATE);
         budget = preferences.getString(BUD, "Aucun budget");
+        nettoyage = preferences.getInt(NETT, 0);
 
         montantActuel.setText(budget);
-        //Listener sur le bouton valider pour mettre à jours le budget
+        int pos = preferences.getInt(NETT,0);
+        spinner.setSelection(pos);
+        //Listener sur le bouton valider pour mettre à jour le budget
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,6 +102,7 @@ public class FormulaireBudget extends Activity {
                     SharedPreferences preferences = getSharedPreferences(BUD, 0);
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString(BUD, str);
+                    editor.putInt(NETT, spinner.getSelectedItemPosition());
                     editor.commit();
 
                     montantActuel.setText(str);
@@ -111,7 +114,6 @@ public class FormulaireBudget extends Activity {
                 }
             }
         });
-
 
         retour.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,5 +187,3 @@ public class FormulaireBudget extends Activity {
         }
     }
 }
-
-

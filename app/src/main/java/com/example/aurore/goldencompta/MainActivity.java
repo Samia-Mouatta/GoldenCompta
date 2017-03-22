@@ -2,23 +2,37 @@ package com.example.aurore.goldencompta;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
     public static int CATEGORIE = 0;
     public static int DEPENSE = 1;
     public static int BUDGET = 2;
     public static int IMAGE = 3;
     public static int CAMERA = 4;
     private Button button_tabl, button_stat, button_scan, button_param;
+    private static final String PREFS_NAME = "prefs";
+    private static final String PREF_DARK_THEME = "dark_theme";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        boolean useDarkTheme = preferences.getBoolean(PREF_DARK_THEME, false);
+
+        if(useDarkTheme) {
+            setTheme(R.style.AppTheme_Dark_NoActionBar);
+        } else {
+            setTheme(R.style.AppTheme);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         button_tabl = (Button) findViewById(R.id.button_tab_dep);
@@ -45,8 +59,8 @@ public class MainActivity extends Activity {
         button_param.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Fonctionnalité non présente pour le moment!",
-                        Toast.LENGTH_LONG).show();
+                Intent intentStat = new Intent(MainActivity.this, FormulaireBudget.class);
+                startActivity(intentStat);
             }
         });
 
@@ -55,6 +69,16 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 Intent intentCamera = new Intent(MainActivity.this, FormulaireCamera.class);
                 startActivityForResult(intentCamera, CAMERA);
+            }
+        });
+
+
+        Switch toggle = (Switch) findViewById(R.id.switch1);
+        toggle.setChecked(useDarkTheme);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton view, boolean isChecked) {
+                toggleTheme(isChecked);
             }
         });
     }
@@ -120,4 +144,16 @@ public class MainActivity extends Activity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private void toggleTheme(boolean darkTheme) {
+        SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
+        editor.putBoolean(PREF_DARK_THEME, darkTheme);
+        editor.apply();
+
+        Intent intent = getIntent();
+        finish();
+
+        startActivity(intent);
+    }
+
 }

@@ -7,8 +7,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import java.text.Format;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -135,7 +133,6 @@ public class DepenseBDD {
      */
     public void removeDepenseWithID(Integer id){
         //Suppression d'une dépense de la BDD grâce à l'ID
-        System.out.println("Suppression du numéro : " + id);
         bdd.delete(TABLE_DEPENSE, COL_ID + " = " +id, null);
     }
 
@@ -210,23 +207,11 @@ public class DepenseBDD {
         return bdd.rawQuery(querry, null);
     }
 
-
     public Cursor getDepenseByID(Integer id){
 
         String TABLE_NAME = "table_depense";
         this.open();
         String querry = "SELECT * FROM table_depense WHERE id = '"+ id +"'";
-        return bdd.rawQuery(querry, null);
-    }
-
-    /**
-     * Méthode retournant le total des dépenses entre deux mois
-     * @return curseur de dépense
-     */
-    public Cursor selectDepenseBewteenMonth(String m1,String m2){
-        String TABLE_NAME = "table_depense";
-        this.open();
-        String querry = "SELECT SUM(montant),strftime('%m', date) as Mois FROM table_depense WHERE Mois BETWEEN '"+m1+"' AND '"+m2+"'";
         return bdd.rawQuery(querry, null);
     }
 
@@ -266,16 +251,11 @@ public class DepenseBDD {
                         month = Integer.parseInt(date.substring(3,5));
 
                         if (year == annee && month == i) {
-                            Log.i(TAG, "mois " + i + " - "+ month + " annee " + year + " - " + annee + " - " + d.getMontant());
                             totalDepense = totalDepense + d.getMontant();
-
                         }
                         c.moveToNext();
                     }
-
             }
-                Log.i(TAG, "total mois de " + i + " - " + Float.toString(totalDepense));
-
             res.add(Float.toString(totalDepense));
         }
 
@@ -285,7 +265,6 @@ public class DepenseBDD {
 
     public float getTotalDepenseMois ()   {
         Cursor c = selectDepense();
-        Cursor result;
         Date dateToday = new Date();
         Calendar myCalendar = GregorianCalendar.getInstance();
         myCalendar.setTime(dateToday);
@@ -569,53 +548,56 @@ public class DepenseBDD {
      * @param dateChoose
      */
 
-    public void nettoyage(String dateChoose){
-        ContentValues values = new ContentValues();
-
+    public void nettoyage(String dateChoose) {
         ArrayList<Depense> listeDepenses = getAllDepenses();
         int taille = listeDepenses.size();
         Date ajd = new Date();
-        Integer mois = ajd.getMonth();
-        Integer annee = ajd.getYear();
-        Date date = new Date (1990, 01, 01);
+        Integer mois = ajd.getMonth()+1;
+        Integer annee = ajd.getYear() + 1900;
+        Date date= new Date(01, 01, 1990);
+        boolean jamais = false;
+        boolean toutsupp =false;
 
-        switch (dateChoose){
-            case  "1 mois" :
+        switch (dateChoose) {
+            case "1 mois":
+                mois = mois -1;
                 //Nettoyage tous les mois avant celui en cours
-                date = new Date(annee, mois-1, 31);
+                date = new Date("01/" + mois +"/"+ annee);
                 break;
             case "6 mois":
                 //Nettoyage en janvier et en juillet
-                if(mois >= 07)
-                    date = new Date(annee, 07, 31);
+                if (mois >= 07)
+                    date = new Date("31/07/" + annee);
                 else
-                    date = new Date(annee, 01, 31);
+                    date = new Date("31/01/" + annee);
                 break;
             case "1 ans":
                 //Nettoyage tous les 1ers de l'an
-                date = new Date(annee-1, 01, 01);
+                annee = annee-1;
+                date = new Date("01/01/"+ annee);
                 break;
             case "2 ans":
-                date = new Date(annee-2, 01, 01);
+                annee = annee-2;
+                date = new Date("01/01/"+ annee);
                 break;
-           case "3 ans":
-               date = new Date(annee-3, 01, 01);
+            case "3 ans":
+                annee = annee-3;
+                date = new Date("01/01/"+ annee);
                 break;
             case "Tout supprimer":
-                date = new Date();
+                toutsupp= true;
+
             default: //Jamais
+                jamais = true;
         }
 
-
-        for(int i = 0 ; i < taille; i++){
-            System.out.println("Avant le bordel : " + listeDepenses.get(i).getDate());
-            if (listeDepenses.get(i).getDateD().before(date)) {
-                //listeDepenses.remove(i);
-                removeDepenseWithID(listeDepenses.get(i).getId());
+        Date DateDepense;
+        if(!jamais){
+            for (int i = 0; i < taille; i++) {
+                DateDepense = new Date(listeDepenses.get(i).getDate());
+                if (DateDepense.before(date) || toutsupp)
+                    removeDepenseWithID(listeDepenses.get(i).getId());
             }
-            System.out.println("Après le bordel : " + listeDepenses.get(i).getDate());
         }
-
-
     }
 }

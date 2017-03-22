@@ -30,7 +30,6 @@ public class FormulaireDepense extends Activity {
     Date systeme = new Date();
     Date saisi;
 
-
     /**
      * Méthode qui permet d'initialiser notre Intent
      * @param savedInstanceState le bundle utilisé pour créer la méthode
@@ -121,8 +120,6 @@ public class FormulaireDepense extends Activity {
         });
 
     }
-
-
 
     /**
      * Méthode de création du menu
