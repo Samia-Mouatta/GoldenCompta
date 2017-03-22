@@ -54,9 +54,6 @@ public class FormulaireEconomie extends Activity {
 
         final TextView ecoView = (TextView) findViewById(R.id.ecoView);
 
-        // icon
-        getActionBar().setDisplayUseLogoEnabled(true);
-        getActionBar().setDisplayShowHomeEnabled(true);
 
       /*  SharedPreferences preferences = getSharedPreferences (eco,0);
         economie = preferences.getString(eco, "Vos economies sont à 0 pour le moment");
@@ -65,6 +62,7 @@ public class FormulaireEconomie extends Activity {
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String mois_deb, mois_fin, annee_deb, annee_fin;
                 date_deb = deb.getYear() + "/" + (deb.getMonth() + 1) + "/" + deb.getDayOfMonth();
                 System.out.println(" date : " + date_deb);
                 saisiDeb = new Date(date_deb);
@@ -75,32 +73,31 @@ public class FormulaireEconomie extends Activity {
 
                 if ((saisiDeb.before(systeme) || saisiDeb.equals(systeme)) && (saisiFin.before(systeme) || saisiFin.equals(systeme)) && saisiDeb.before(saisiFin)) {
                     if ((deb.getMonth() < 9) || (fin.getMonth() < 9)) {
-                        date_deb = "0" + (deb.getMonth() + 1);
-                        date_fin = "0" + (fin.getMonth() + 1);
-                        System.out.println(" mois deb : " + date_deb);
-                        System.out.println(" mois fin: " + date_fin);
+                        mois_deb = "0" + (deb.getMonth() + 1);
+                        mois_fin = "0" + (fin.getMonth() + 1);
+                        System.out.println(" mois deb : " + mois_deb);
+                        System.out.println(" mois fin: " + mois_fin);
                     } else {
-                        date_deb = " " + (deb.getMonth() + 1);
-                        date_fin = " " + (fin.getMonth() + 1);
-                        System.out.println(" mois deb: " + date_deb);
-                        System.out.println(" mois fin: " + date_fin);
+                        mois_deb = " " + (deb.getMonth() + 1);
+                        mois_fin = " " + (fin.getMonth() + 1);
+                        System.out.println(" mois deb: " + mois_deb);
+                        System.out.println(" mois fin: " + mois_fin);
                     }
+
+                    annee_deb = Integer.toString(deb.getYear());
+                    annee_fin = Integer.toString(fin.getYear());
 
                     DepenseBDD depense = new DepenseBDD(main);
-                    Cursor sommeCursor;
-                    double total = 0;
-                    sommeCursor = depense.selectDepenseBewteenMonth(date_deb,date_fin);
+                    BudgetBDD budget = new BudgetBDD(main);
+                    double total, economie;
+                    total = 0;
+                    float totalDepense = depense.selectDepenseBewteenMonth(Integer.parseInt(mois_deb), Integer.parseInt(annee_deb), Integer.parseInt(mois_fin), Integer.parseInt(annee_fin));
+                    System.out.println(totalDepense);
+                    float totalBudget = budget.selectBudgetBetweenMonth(Integer.parseInt(mois_deb), Integer.parseInt(annee_deb), Integer.parseInt(mois_fin), Integer.parseInt(annee_fin));
+                    economie = totalBudget - totalDepense;
 
-                    if (sommeCursor.getCount() != 0) {
-                        sommeCursor.moveToFirst();
-                        total = sommeCursor.getDouble(0);
-                    }
-                    System.out.println("Total entre: " + date_deb+" et "+date_fin+" = "+total);
-                    Budget bud= new Budget();
-                    BudgetBDD newbud = new BudgetBDD(main);
-                    bud = newbud.selectLastBudget();
-                    double economie = total - bud.getMontant();
-                    System.out.println("vos economies = : " + economie);
+                    System.out.println("Economies entre: " + date_deb+" et "+date_fin+" = "+economie);
+
                     SharedPreferences preferences = getSharedPreferences(eco, 0);
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString(eco,String.valueOf(total));

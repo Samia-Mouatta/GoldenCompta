@@ -194,6 +194,83 @@ public class BudgetBDD {
         return bdd.update(TABLE_BUDGET, values, COL_ID + " = " +id, null);
     }
 
+    public float selectBudgetBetweenMonth(int mois_deb, int annee_deb, int mois_fin, int annee_fin) {
+        float total, value;
+        total = 0;
+        String [] date;
+        int y, m, mois, annee, jour;
+        Cursor c = selectBudget();
+        c.moveToFirst();
+
+
+        for (y = annee_deb; y < annee_fin; y++) {
+            value = 0;
+
+            if (y ==  annee_deb) {
+                for (m = mois_deb; m < 12; m++) {
+                    value = 0;
+                    while (!c.isAfterLast()) {
+                        date = c.getString(2).split("/");
+                        System.out.println(date);
+                        mois = Integer.parseInt(date[1]);
+                        annee = Integer.parseInt(date[2]);
+                        jour = Integer.parseInt(date[0]);
+                        if (mois == m && annee == y) {
+                            value = c.getInt(1);
+                        }
+                        c.moveToNext();
+                    }
+                    total = total + value;
+                }
+            }
+
+            else if (y == annee_fin) {
+
+                for (m = 1; m < mois_fin; m++) {
+                    value = 0;
+                    while (!c.isAfterLast()) {
+                        date = c.getString(2).split("/");
+
+                        mois = Integer.parseInt(date[1]);
+                        annee = Integer.parseInt(date[2]);
+                        jour = Integer.parseInt(date[0]);
+                        if (mois == m && annee == y) {
+                            value = c.getInt(1);
+                        }
+
+                        c.moveToNext();
+                    }
+                    total = total + value;
+                }
+
+            }
+
+            else {
+
+                for (m = 1; m < 12; m++) {
+                    value = 0;
+                    while (!c.isAfterLast()) {
+                        date = c.getString(2).split("/");
+
+                        mois = Integer.parseInt(date[1]);
+                        annee = Integer.parseInt(date[2]);
+                        jour = Integer.parseInt(date[0]);
+                        if (mois == m && annee == y) {
+                            value = c.getInt(1);
+                        }
+                        c.moveToNext();
+                    }
+                    total = total + value;
+                }
+
+            }
+
+
+        }
+
+        return total;
+    }
+
 
 
 }

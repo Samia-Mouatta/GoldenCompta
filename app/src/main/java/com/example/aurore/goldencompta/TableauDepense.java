@@ -432,6 +432,11 @@ public class TableauDepense extends BaseActivity {
                     budgetBDD.updateBudget(lastbugd.getId(), lastbugd);
                 }
                 Toast.makeText(this, "Budget enregistré", Toast.LENGTH_LONG).show();
+                ArrayList<Budget> listbudg = new ArrayList<Budget>();
+                listbudg = budgetBDD.getAllBudgets();
+                for(int i = 0 ; i < listbudg.size(); i++) {
+                    System.out.println(listbudg.get(i).getId()+ " : " + listbudg.get(i).getDateDeb() + " // " + listbudg.get(i).getDateFin());
+                }
                 depenseBDD.nettoyage(nettoyage);
                 budgetBDD.close();
             }

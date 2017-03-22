@@ -379,11 +379,39 @@ public class DepenseBDD {
      * Méthode retournant le total des dépenses entre deux mois
      * @return curseur de dépense
      */
-    public Cursor selectDepenseBewteenMonth(String m1,String m2){
+    public float selectDepenseBewteenMonth(int mois_deb, int annee_deb, int mois_fin, int annee_fin){
         String TABLE_NAME = "table_depense";
+        int mois, annee;
+        float total;
         this.open();
-        String querry = "SELECT SUM(montant),strftime('%m', date) as Mois FROM table_depense WHERE Mois BETWEEN '"+m1+"' AND '"+m2+"'";
-        return bdd.rawQuery(querry, null);
+        //String querry = "SELECT SUM(montant),strftime('%m', date) as Mois FROM table_depense WHERE Mois BETWEEN '"+m1+"' AND '"+m2+"'";
+        total = 0;
+        Cursor c = selectDepense();
+        c.moveToFirst();
+        while(!c.isAfterLast()) {
+            Depense d = cursorToDepense(c);
+            mois = d.getDateD().getMonth();
+            annee = d.getDateD().getYear();
+            if (annee >= annee_deb && annee <= annee_fin) {
+                if (annee == annee_deb) {
+                    if (mois >= mois_deb) {
+                        total = total + d.getMontant();
+                    }
+                }
+                else if (annee == annee_fin) {
+                    if (mois < mois_fin) {
+                        total = total + d.getMontant();
+                    }
+
+                } else {
+                    total = total + d.getMontant();
+                }
+            }
+
+            c.moveToNext();
+        }
+
+        return total;
     }
 
     /**

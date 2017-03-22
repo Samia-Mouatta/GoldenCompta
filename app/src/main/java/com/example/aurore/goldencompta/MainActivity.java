@@ -18,6 +18,7 @@ public class MainActivity extends BaseActivity {
     public static int BUDGET = 2;
     public static int IMAGE = 3;
     public static int CAMERA = 4;
+    public static int ECONOMIE = 5;
     private Button button_tabl, button_stat, button_scan, button_param;
     private static final String PREFS_NAME = "prefs";
     private static final String PREF_DARK_THEME = "dark_theme";
