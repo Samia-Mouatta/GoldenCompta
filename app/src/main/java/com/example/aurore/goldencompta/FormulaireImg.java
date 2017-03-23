@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -50,7 +51,7 @@ public class FormulaireImg extends BaseActivity {
     protected TessBaseAPI mTess;
     protected Bitmap bitmap = null;
     protected String contenu;
-    protected TextView ocr;
+    protected EditText ocr;
     protected Button confirmer;
     protected Button refuser;
     protected String d, dBis;
@@ -152,10 +153,6 @@ public class FormulaireImg extends BaseActivity {
                     }
 
 
-                    System.out.println("Date du calendrier2 : " + d);
-                    System.out.println("Depense : " + Float.parseFloat(montant));
-                    System.out.println("Catégorie : " + cat);
-                    System.out.print("Date : " + d.toString());
 
 
                 }
@@ -194,7 +191,7 @@ public class FormulaireImg extends BaseActivity {
                 int pos;
                 montant = null;
 
-                ocr = (TextView) findViewById(R.id.texteOCR);
+                ocr = (EditText) findViewById(R.id.texteOCR);
                 String language = "eng";
 
                 datapath = getFilesDir() + "/tesseract/";
@@ -211,7 +208,6 @@ public class FormulaireImg extends BaseActivity {
                 split = contenu.split(" ");
                 pos = split.length-1;
                 while(!soldeTrouver && pos >= 0){
-                    System.out.println(split[pos]);
                     if(!estMotCle){
                         for(int i = 0; i < listeMotCle.length; i++){
                             if (split[pos].equals(listeMotCle[i])) { estMotCle = true;}
@@ -226,7 +222,6 @@ public class FormulaireImg extends BaseActivity {
                     }
                 }
 
-                //System.out.println(split[pos]);
                 if(soldeTrouver) {
                     ocr.setText(split[pos]);
                     montant = split[pos];
@@ -314,7 +309,28 @@ public class FormulaireImg extends BaseActivity {
                     //Ajout dans la base de données
                     DepenseBDD cdepBdd = new DepenseBDD(this);
                     cdepBdd.open();
-                    cdepBdd.insertDepense(newDep);
+
+                    List<Depense> listDep = new ArrayList<Depense>();
+                    listDep = cdepBdd.getAllDepenses();
+
+                    Depense ldp = new Depense();
+
+                    boolean exists = false;
+
+                    int i = 0;
+                    int taille = listDep.size();
+                    while(!exists && i < listDep.size()){
+                        ldp = listDep.get(i);
+                        //comparer les dépenses existants avec la nouvelle dépense à ajouter
+                        exists = ldp.equals(newDep);
+                        i++;
+                    }
+                    // si les dépenses sont différents
+                    if (!exists || taille == 0) {
+                        cdepBdd.insertDepense(newDep);
+                    } else {
+                        Toast.makeText(this, " Votre dépense existe déjà dans la liste", Toast.LENGTH_LONG).show();
+                    }
                     cdepBdd.close();
                 }
             } else if (requestCode == BUDGET) {

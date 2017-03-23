@@ -22,9 +22,11 @@ import java.util.List;
 public class FormulaireEditDepense extends BaseActivity {
     String d= "";
     Date ajd = new Date();
+    Date dateDepense;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         SharedPreferences preferencesD = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         boolean useDarkTheme = preferencesD.getBoolean(PREF_DARK_THEME, false);
 
@@ -53,10 +55,8 @@ public class FormulaireEditDepense extends BaseActivity {
         List<String> list = new ArrayList<String>();
 
         final EditText montant = (EditText) findViewById(R.id.montant);
-        //final EditText date = (EditText) findViewById(R.id.date);
 
         final DatePicker date = (DatePicker) findViewById(R.id.date);
-        //EditText dateBase = (EditText)findViewById(R.id.date);
 
         final Spinner spinnerCat = (Spinner) findViewById(R.id.spinnerCategorie);
         Button save = (Button) findViewById(R.id.save);
@@ -89,14 +89,11 @@ public class FormulaireEditDepense extends BaseActivity {
         spinnerCat.setAdapter(dataAdapter);
         spinnerCat.setSelection(idC-1);
 
-        //Toast.makeText(this, c.getString(1), Toast.LENGTH_LONG).show();
         save.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)   {
 
                 String dBis = date.getYear() + "/" + (date.getMonth() + 1) + "/" + date.getDayOfMonth();
                 Date saisi = new Date(dBis);
-                System.out.println((saisi.getYear() + 1900) +"/"  + saisi.getMonth() + "/" + saisi.getDate());
-                System.out.println((ajd.getYear() + 1900) +"/"  +ajd.getMonth() + "/" + ajd.getDate());
 
                 if (saisi.before(ajd) || saisi.equals(ajd)) {
                     if (date.getDayOfMonth() < 10) {
@@ -129,7 +126,11 @@ public class FormulaireEditDepense extends BaseActivity {
         });
 
         montant.setText(c.getString(1));
-        //date.setText(c.getString(2));
+        String[] dateCdc = c.getString(2).split("/");
+        dateDepense = new Date(Integer.valueOf(dateCdc[2]),Integer.valueOf(dateCdc[1]) ,Integer.valueOf(dateCdc[0]));
+        //dateDepense = new Date(c.getString(2));
+        System.out.println(dateDepense.getYear() + "/" + dateDepense.getMonth() + "/" + dateDepense.getDate());
+        date.updateDate(Integer.valueOf(dateCdc[2]),Integer.valueOf(dateCdc[1]) - 1 ,Integer.valueOf(dateCdc[0]));
 
     }
 }

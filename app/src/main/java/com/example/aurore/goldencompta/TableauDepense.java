@@ -405,7 +405,28 @@ public class TableauDepense extends BaseActivity {
                 //Ajout dans la base de données
                 DepenseBDD cdepBdd = new DepenseBDD(this);
                 cdepBdd.open();
-                cdepBdd.insertDepense(newDep);
+
+                List<Depense> listDep = new ArrayList<Depense>();
+                listDep = cdepBdd.getAllDepenses();
+
+                Depense ldp = new Depense();
+
+                boolean exists = false;
+
+                int i = 0;
+                int taille = listDep.size();
+                while(!exists && i < listDep.size()){
+                    ldp = listDep.get(i);
+                    //comparer les dépenses existants avec la nouvelle dépense à ajouter
+                    exists = ldp.equals(newDep);
+                    i++;
+                }
+                // si les dépenses sont différents
+                if (!exists || taille == 0) {
+                    cdepBdd.insertDepense(newDep);
+                } else {
+                    Toast.makeText(this, " Votre dépense existe déjà dans la liste", Toast.LENGTH_LONG).show();
+                }
                 cdepBdd.close();
             }
         } else if (requestCode == BUDGET) {

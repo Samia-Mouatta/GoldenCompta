@@ -20,7 +20,7 @@ import static com.example.aurore.goldencompta.MainActivity.CAMERA;
 import static com.example.aurore.goldencompta.MainActivity.CATEGORIE;
 import static com.example.aurore.goldencompta.MainActivity.DEPENSE;
 import static com.example.aurore.goldencompta.MainActivity.IMAGE;
-import static com.example.aurore.goldencompta.MainActivity.ECONOMIE;
+//import static com.example.aurore.goldencompta.MainActivity.ECONOMIE;
 
 public class BaseActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
@@ -165,10 +165,10 @@ public class BaseActivity extends AppCompatActivity implements
                 Intent intentCamera = new Intent(this, FormulaireCamera.class);
                 startActivityForResult(intentCamera, CAMERA);
                 return true;
-            case R.id.menu_economie:
+            /*case R.id.menu_economie:
                 Intent intentEconomie = new Intent(this, FormulaireEconomie.class);
                 startActivityForResult(intentEconomie, ECONOMIE);
-                return true;
+                return true;*/
             default:
                 return super.onOptionsItemSelected(item);
         }
