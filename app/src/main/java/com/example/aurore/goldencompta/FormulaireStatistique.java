@@ -147,9 +147,6 @@ public class FormulaireStatistique extends BaseActivity {
 
         }
 
-
-        LinearLayout layoutView = (LinearLayout)
-                findViewById(R.id.chartView);
         // Now we create the renderer
         XYSeriesRenderer renderer = new XYSeriesRenderer();
         renderer.setLineWidth(5);
@@ -181,7 +178,6 @@ public class FormulaireStatistique extends BaseActivity {
         //barre
         //GraphicalView chartView = ChartFactory.getBarChartView(this, dataset, mRenderer, BarChart.Type.DEFAULT);
 
-        layoutView.addView(chartView, 0);
     }
 
     /**

@@ -33,19 +33,6 @@
             android:id="@+id/chartPie"
             android:orientation="vertical"/>
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="Dépenses par Montant : "
-            android:textSize="20sp" />
-
-
-        <LinearLayout
-            android:layout_width="130pt"
-            android:layout_height="130pt"
-            android:id="@+id/chartView"
-            android:orientation="vertical"/>
 
         <TextView
             android:layout_width="fill_parent"
