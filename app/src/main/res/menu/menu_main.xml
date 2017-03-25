@@ -26,7 +26,7 @@
         android:id="@+id/menu_budget"
         app:showAsAction="ifRoom"
         android:icon="@android:drawable/ic_menu_add"
-        android:title="Modifier mon budget"/>
+        android:title="Paramètres"/>
     <item
         android:id="@+id/menu_img"
         app:showAsAction="ifRoom"

@@ -57,7 +57,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="A quelle fréquence souhaitez-vous supprimer vos dépenses? "
+        android:text="Nettoyage de vos dépenses avant quelle date :  "
         android:id="@+id/ParamActuel"/>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

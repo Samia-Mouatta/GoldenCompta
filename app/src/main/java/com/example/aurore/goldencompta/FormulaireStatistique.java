@@ -443,10 +443,10 @@ public class FormulaireStatistique extends BaseActivity {
                     s1 = Normalizer.normalize(s1, Normalizer.Form.NFD);
                     s1 = s1.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
 
-                    r2 = s1.compareToIgnoreCase(s2);
+                    if(s1.equals(s2))
+                        r2 = 0;
                     i++;
                 }
-
                 if (r2 != 0) {
                     categBdd.insertCategorie(new Categorie(data.getStringExtra("newCateg")));
                 } else {
