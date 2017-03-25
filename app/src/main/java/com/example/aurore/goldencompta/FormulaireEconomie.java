@@ -84,7 +84,7 @@ public class FormulaireEconomie extends BaseActivity {
                     DepenseBDD depense = new DepenseBDD(main);
                     BudgetBDD budget = new BudgetBDD(main);
                     double total, economie;
-                    int mois_d, annee_d, mois_f, annee_f;
+                    int mois_d, annee_d, mois_f, annee_f, nb;
                     mois_d = Integer.parseInt(mois_deb);
                     annee_d = Integer.parseInt(annee_deb);
                     mois_f =  Integer.parseInt(mois_fin);
@@ -92,15 +92,16 @@ public class FormulaireEconomie extends BaseActivity {
 
                     total = 0;
                     float totalDepense = depense.selectDepenseBewteenMonth(mois_d,annee_d ,mois_f, annee_f);
-                    float totalBudget = budget.selectBudgetBetweenMonth(mois_d,annee_d ,mois_f, annee_f);
+                    //float totalBudget = budget.selectBudgetBetweenMonth(mois_d,annee_d ,mois_f, annee_f);
                     Cursor last = budget.gettLastBudget();
                     last.moveToLast();
 
                     float lastBud = last.getFloat(1);
                     System.out.println("budget actuel: = "+lastBud);
-                    lastBud = lastBud * ((12 * (annee_f - annee_d)) + (mois_f - mois_d));
-
-                    economie = totalBudget - lastBud;
+                    nb = ((12 * (annee_f - annee_d)) + (mois_f - mois_d));
+                    lastBud = lastBud * nb;
+                    System.out.println("nb = "+nb);
+                    economie = lastBud - totalDepense;
 
                     System.out.println("Economies entre: " + date_deb+" et "+date_fin+" = "+economie);
                     System.out.println("Total dépenses: = "+totalDepense);
