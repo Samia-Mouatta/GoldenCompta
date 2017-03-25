@@ -25,6 +25,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.example.aurore.goldencompta.MainActivity.BUDGET;
+import static com.example.aurore.goldencompta.MainActivity.CAMERA;
+import static com.example.aurore.goldencompta.MainActivity.CATEGORIE;
+import static com.example.aurore.goldencompta.MainActivity.DEPENSE;
+import static com.example.aurore.goldencompta.MainActivity.IMAGE;
+
+
 public class FormulaireBudget extends BaseActivity {
     Activity main = this;
 
@@ -99,19 +106,34 @@ public class FormulaireBudget extends BaseActivity {
                 String str = montant.getText().toString();
                 String dateNett = spinner.getSelectedItem().toString();
 
-                SharedPreferences preferences = getSharedPreferences(BUD, 0);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString(BUD, str);
-                editor.putInt(NETT, spinner.getSelectedItemPosition());
-                editor.commit();
+                if (str.equals("")) {
+                    Builder builder = new Builder(FormulaireBudget.this);
+                    builder.setTitle("Alerte");
+                    builder.setIcon(R.mipmap.alert);
+                    builder.setMessage("Attention! Vous n'avez pas rempli le champ budget");
+                    builder.setCancelable(true);
+                    // ajouter un bouton
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }else {
+                    SharedPreferences preferences = getSharedPreferences(BUD, 0);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString(BUD, str);
+                    editor.putInt(NETT, spinner.getSelectedItemPosition());
+                    editor.commit();
 
-                montantActuel.setText(str);
+                    montantActuel.setText(str);
 
-                intent.putExtra("NEWBUDGET", str);
-                intent.putExtra("NEWDATENETTOYAGE", dateNett);
-                main.setResult(RESULT_OK, intent);
-                finish();
-
+                    intent.putExtra("NEWBUDGET", str);
+                    intent.putExtra("NEWDATENETTOYAGE", dateNett);
+                    main.setResult(RESULT_OK, intent);
+                    finish();
+                }
             }
         });
 
