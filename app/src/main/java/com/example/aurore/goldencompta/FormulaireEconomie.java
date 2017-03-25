@@ -1,28 +1,22 @@
 package com.example.aurore.goldencompta;
 
         import android.app.Activity;
-        import android.content.Intent;
-        import android.content.SharedPreferences;
+import android.content.Intent;
+import android.content.SharedPreferences;
         import android.database.Cursor;
         import android.os.Bundle;
-        import android.view.Menu;
-        import android.view.MenuItem;
-        import android.view.View;
-        import android.widget.Button;
-        import android.widget.DatePicker;
-        import android.widget.TextView;
-        import android.widget.Toast;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.TextView;
+import android.widget.Toast;
 
-        import java.text.Normalizer;
-        import java.util.ArrayList;
-        import java.util.Date;
-        import java.util.List;
-
-        import static com.example.aurore.goldencompta.MainActivity.BUDGET;
-        import static com.example.aurore.goldencompta.MainActivity.CAMERA;
-        import static com.example.aurore.goldencompta.MainActivity.CATEGORIE;
-        import static com.example.aurore.goldencompta.MainActivity.DEPENSE;
-        import static com.example.aurore.goldencompta.MainActivity.IMAGE;
+import java.text.Normalizer;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 
@@ -90,13 +84,27 @@ public class FormulaireEconomie extends BaseActivity {
                     DepenseBDD depense = new DepenseBDD(main);
                     BudgetBDD budget = new BudgetBDD(main);
                     double total, economie;
+                    int mois_d, annee_d, mois_f, annee_f;
+                    mois_d = Integer.parseInt(mois_deb);
+                    annee_d = Integer.parseInt(annee_deb);
+                    mois_f =  Integer.parseInt(mois_fin);
+                    annee_f = Integer.parseInt(annee_fin);
+
                     total = 0;
-                    float totalDepense = depense.selectDepenseBewteenMonth(Integer.parseInt(mois_deb), Integer.parseInt(annee_deb), Integer.parseInt(mois_fin), Integer.parseInt(annee_fin));
-                    System.out.println(totalDepense);
-                    float totalBudget = budget.selectBudgetBetweenMonth(Integer.parseInt(mois_deb), Integer.parseInt(annee_deb), Integer.parseInt(mois_fin), Integer.parseInt(annee_fin));
-                    economie = totalBudget - totalDepense;
+                    float totalDepense = depense.selectDepenseBewteenMonth(mois_d,annee_d ,mois_f, annee_f);
+                    float totalBudget = budget.selectBudgetBetweenMonth(mois_d,annee_d ,mois_f, annee_f);
+                    Cursor last = budget.gettLastBudget();
+                    last.moveToLast();
+
+                    float lastBud = last.getFloat(1);
+                    System.out.println("budget actuel: = "+lastBud);
+                    lastBud = lastBud * ((12 * (annee_f - annee_d)) + (mois_f - mois_d));
+
+                    economie = totalBudget - lastBud;
 
                     System.out.println("Economies entre: " + date_deb+" et "+date_fin+" = "+economie);
+                    System.out.println("Total dépenses: = "+totalDepense);
+                    System.out.println("Total budget: = "+lastBud);
 
                     SharedPreferences preferences = getSharedPreferences(eco, 0);
                     SharedPreferences.Editor editor = preferences.edit();

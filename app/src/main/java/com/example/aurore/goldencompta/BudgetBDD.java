@@ -3,22 +3,14 @@ package com.example.aurore.goldencompta;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
-import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-
-import static android.content.ContentValues.TAG;
 
 public class BudgetBDD {
 
-    private static final int VERSION_BDD = 10;
+    private static final int VERSION_BDD = 14;
     private static final String NOM_BDD = "goldenCompta.db";
 
     private static final String TABLE_BUDGET = "table_budget";
@@ -197,24 +189,47 @@ public class BudgetBDD {
     public float selectBudgetBetweenMonth(int mois_deb, int annee_deb, int mois_fin, int annee_fin) {
         float total, value;
         total = 0;
+        int i;
         String [] date;
+        ArrayList<String> month = new ArrayList<String>();
+        month.add("Jan");
+        month.add("Feb");
+        month.add("Mar");
+        month.add("Apr");
+        month.add("May");
+        month.add("Jun");
+        month.add("Jul");
+        month.add("Aug");
+        month.add("Pet");
+        month.add("Oct");
+        month.add("Nov");
+        month.add("Dec");
+
+
         int y, m, mois, annee, jour;
+        mois = 0;
+        String leMois;
         Cursor c = selectBudget();
         c.moveToFirst();
-
+        value = 0;
 
         for (y = annee_deb; y < annee_fin; y++) {
-            value = 0;
+
 
             if (y ==  annee_deb) {
                 for (m = mois_deb; m < 12; m++) {
-                    value = 0;
                     while (!c.isAfterLast()) {
-                        date = c.getString(2).split("/");
+                        date = c.getString(2).split(" ");
                         System.out.println(date);
-                        mois = Integer.parseInt(date[1]);
-                        annee = Integer.parseInt(date[2]);
-                        jour = Integer.parseInt(date[0]);
+                        leMois = date[1];
+                        for (i = 0; i<12; i++)   {
+                            if (leMois == month.get(i)) {
+                                mois = i+1;
+                            }
+                        }
+                        annee = Integer.parseInt(date[5]);
+                        jour = Integer.parseInt(date[2]);
+                        System.out.println("Anne deb: = "+annee+ "mois = " +mois+ "jour = " + jour);
                         if (mois == m && annee == y) {
                             value = c.getInt(1);
                         }
@@ -227,17 +242,21 @@ public class BudgetBDD {
             else if (y == annee_fin) {
 
                 for (m = 1; m < mois_fin; m++) {
-                    value = 0;
                     while (!c.isAfterLast()) {
-                        date = c.getString(2).split("/");
-
-                        mois = Integer.parseInt(date[1]);
-                        annee = Integer.parseInt(date[2]);
-                        jour = Integer.parseInt(date[0]);
+                        date = c.getString(2).split(" ");
+                        System.out.println(date);
+                        leMois = date[1];
+                        for (i = 0; i<12; i++)   {
+                            if (leMois == month.get(i)) {
+                                mois = i+1;
+                            }
+                        }
+                        annee = Integer.parseInt(date[5]);
+                        jour = Integer.parseInt(date[2]);
+                        System.out.println("Anne deb: = "+annee+ "mois = " +mois+ "jour = " + jour);
                         if (mois == m && annee == y) {
                             value = c.getInt(1);
                         }
-
                         c.moveToNext();
                     }
                     total = total + value;
@@ -248,13 +267,18 @@ public class BudgetBDD {
             else {
 
                 for (m = 1; m < 12; m++) {
-                    value = 0;
                     while (!c.isAfterLast()) {
-                        date = c.getString(2).split("/");
-
-                        mois = Integer.parseInt(date[1]);
-                        annee = Integer.parseInt(date[2]);
-                        jour = Integer.parseInt(date[0]);
+                        date = c.getString(2).split(" ");
+                        System.out.println(date);
+                        leMois = date[1];
+                        for (i = 0; i<12; i++)   {
+                            if (leMois == month.get(i)) {
+                                mois = i+1;
+                            }
+                        }
+                        annee = Integer.parseInt(date[5]);
+                        jour = Integer.parseInt(date[2]);
+                        System.out.println("Anne deb: = "+annee+ "mois = " +mois+ "jour = " + jour);
                         if (mois == m && annee == y) {
                             value = c.getInt(1);
                         }

@@ -107,6 +107,9 @@ public class MaBaseSQLite extends SQLiteOpenHelper {
         String ROW21 = "INSERT INTO " + TABLE_DEPENSE+ " Values ('5','12.3','15/01/2014', 'Electricité');";
         db.execSQL(ROW21);
 
+        //String ROW22 = "INSERT INTO " + TABLE_BUDGET+ " Values ('4','600');";
+        //db.execSQL(ROW22);
+
     }
 
     /**

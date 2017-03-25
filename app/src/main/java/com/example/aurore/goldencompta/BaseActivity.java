@@ -1,7 +1,6 @@
 package com.example.aurore.goldencompta;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,15 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.FrameLayout;
-import android.widget.Switch;
-
-import static com.example.aurore.goldencompta.MainActivity.BUDGET;
-import static com.example.aurore.goldencompta.MainActivity.CAMERA;
-import static com.example.aurore.goldencompta.MainActivity.CATEGORIE;
-import static com.example.aurore.goldencompta.MainActivity.DEPENSE;
-import static com.example.aurore.goldencompta.MainActivity.IMAGE;
 //import static com.example.aurore.goldencompta.MainActivity.ECONOMIE;
 
 public class BaseActivity extends AppCompatActivity implements
@@ -31,6 +22,7 @@ public class BaseActivity extends AppCompatActivity implements
     public static int IMAGE = 3;
     public static int CAMERA = 4;
     public static int EDIT = 6;
+    public static int ECONOMIE = 7;
 
     public static final String PREFS_NAME = "prefs";
     public static final String PREF_DARK_THEME = "dark_theme";
@@ -165,10 +157,10 @@ public class BaseActivity extends AppCompatActivity implements
                 Intent intentCamera = new Intent(this, FormulaireCamera.class);
                 startActivityForResult(intentCamera, CAMERA);
                 return true;
-            /*case R.id.menu_economie:
+            case R.id.menu_economie:
                 Intent intentEconomie = new Intent(this, FormulaireEconomie.class);
                 startActivityForResult(intentEconomie, ECONOMIE);
-                return true;*/
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -7,7 +7,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,7 +16,7 @@ import static android.content.ContentValues.TAG;
 
 public class DepenseBDD {
 
-    private static final int VERSION_BDD = 10;
+    private static final int VERSION_BDD = 14;
     private static final String NOM_BDD = "goldenCompta.db";
 
     private static final String TABLE_DEPENSE = "table_depense";
@@ -376,7 +375,7 @@ public class DepenseBDD {
     }
 
     /**
-     * Méthode retournant le total des dépenses entre deux mois
+     * Méthode retournant le total des dépenses entre deux mois et deux années
      * @return curseur de dépense
      */
     public float selectDepenseBewteenMonth(int mois_deb, int annee_deb, int mois_fin, int annee_fin){
@@ -388,10 +387,12 @@ public class DepenseBDD {
         total = 0;
         Cursor c = selectDepense();
         c.moveToFirst();
+
         while(!c.isAfterLast()) {
             Depense d = cursorToDepense(c);
             mois = d.getDateD().getMonth();
-            annee = d.getDateD().getYear();
+            annee = Integer.parseInt(d.getDate().substring(6));
+
             if (annee >= annee_deb && annee <= annee_fin) {
                 if (annee == annee_deb) {
                     if (mois >= mois_deb) {
