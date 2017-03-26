@@ -231,7 +231,7 @@ public class FormulaireImg extends BaseActivity {
             } catch(IOException e) {
                 e.printStackTrace();
             }
-        } else  if (requestCode == CATEGORIE) {
+        } else if (requestCode == CATEGORIE) {
             if (resultCode == RESULT_OK) {
                 //Si ok on ajoute dans la base de données correspondante
                 Categorie newCateg = new Categorie(data.getStringExtra("newCateg"));
@@ -248,15 +248,21 @@ public class FormulaireImg extends BaseActivity {
                 String s2 = data.getStringExtra("newCateg");
                 s2 = Normalizer.normalize(s2, Normalizer.Form.NFD);
                 s2 = s2.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+                s2 = s2.toLowerCase();
                 int i = 0;
                 while(i < listCategorie.size() && r2==1) {
                     s1 = listCategorie.get(i);
                     s1 = Normalizer.normalize(s1, Normalizer.Form.NFD);
                     s1 = s1.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+                    s1 = s1.toLowerCase();
+                    System.out.println("Bordel 1 " + s1);
+                    System.out.println("Bordel 2 " + s2);
 
                     if(s1.equals(s2))
                         r2 = 0;
-                    i++;
+                    else
+                        i++;
+                    System.out.println("R2 " + r2);
                 }
                 if (r2 != 0) {
                     categBdd.insertCategorie(new Categorie(data.getStringExtra("newCateg")));

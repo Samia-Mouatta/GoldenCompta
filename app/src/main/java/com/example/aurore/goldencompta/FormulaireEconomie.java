@@ -1,10 +1,10 @@
 package com.example.aurore.goldencompta;
 
-        import android.app.Activity;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-        import android.database.Cursor;
-        import android.os.Bundle;
+import android.database.Cursor;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -62,20 +62,15 @@ public class FormulaireEconomie extends BaseActivity {
                 saisiDeb = new Date(date_deb);
 
                 date_fin = fin.getYear() + "/" + (fin.getMonth() + 1) + "/" + fin.getDayOfMonth();
-                System.out.println(" date : " + date_fin);
                 saisiFin = new Date(date_fin);
 
                 if ((saisiDeb.before(systeme) || saisiDeb.equals(systeme)) && (saisiFin.before(systeme) || saisiFin.equals(systeme)) && saisiDeb.before(saisiFin)) {
                     if ((deb.getMonth() < 9) || (fin.getMonth() < 9)) {
                         mois_deb = "0" + (deb.getMonth() + 1);
                         mois_fin = "0" + (fin.getMonth() + 1);
-                        System.out.println(" mois deb : " + mois_deb);
-                        System.out.println(" mois fin: " + mois_fin);
                     } else {
                         mois_deb = " " + (deb.getMonth() + 1);
                         mois_fin = " " + (fin.getMonth() + 1);
-                        System.out.println(" mois deb: " + mois_deb);
-                        System.out.println(" mois fin: " + mois_fin);
                     }
 
                     annee_deb = Integer.toString(deb.getYear());
@@ -97,14 +92,9 @@ public class FormulaireEconomie extends BaseActivity {
                     last.moveToLast();
 
                     float lastBud = last.getFloat(1);
-                    System.out.println("budget actuel: = "+lastBud);
                     lastBud = lastBud * ((12 * (annee_f - annee_d)) + (mois_f - mois_d));
 
                     economie = totalBudget - lastBud;
-
-                    System.out.println("Economies entre: " + date_deb+" et "+date_fin+" = "+economie);
-                    System.out.println("Total dépenses: = "+totalDepense);
-                    System.out.println("Total budget: = "+lastBud);
 
                     SharedPreferences preferences = getSharedPreferences(eco, 0);
                     SharedPreferences.Editor editor = preferences.edit();
@@ -168,15 +158,18 @@ public class FormulaireEconomie extends BaseActivity {
                 String s2 = data.getStringExtra("newCateg");
                 s2 = Normalizer.normalize(s2, Normalizer.Form.NFD);
                 s2 = s2.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+                s2 = s2.toLowerCase();
                 int i = 0;
                 while(i < listCategorie.size() && r2==1) {
                     s1 = listCategorie.get(i);
                     s1 = Normalizer.normalize(s1, Normalizer.Form.NFD);
                     s1 = s1.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+                    s1 = s1.toLowerCase();
 
                     if(s1.equals(s2))
                         r2 = 0;
-                    i++;
+                    else
+                        i++;
                 }
                 if (r2 != 0) {
                     categBdd.insertCategorie(new Categorie(data.getStringExtra("newCateg")));

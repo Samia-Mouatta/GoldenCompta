@@ -60,16 +60,16 @@ public class BudgetBDD {
      * Méthode retournant toutes les budgets
      * @return
      */
-     public Cursor populateTable(){
+    public Cursor populateTable(){
 
         String[] columns = {maBaseSQLite.COL_CATEG,maBaseSQLite.COL_DATE,maBaseSQLite.COL_MONTANT};
         Cursor cursor = bdd.query(maBaseSQLite.TABLE_BUDGET, columns, null, null, null, null, null);
 
-         if (cursor != null) {
+        if (cursor != null) {
             cursor.moveToFirst();
         }
         return cursor;
-     }
+    }
 
     /**
      * Méthode retournant toute le base
@@ -220,7 +220,6 @@ public class BudgetBDD {
                 for (m = mois_deb; m < 12; m++) {
                     while (!c.isAfterLast()) {
                         date = c.getString(2).split(" ");
-                        System.out.println(date);
                         leMois = date[1];
                         for (i = 0; i<12; i++)   {
                             if (leMois == month.get(i)) {
@@ -229,7 +228,6 @@ public class BudgetBDD {
                         }
                         annee = Integer.parseInt(date[5]);
                         jour = Integer.parseInt(date[2]);
-                        System.out.println("Anne deb: = "+annee+ "mois = " +mois+ "jour = " + jour);
                         if (mois == m && annee == y) {
                             value = c.getInt(1);
                         }
@@ -244,7 +242,6 @@ public class BudgetBDD {
                 for (m = 1; m < mois_fin; m++) {
                     while (!c.isAfterLast()) {
                         date = c.getString(2).split(" ");
-                        System.out.println(date);
                         leMois = date[1];
                         for (i = 0; i<12; i++)   {
                             if (leMois == month.get(i)) {
@@ -253,7 +250,6 @@ public class BudgetBDD {
                         }
                         annee = Integer.parseInt(date[5]);
                         jour = Integer.parseInt(date[2]);
-                        System.out.println("Anne deb: = "+annee+ "mois = " +mois+ "jour = " + jour);
                         if (mois == m && annee == y) {
                             value = c.getInt(1);
                         }
@@ -262,14 +258,10 @@ public class BudgetBDD {
                     total = total + value;
                 }
 
-            }
-
-            else {
-
+            } else {
                 for (m = 1; m < 12; m++) {
                     while (!c.isAfterLast()) {
                         date = c.getString(2).split(" ");
-                        System.out.println(date);
                         leMois = date[1];
                         for (i = 0; i<12; i++)   {
                             if (leMois == month.get(i)) {
@@ -278,7 +270,6 @@ public class BudgetBDD {
                         }
                         annee = Integer.parseInt(date[5]);
                         jour = Integer.parseInt(date[2]);
-                        System.out.println("Anne deb: = "+annee+ "mois = " +mois+ "jour = " + jour);
                         if (mois == m && annee == y) {
                             value = c.getInt(1);
                         }
