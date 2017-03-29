@@ -104,8 +104,6 @@ public class FormulaireEconomie extends BaseActivity {
                     economie = lastBud - totalDepense;
 
                     System.out.println("Economies entre: " + date_deb+" et "+date_fin+" = "+economie);
-                    System.out.println("Total dépenses: = "+totalDepense);
-                    System.out.println("Total budget: = "+lastBud);
 
                     SharedPreferences preferences = getSharedPreferences(eco, 0);
                     SharedPreferences.Editor editor = preferences.edit();
