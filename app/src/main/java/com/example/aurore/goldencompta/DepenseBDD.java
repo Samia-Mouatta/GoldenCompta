@@ -66,16 +66,16 @@ public class DepenseBDD {
      * Méthode retournant toutes les dépenses
      * @return
      */
-     public Cursor populateTable(){
+    public Cursor populateTable(){
 
         String[] columns = {maBaseSQLite.COL_CATEG,maBaseSQLite.COL_DATE,maBaseSQLite.COL_MONTANT};
         Cursor cursor = bdd.query(maBaseSQLite.TABLE_DEPENSE, columns, null, null, null, null, null);
 
-         if (cursor != null) {
+        if (cursor != null) {
             cursor.moveToFirst();
         }
         return cursor;
-     }
+    }
 
     /**
      * Méthode retournant toute le base
@@ -238,22 +238,22 @@ public class DepenseBDD {
         ArrayList<String> tmp = new ArrayList<String>();
 
 
-            for (i = 0; i<12; i++) {
+        for (i = 0; i<12; i++) {
+            totalDepense = 0;
+            if (c.getCount()!=0)    {
+                c.moveToFirst();
                 totalDepense = 0;
-                if (c.getCount()!=0)    {
-                    c.moveToFirst();
-                    totalDepense = 0;
-                    while (!c.isAfterLast()) {
-                        d = cursorToDepense(c);
-                        date = d.getDate();
-                        year = Integer.parseInt(date.substring(6,10));
-                        month = Integer.parseInt(date.substring(3,5));
+                while (!c.isAfterLast()) {
+                    d = cursorToDepense(c);
+                    date = d.getDate();
+                    year = Integer.parseInt(date.substring(6,10));
+                    month = Integer.parseInt(date.substring(3,5));
 
-                        if (year == annee && month == i) {
-                            totalDepense = totalDepense + d.getMontant();
-                        }
-                        c.moveToNext();
+                    if (year == annee && month == i) {
+                        totalDepense = totalDepense + d.getMontant();
                     }
+                    c.moveToNext();
+                }
             }
             res.add(Float.toString(totalDepense));
         }
@@ -305,7 +305,7 @@ public class DepenseBDD {
         int i;
         Cursor c = bdd.rawQuery("SELECT montant,strftime('%m',date) as Mois FROM " + TABLE_NAME +  " WHERE strftime('%Y', date)='"+ year +"' GROUP BY Mois, montant ORDER BY Mois", null);
         Cursor result;
-       //return bdd.rawQuery("SELECT montant,strftime('%m',date) as Mois FROM " + TABLE_NAME +  " WHERE strftime('%Y', date)='"+ year +"' GROUP BY Mois, montant ORDER BY Mois", null);
+        //return bdd.rawQuery("SELECT montant,strftime('%m',date) as Mois FROM " + TABLE_NAME +  " WHERE strftime('%Y', date)='"+ year +"' GROUP BY Mois, montant ORDER BY Mois", null);
         //return bdd.rawQuery("SELECT montant,strftime('%m',date) as Mois FROM " + TABLE_NAME +  " WHERE strftime('%Y', date)='"+ year +"'", null);
         c.moveToFirst();
 

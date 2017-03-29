@@ -159,57 +159,6 @@ public class FormulaireBudget extends BaseActivity {
     }
 
     /**
-     * Méthode de navigation dans les items du menu
-     * @param item
-     * @return
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            //Retour à la page d'accueil
-            case R.id.accueil:
-                Intent accueil = new Intent(this, MainActivity.class);
-                startActivity(accueil);
-                return true;
-            //case R.id.menu_about:
-            case R.id.tab_dep:
-                Intent tabDep = new Intent(this, TableauDepense.class);
-                startActivity(tabDep);
-                return true;
-            case R.id.menu_category:
-                // Comportement du bouton "Catégorie"
-                Intent intentCategory = new Intent(this, FormulaireCategorie.class);
-                startActivityForResult(intentCategory, CATEGORIE);
-                return true;
-            case R.id.menu_depense:
-                //Comportement du bouton "Dépense"
-                Intent intentDepense = new Intent(this, FormulaireDepense.class);
-                startActivityForResult(intentDepense, DEPENSE);
-                return true;
-            case R.id.menu_budget:
-                //Comportement du bouton "budget"
-                Intent intentBudget = new Intent(this, FormulaireBudget.class);
-                startActivityForResult(intentBudget, BUDGET);
-                return true;
-            case R.id.menu_statistique:
-                //Comportement du bouton "camera"
-                Intent intentStat = new Intent(this, FormulaireStatistique.class);
-                startActivity(intentStat);
-                return true;
-            case R.id.menu_img:
-                Intent intentImage = new Intent(this, FormulaireImg.class);
-                startActivityForResult(intentImage, IMAGE);
-                return true;
-            case R.id.menu_camera:
-                Intent intentCamera = new Intent(this, FormulaireCamera.class);
-                startActivityForResult(intentCamera, CAMERA);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    /**
      * Méthode de mise a jour de la base de données
      *
      * @param requestCode
@@ -235,16 +184,19 @@ public class FormulaireBudget extends BaseActivity {
                 String s2 = data.getStringExtra("newCateg");
                 s2 = Normalizer.normalize(s2, Normalizer.Form.NFD);
                 s2 = s2.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+                s2 = s2.toLowerCase();
                 int i = 0;
                 while(i < listCategorie.size() && r2==1) {
                     s1 = listCategorie.get(i);
                     s1 = Normalizer.normalize(s1, Normalizer.Form.NFD);
                     s1 = s1.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+                    s1 = s1.toLowerCase();
 
-                    r2 = s1.compareToIgnoreCase(s2);
-                    i++;
+                    if(s1.equals(s2))
+                        r2 = 0;
+                    else
+                        i++;
                 }
-
                 if (r2 != 0) {
                     categBdd.insertCategorie(new Categorie(data.getStringExtra("newCateg")));
                 } else {

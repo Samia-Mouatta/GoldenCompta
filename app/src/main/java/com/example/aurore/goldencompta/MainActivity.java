@@ -118,16 +118,19 @@ public class MainActivity extends BaseActivity {
                 String s2 = data.getStringExtra("newCateg");
                 s2 = Normalizer.normalize(s2, Normalizer.Form.NFD);
                 s2 = s2.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+                s2 = s2.toLowerCase();
                 int i = 0;
                 while(i < listCategorie.size() && r2==1) {
                     s1 = listCategorie.get(i);
                     s1 = Normalizer.normalize(s1, Normalizer.Form.NFD);
                     s1 = s1.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+                    s1 = s1.toLowerCase();
 
-                    r2 = s1.compareToIgnoreCase(s2);
-                    i++;
+                    if(s1.equals(s2))
+                        r2 = 0;
+                    else
+                        i++;
                 }
-
                 if (r2 != 0) {
                     categBdd.insertCategorie(new Categorie(data.getStringExtra("newCateg")));
                 } else {

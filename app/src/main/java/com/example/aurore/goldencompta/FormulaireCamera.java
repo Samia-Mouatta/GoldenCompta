@@ -240,40 +240,43 @@ public class FormulaireCamera extends BaseActivity {
                 e.printStackTrace();
             }
         }  else if (requestCode == CATEGORIE) {
-                if (resultCode == RESULT_OK) {
-                    //Si ok on ajoute dans la base de données correspondante
-                    Categorie newCateg = new Categorie(data.getStringExtra("newCateg"));
+            if (resultCode == RESULT_OK) {
+                //Si ok on ajoute dans la base de données correspondante
+                Categorie newCateg = new Categorie(data.getStringExtra("newCateg"));
 
-                    //Ajout dans la base de données
-                    CategorieBDD categBdd = new CategorieBDD(this);
-                    categBdd.open();
+                //Ajout dans la base de données
+                CategorieBDD categBdd = new CategorieBDD(this);
+                categBdd.open();
 
-                    List<String> listCategorie = new ArrayList<String>();
+                List<String> listCategorie = new ArrayList<String>();
 
-                    listCategorie = categBdd.getAllCategoriesName();
-                    String s1 = "";
-                    int r2 = 1;
-                    String s2 = data.getStringExtra("newCateg");
-                    s2 = Normalizer.normalize(s2, Normalizer.Form.NFD);
-                    s2 = s2.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-                    int i = 0;
-                    while(i < listCategorie.size() && r2==1) {
-                        s1 = listCategorie.get(i);
-                        s1 = Normalizer.normalize(s1, Normalizer.Form.NFD);
-                        s1 = s1.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+                listCategorie = categBdd.getAllCategoriesName();
+                String s1 = "";
+                int r2 = 1;
+                String s2 = data.getStringExtra("newCateg");
+                s2 = Normalizer.normalize(s2, Normalizer.Form.NFD);
+                s2 = s2.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+                s2 = s2.toLowerCase();
+                int i = 0;
+                while(i < listCategorie.size() && r2==1) {
+                    s1 = listCategorie.get(i);
+                    s1 = Normalizer.normalize(s1, Normalizer.Form.NFD);
+                    s1 = s1.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+                    s1 = s1.toLowerCase();
 
-                        r2 = s1.compareToIgnoreCase(s2);
+                    if(s1.equals(s2))
+                        r2 = 0;
+                    else
                         i++;
-                    }
-
-                    if (r2 != 0) {
-                        categBdd.insertCategorie(new Categorie(data.getStringExtra("newCateg")));
-                    } else {
-                        Toast.makeText(this, "Cette catégorie existe dans la BDD", Toast.LENGTH_LONG).show();
-                    }
-                    categBdd.close();
                 }
-            } else if (requestCode == DEPENSE) {
+                if (r2 != 0) {
+                    categBdd.insertCategorie(new Categorie(data.getStringExtra("newCateg")));
+                } else {
+                    Toast.makeText(this, "Cette catégorie existe dans la BDD", Toast.LENGTH_LONG).show();
+                }
+                categBdd.close();
+            }
+        } else if (requestCode == DEPENSE) {
                 if (resultCode == RESULT_OK) {
                     //Si ok on ajoute dans la base de données correspondante
                     float montant = Float.parseFloat(data.getStringExtra("NEWDEPENSE"));
