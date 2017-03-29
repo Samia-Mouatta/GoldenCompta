@@ -94,24 +94,29 @@ public class FormulaireEconomie extends BaseActivity {
                     float totalDepense = depense.selectDepenseBewteenMonth(mois_d,annee_d ,mois_f, annee_f);
                     //float totalBudget = budget.selectBudgetBetweenMonth(mois_d,annee_d ,mois_f, annee_f);
                     Cursor last = budget.gettLastBudget();
-                    last.moveToLast();
+                    if (last.getCount() != 0) {
+                        last.moveToLast();
 
-                    float lastBud = last.getFloat(1);
-                    System.out.println("budget actuel: = "+lastBud);
-                    nb = ((12 * (annee_f - annee_d)) + (mois_f - mois_d));
-                    lastBud = lastBud * nb;
-                    System.out.println("nb = "+nb);
-                    economie = lastBud - totalDepense;
+                        float lastBud = last.getFloat(1);
+                        System.out.println("budget actuel: = " + lastBud);
+                        nb = ((12 * (annee_f - annee_d)) + (mois_f - mois_d));
+                        lastBud = lastBud * nb;
+                        System.out.println("nb = " + nb);
+                        economie = lastBud - totalDepense;
 
-                    System.out.println("Economies entre: " + date_deb+" et "+date_fin+" = "+economie);
+                        System.out.println("Economies entre: " + date_deb + " et " + date_fin + " = " + economie);
 
-                    SharedPreferences preferences = getSharedPreferences(eco, 0);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString(eco,String.valueOf(total));
-                    editor.commit();
-                    ecoView.setText(String.valueOf(economie));
-                    intent.putExtra("Economie", economie);
-                    main.setResult(RESULT_OK, intent);
+                        SharedPreferences preferences = getSharedPreferences(eco, 0);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString(eco, String.valueOf(total));
+                        editor.commit();
+                        ecoView.setText(String.valueOf(economie));
+                        intent.putExtra("Economie", economie);
+                        main.setResult(RESULT_OK, intent);
+                    }
+                    else    {
+                        Toast.makeText(FormulaireEconomie.this, "Aucun budget défini", Toast.LENGTH_SHORT).show();
+                    }
                     // finish();
                 }else {
                     Toast.makeText(FormulaireEconomie.this, "La date doit être inférieure ou égale à la date d'aujourd'hui", Toast.LENGTH_SHORT).show();
