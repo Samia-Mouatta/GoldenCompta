@@ -78,8 +78,7 @@ public class BaseActivity extends AppCompatActivity implements
         return true;
     }
 
-    protected void setUpNavView()
-    {
+    protected void setUpNavView() {
         navigationView.setNavigationItemSelectedListener(this);
 
         if( useDrawerToggle()) { // use the hamburger menu
@@ -108,6 +107,11 @@ public class BaseActivity extends AppCompatActivity implements
     }
 
 
+    /**
+     * Méthode de navigation dans les items du menu
+     * @param menuItem le choix dans le menu
+     * @return un booléen
+     */
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
         fullLayout.closeDrawer(GravityCompat.START);
@@ -116,6 +120,11 @@ public class BaseActivity extends AppCompatActivity implements
         return onOptionsItemSelected(menuItem);
     }
 
+    /**
+     * Méthode qui analyse le choix dans le menu
+     * @param item choix selcetionner
+     * @return un booléen
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

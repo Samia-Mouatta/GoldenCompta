@@ -24,6 +24,10 @@ public class FormulaireEditDepense extends BaseActivity {
     Date ajd = new Date();
     Date dateDepense;
 
+    /**
+     * Methode d'initialisation de l'intent
+     * @param savedInstanceState le bundle utilisé pour créer la méthode
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 

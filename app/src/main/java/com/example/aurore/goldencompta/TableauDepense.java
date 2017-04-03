@@ -51,7 +51,6 @@ public class TableauDepense extends BaseActivity {
 
     /**
      * Méthode principale du lancement de l'application
-     *
      * @param savedInstanceState
      */
     @Override
@@ -259,6 +258,7 @@ public class TableauDepense extends BaseActivity {
 
 
         registerForContextMenu(listView);
+        onResume();
     }
 
 
@@ -311,7 +311,9 @@ public class TableauDepense extends BaseActivity {
         return true;
     }
 
-
+    /**
+     * méthode pour mettre à jour la vue
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -327,6 +329,7 @@ public class TableauDepense extends BaseActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        onResume();
         if (requestCode == CATEGORIE) {
             if (resultCode == RESULT_OK) {
                 //Si ok on ajoute dans la base de données correspondante
@@ -462,6 +465,9 @@ public class TableauDepense extends BaseActivity {
         }
     }
 
+    /**
+     * Méthode pour modifier l'affichage de la liste (mettre à jour la liste)
+     */
     private void afficherDepenses() {
         ListView listView;
         listView = (ListView) findViewById(R.id.listView1);

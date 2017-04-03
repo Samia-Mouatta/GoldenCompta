@@ -135,6 +135,11 @@ public class DepenseBDD {
         bdd.delete(TABLE_DEPENSE, COL_ID + " = " +id, null);
     }
 
+    /**
+     * Méthode de suppression d'une dépense
+     * @param montant montant de la dépense recherché
+     * @return la dépense supprimée
+     */
     public void removeDepenseWithInfo(String montant, String date, String cat){
         //Suppression d'une dépense de la BDD grâce à l'ID
         bdd.delete(TABLE_DEPENSE, COL_MONTANT + " = " +montant+ "and" + COL_DATE + "=" + date + "and" + COL_CATEG + " = " + cat, null);
@@ -206,6 +211,11 @@ public class DepenseBDD {
         return bdd.rawQuery(querry, null);
     }
 
+    /**
+     *  Méthode pour la recherche de dépense selon un identifiant
+     * @param id l'idendifiant de la dépense
+     * @return un cursor qui contient la dépense
+     */
     public Cursor getDepenseByID(Integer id){
 
         String TABLE_NAME = "table_depense";
@@ -226,6 +236,11 @@ public class DepenseBDD {
         return bdd.rawQuery("SELECT montant,strftime('%m',date) as Mois FROM " + TABLE_NAME +  "", null);
     }
 
+    /**
+     * Méthode retournant toutes les dépenses d'une année sous la forme d'une chaine de caractère
+     * @param annee l'année des dépenses rechechées
+     * @return un tableau de chaine de caractère contenant les dépenses
+     */
     public ArrayList<String> selectAllDepensesAnnee1 (Integer annee)   {
         Cursor c = selectDepense();
         Cursor result;
@@ -262,6 +277,10 @@ public class DepenseBDD {
         return res;
     }
 
+    /**
+     * Méthode retournant le total du montant des dépenses pour chaque mois
+     * @return curseur de dépense
+     */
     public float getTotalDepenseMois ()   {
         Cursor c = selectDepense();
         Date dateToday = new Date();
@@ -298,27 +317,6 @@ public class DepenseBDD {
     }
 
 
-    public Cursor selectAllDepensesAnnee(String year) {
-
-        String TABLE_NAME = "table_depense";
-        this.open();
-        int i;
-        Cursor c = bdd.rawQuery("SELECT montant,strftime('%m',date) as Mois FROM " + TABLE_NAME +  " WHERE strftime('%Y', date)='"+ year +"' GROUP BY Mois, montant ORDER BY Mois", null);
-        Cursor result;
-        //return bdd.rawQuery("SELECT montant,strftime('%m',date) as Mois FROM " + TABLE_NAME +  " WHERE strftime('%Y', date)='"+ year +"' GROUP BY Mois, montant ORDER BY Mois", null);
-        //return bdd.rawQuery("SELECT montant,strftime('%m',date) as Mois FROM " + TABLE_NAME +  " WHERE strftime('%Y', date)='"+ year +"'", null);
-        c.moveToFirst();
-
-        for (i =0; i<12; i++)   {
-            if (c.getString(1) != String.valueOf(i)) {
-
-            }
-
-        }
-
-        return c;
-
-    }
 
     /**
      * Méthode retournant le montant des dépenses d'un mois
@@ -449,9 +447,9 @@ public class DepenseBDD {
     }
 
     /**
-     *
-     * @param mois
-     * @return
+     * retournant toutes les dépenses d'un mois sous la forme d'une chaine de caractère
+     * @param mois le mois des dépenses recherché
+     * @return un tableau contenant les dépenses sous la forme de chaine de caractère
      */
     public ArrayList<String> getDepensesByMonth(String mois){
         ArrayList<String> listeDepenses = new ArrayList<String>();
@@ -493,6 +491,12 @@ public class DepenseBDD {
         return listeDepenses;
     }
 
+
+    /**
+     * retournant toutes les dépenses d'une année  sous la forme d'une chaine de caractère
+     * @param annee l'année des dépenses recherché
+     * @return un tableau contenant les dépenses sous la forme de chaine de caractère
+     */
     public ArrayList<String> getDepensesByAnnee(String annee){
         ArrayList<String> listeDepenses = new ArrayList<String>();
         String ligne;
@@ -517,7 +521,12 @@ public class DepenseBDD {
         return listeDepenses;
     }
 
-
+    /**
+     * retournant toutes les dépenses d'une année et d'un mois sous la forme d'une chaine de caractère
+     * @param mois le mois des dépenses recherché
+     * @param annee l'année des dépenses recherché
+     * @return un tableau contenant les dépenses sous la forme de chaine de caractère
+     */
     public ArrayList<String> getDepensesByMonthYear(String mois, String annee){
         ArrayList<String> listeDepenses = new ArrayList<String>();
         String ligne;
@@ -562,6 +571,11 @@ public class DepenseBDD {
         return listeDepenses;
     }
 
+    /**
+     * Retourne le montant le plus élevé des dépenses d'une année
+     * @param Year année des dépenses recherché
+     * @return le montant le plus éleve sous la forme d'entier
+     */
     public  Integer montantMaxYear(int Year)   {
         Integer res;
         float montant;
@@ -592,24 +606,33 @@ public class DepenseBDD {
         ArrayList<Depense> listeDepenses = getAllDepenses();
         int taille = listeDepenses.size();
         Date ajd = new Date();
-        Integer mois = ajd.getMonth()+1;
-        Integer annee = ajd.getYear() + 1900;
-        Date date= new Date(01, 01, 1990);
+        Integer mois = ajd.getMonth() - 1;
+        Integer annee = ajd.getYear();
+        Date date = new Date();
         boolean jamais = false;
-        boolean toutsupp =false;
+        boolean toutsupp = false;
+        String[] tpm;
 
+        System.out.println("Choix : " + dateChoose);
         switch (dateChoose) {
             case "1 mois":
-                mois = mois -1;
-                //Nettoyage tous les mois avant celui en cours
-                date = new Date("01/" + mois +"/"+ annee);
+                if ( mois != 0) {
+                    //Nettoyage tous les mois avant celui en cours
+                    date = new Date(annee, mois -1 , 1);
+                } else {
+                    mois = 11;
+                    annee = annee - 1;
+                    date = new Date(annee, mois, 1);
+                }
                 break;
             case "6 mois":
                 //Nettoyage en janvier et en juillet
-                if (mois >= 07)
+                if (mois >= 07) {
+                    annee = annee - 1;
                     date = new Date("31/07/" + annee);
-                else
+                } else {
                     date = new Date("31/01/" + annee);
+                }
                 break;
             case "1 ans":
                 //Nettoyage tous les 1ers de l'an
@@ -626,16 +649,23 @@ public class DepenseBDD {
                 break;
             case "Tout supprimer":
                 toutsupp= true;
-
+                break;
             default: //Jamais
                 jamais = true;
+                break;
         }
 
         Date DateDepense;
         if(!jamais){
             for (int i = 0; i < taille; i++) {
-                DateDepense = new Date(listeDepenses.get(i).getDate());
+                tpm = listeDepenses.get(i).getDate().split("/");
+                DateDepense = new Date((Integer.valueOf(tpm[2]) - 1900),Integer.valueOf(tpm[1]),Integer.valueOf(tpm[0]));
+                System.out.println("Date 1 : " + date.toString());
+                System.out.println("Date 2 : " + DateDepense.toString());
+                System.out.println("Valeur de toutsupp : " + toutsupp);
+                System.out.println("Valeur before : " + DateDepense.before(date));
                 if (DateDepense.before(date) || toutsupp)
+                    System.out.println("Supprimer : " + listeDepenses.get(i).getId());
                     removeDepenseWithID(listeDepenses.get(i).getId());
             }
         }

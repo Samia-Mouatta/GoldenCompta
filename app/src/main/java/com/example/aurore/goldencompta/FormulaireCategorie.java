@@ -95,12 +95,11 @@ public class FormulaireCategorie extends BaseActivity {
     }
 
     /**
-     * Méthode de mise a jour de la base de données
-     *
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
+    * Méthode de mise a jour de la base de données
+    * @param requestCode Entier representent la vue précédente
+    * @param resultCode Entier representent si l'action c'est bien passé ou pas
+    * @param data
+    */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CATEGORIE) {

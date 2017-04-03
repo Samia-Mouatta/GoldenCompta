@@ -168,6 +168,7 @@ public class FormulaireEconomie extends BaseActivity {
                 // Comportement du bouton "Catégorie"
                 Intent intentCategory = new Intent(this, FormulaireCategorie.class);
                 startActivityForResult(intentCategory, CATEGORIE);
+                finish();
                 return true;
             case R.id.menu_depense:
                 //Comportement du bouton "Dépense"

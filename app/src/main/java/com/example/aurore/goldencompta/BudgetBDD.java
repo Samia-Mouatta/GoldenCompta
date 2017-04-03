@@ -157,7 +157,10 @@ public class BudgetBDD {
     }
 
 
-
+    /**
+     * Méthode qui retourne tous les budgets
+     * @return un tableau contenant tous les budgets
+     */
     public ArrayList<Budget> getAllBudgets(){
         ArrayList<Budget> listeBudget = new ArrayList<>();
         Cursor cursor = selectBudget();
@@ -186,6 +189,14 @@ public class BudgetBDD {
         return bdd.update(TABLE_BUDGET, values, COL_ID + " = " +id, null);
     }
 
+    /**
+     * Méthode qui retourne la montant associé à un budget pendant une période donnée
+     * @param mois_deb mois du début du budget
+     * @param annee_deb année du début du budget
+     * @param mois_fin mois du fin du budget
+     * @param annee_fin année du début du budget
+     * @return le montant associé au buget trouvé
+     */
     public float selectBudgetBetweenMonth(int mois_deb, int annee_deb, int mois_fin, int annee_fin) {
         float total, value;
         total = 0;
@@ -285,7 +296,5 @@ public class BudgetBDD {
 
         return total;
     }
-
-
 
 }

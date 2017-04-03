@@ -96,6 +96,11 @@ public class CategorieBDD {
         return bdd.update(TABLE_CATEGORIE, values, COL_ID + " = " +id, null);
     }
 
+    /**
+     * Méthode qui retourne l'identifiant d'une catégorie en fonction du nom
+     * @param Cat chaine de caractère representent le nom de la catégorie recherché
+     * @return un entier qui symbolise l'identifiant de la catégorie
+     */
     public int getIdCategorie(String Cat)  {
         Cursor c;
         int id = 0;

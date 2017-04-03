@@ -64,6 +64,10 @@ public class FormulaireCamera extends BaseActivity {
     protected Date systeme = new Date();
     protected Date saisi;
 
+    /**
+     * Methode d'initialisation de l'intent
+     * @param savedInstanceState le bundle utilisé pour créer la méthode
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences preferencesD = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
@@ -156,12 +160,18 @@ public class FormulaireCamera extends BaseActivity {
         init();
     }
 
+    /**
+     * Méthode pour initialise les paramètre utile à la librairie ScanLibrary
+     */
     private void init() {
         cameraButton = (Button) findViewById(R.id.cameraButton);
         cameraButton.setOnClickListener(new ScanButtonClickListener(ScanConstants.OPEN_CAMERA));
         scannedImageView = (ImageView) findViewById(R.id.imageView1);
     }
 
+    /**
+     * Classe pour l'utilisation de la Caméra et du traitement de l'image
+     */
     private class ScanButtonClickListener implements View.OnClickListener {
 
         private int preference;
@@ -179,12 +189,23 @@ public class FormulaireCamera extends BaseActivity {
         }
     }
 
+    /**
+     * Méthode par lancer un vue avec la Caméra
+     * @param preference
+     */
     protected void startScan(int preference) {
         Intent intent = new Intent(this, ScanActivity.class);
         intent.putExtra(ScanConstants.OPEN_INTENT_PREFERENCE, preference);
         startActivityForResult(intent, REQUEST_CODE);
     }
 
+    /**
+     * Méthode de mise a jour de la base de données
+     *
+     * @param requestCode Entier representent la vue précédente
+     * @param resultCode Entier representent si l'action c'est bien passé ou pas
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -369,12 +390,20 @@ public class FormulaireCamera extends BaseActivity {
             }
         }
 
+    /**
+     * Fonction permettant de transformer en donnée en byte en un Bitmap
+     * @param data les données a transformé
+     * @return l'image correspondant au donnée
+     */
     private Bitmap convertByteArrayToBitmap(byte[] data) {
         return BitmapFactory.decodeByteArray(data, 0, data.length);
     }
 
 
-
+    /**
+     * Methode qui vérifie l'existence du fichier
+     * @param dir le fichier à vérifier
+     */
     private void checkFile(File dir) {
         if (!dir.exists() && dir.mkdirs()) {
             copyFiles();
@@ -389,6 +418,9 @@ public class FormulaireCamera extends BaseActivity {
         }
     }
 
+    /**
+     * Méthode qui copie un fichier
+     */
     private void copyFiles() {
         try {
             String filepath = datapath + "/tessdata/eng.traineddata";
@@ -419,6 +451,11 @@ public class FormulaireCamera extends BaseActivity {
         }
     }
 
+    /**
+     * Méthode qui convertie un string en entier
+     * @param nombre la chaine de caractère a convertir
+     * @return
+     */
     public boolean estReel(String nombre) {
         try {
             Float.parseFloat(nombre);

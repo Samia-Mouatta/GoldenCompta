@@ -23,6 +23,10 @@ public class MainActivity extends BaseActivity {
     private static final String PREFS_NAME = "prefs";
     private static final String PREF_DARK_THEME = "dark_theme";
 
+    /**
+     * Methode d'initialisation de l'intent
+     * @param savedInstanceState le bundle utilisé pour créer la méthode
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
@@ -92,6 +96,7 @@ public class MainActivity extends BaseActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
     /**
      * Méthode de mise a jour de la base de données
      *

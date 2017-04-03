@@ -49,17 +49,10 @@ import static com.example.aurore.goldencompta.MainActivity.IMAGE;
 
 public class FormulaireStatistique extends BaseActivity {
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+
     private Activity main = this;
     private Intent intent;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
+
     private GoogleApiClient client2;
 
     @Override
