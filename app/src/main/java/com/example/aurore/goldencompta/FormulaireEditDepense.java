@@ -135,6 +135,5 @@ public class FormulaireEditDepense extends BaseActivity {
         //dateDepense = new Date(c.getString(2));
         System.out.println(dateDepense.getYear() + "/" + dateDepense.getMonth() + "/" + dateDepense.getDate());
         date.updateDate(Integer.valueOf(dateCdc[2]),Integer.valueOf(dateCdc[1]) - 1 ,Integer.valueOf(dateCdc[0]));
-
     }
 }
